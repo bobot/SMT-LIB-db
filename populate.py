@@ -18,39 +18,45 @@ cur.execute("""CREATE TABLE Sets(
 cur.execute("""CREATE TABLE Benchmarks(
     id INT NOT NULL PRIMARY KEY,
     filename TEXT NOT NULL,
-    benchmarkSet INT FOREIGN KEY REFERENCES Sets(id)
+    benchmarkSet INT,
     setIndex INT NOT NULL,
     size INT,
     compressedSize INT,
-    license INT FOREIGN KEY REFERENCES Licenses(id)
+    license INT,
     generatedOn DATETTIME,
     generatedBy TEXT,
     generator TEXT,
     application TEXT,
     description TEXT,
     category TEXT,
-    subbenchmarkCount INT NOT NULL
+    subbenchmarkCount INT NOT NULL,
+    FOREIGN KEY(benchmarkSet) REFERENCES Sets(id)
+    FOREIGN KEY(license) REFERENCES Licenses(id)
 );""")
 
 cur.execute("""CREATE TABLE Subbenchmarks(
     id INT NOT NULL PRIMARY KEY,
-    benchmark INT FOREIGN KEY REFERENCES Benchmarks(id)
+    benchmark INT,
     normalizedSize INT,
     compressedSize INT,
     defineFunCount INT,
     maxTermDepth INT,
     numSexps INT,
-    numPatterns INT
+    numPatterns INT,
+    FOREIGN KEY(benchmark) REFERENCES Benchmarks(id)
 );""")
 
-cur.execute("""CREATE TABLE SyntcticFeatures(
+cur.execute("""CREATE TABLE SyntacticFeatures(
     id INT NOT NULL PRIMARY KEY,
     name TEXT);""")
 
-cur.execute("""CREATE TABLE SyntcticalFeatureCounts(
-    feature INT FOREIGN KEY REFERENCES SyntcticFeatures(id),
-    benchmark INT FOREIGN KEY REFERENCES Benchmarks(id),
-    count INT NOT NULL);""")
+cur.execute("""CREATE TABLE SyntcticFeatureCounts(
+    feature INT,
+    benchmark INT,
+    count INT NOT NULL,
+    FOREIGN KEY(feature) REFERENCES SyntacticFeatures(id)
+    FOREIGN KEY(benchmark) REFERENCES Benchmarks(id)
+);""")
 
 cur.execute("""CREATE TABLE Solvers(
     id INT NOT NULL PRIMARY KEY,
@@ -59,27 +65,37 @@ cur.execute("""CREATE TABLE Solvers(
     link TEXT);""")
 
 cur.execute("""CREATE TABLE TargetSolvers(
-    subbenchmark INT FOREIGN KEY REFERENCES Subbenchmarks(id),
-    solver INT FOREIGN KEY REFERENCES Solvers(id)
+    subbenchmark INT,
+    solver INT,
+    FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
+    FOREIGN KEY(solver) REFERENCES Solvers(id)
     );""")
 
 cur.execute("""CREATE TABLE Results(
     id INT NOT NULL PRIMARY KEY,
-    subbenchmark INT FOREIGN KEY REFERENCES Subbenchmarks(id),
-    solver INT FOREIGN KEY REFERENCES Solvers(id),
-    solved BOOL);""")
+    subbenchmark INT,
+    solver INT,
+    solvingTime REAL,
+    status TEXT,
+    FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
+    FOREIGN KEY(solver) REFERENCES Subbenchmarks(id)
+);""")
 
 cur.execute("""CREATE TABLE Ratings(
     id INT NOT NULL PRIMARY KEY,
-    subbenchmark INT FOREIGN KEY REFERENCES Subbenchmarks(id),
-    evaluation INT FOREIGN KEY REFERENCES Evaluations(id),
-    rating REAL);""")
+    subbenchmark INT,
+    evaluation INT,
+    rating REAL,
+    FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
+    FOREIGN KEY(evaluation) REFERENCES Evaluations(id)
+);""")
 
 cur.execute("""CREATE TABLE Licenses(
     id INT NOT NULL PRIMARY KEY,
     name TEXT,
     shortCode TEXT,
     link TEXT,
-    spdxIdentifier TEXT);""")
+    spdxIdentifier TEXT
+);""")
 
 
