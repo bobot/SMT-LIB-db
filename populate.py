@@ -1,78 +1,56 @@
 #!/usr/bin/env python3
 
 import sqlite3
-from modules import licenses
+import argparse
+from pathlib import Path
+from modules import licenses, benchmarks
 
-con = sqlite3.connect("smtlib.sqlite")
-cur = con.cursor()
+parser = argparse.ArgumentParser(
+    prog="populate.py", description="Prepopulates the benchmark database."
+)
 
-cur.execute("PRAGMA foreign_keys = ON;")
-cur.execute("""CREATE TABLE Sets(
+parser.add_argument("BENCHMARK_FOLDER", type=Path)
+args = parser.parse_args()
+
+connection = sqlite3.connect("smtlib.sqlite")
+
+connection.execute("PRAGMA foreign_keys = ON;")
+
+connection.execute(
+    """CREATE TABLE SyntacticFeatures(
     id INTEGER PRIMARY KEY,
-    logic NVARCHAR(100) NOT NULL,
-    name NVARCHAR(100) NOT NULL,
-    date DATE,
-    isIncremental BOOL NOT NULL,
-    benchmarkCount INT NOT NULL
-);""")
+    name TEXT);"""
+)
 
-cur.execute("""CREATE TABLE Benchmarks(
-    id INTEGER PRIMARY KEY,
-    filename TEXT NOT NULL,
-    benchmarkSet INT,
-    setIndex INT NOT NULL,
-    size INT,
-    compressedSize INT,
-    license INT,
-    generatedOn DATETTIME,
-    generatedBy TEXT,
-    generator TEXT,
-    application TEXT,
-    description TEXT,
-    category TEXT,
-    subbenchmarkCount INT NOT NULL,
-    FOREIGN KEY(benchmarkSet) REFERENCES Sets(id)
-    FOREIGN KEY(license) REFERENCES Licenses(id)
-);""")
-
-cur.execute("""CREATE TABLE Subbenchmarks(
-    id INTEGER PRIMARY KEY,
-    benchmark INT,
-    normalizedSize INT,
-    compressedSize INT,
-    defineFunCount INT,
-    maxTermDepth INT,
-    numSexps INT,
-    numPatterns INT,
-    FOREIGN KEY(benchmark) REFERENCES Benchmarks(id)
-);""")
-
-cur.execute("""CREATE TABLE SyntacticFeatures(
-    id INTEGER PRIMARY KEY,
-    name TEXT);""")
-
-cur.execute("""CREATE TABLE SyntcticFeatureCounts(
+connection.execute(
+    """CREATE TABLE SyntacticFeatureCounts(
     feature INT,
     benchmark INT,
     count INT NOT NULL,
     FOREIGN KEY(feature) REFERENCES SyntacticFeatures(id)
     FOREIGN KEY(benchmark) REFERENCES Benchmarks(id)
-);""")
+);"""
+)
 
-cur.execute("""CREATE TABLE Solvers(
+connection.execute(
+    """CREATE TABLE Solvers(
     id INTEGER PRIMARY KEY,
     name TEXT,
     version TEXT,
-    link TEXT);""")
+    link TEXT);"""
+)
 
-cur.execute("""CREATE TABLE TargetSolvers(
+connection.execute(
+    """CREATE TABLE TargetSolvers(
     subbenchmark INT,
     solver INT,
     FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
     FOREIGN KEY(solver) REFERENCES Solvers(id)
-    );""")
+    );"""
+)
 
-cur.execute("""CREATE TABLE Results(
+connection.execute(
+    """CREATE TABLE Results(
     id INTEGER PRIMARY KEY,
     subbenchmark INT,
     solver INT,
@@ -80,18 +58,22 @@ cur.execute("""CREATE TABLE Results(
     status TEXT,
     FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
     FOREIGN KEY(solver) REFERENCES Subbenchmarks(id)
-);""")
+);"""
+)
 
-cur.execute("""CREATE TABLE Ratings(
+connection.execute(
+    """CREATE TABLE Ratings(
     id INTEGER PRIMARY KEY,
     subbenchmark INT,
     evaluation INT,
     rating REAL,
     FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
     FOREIGN KEY(evaluation) REFERENCES Evaluations(id)
-);""")
+);"""
+)
+connection.commit()
 
-licenses.setup_licenses(cur)
-con.commit()
-cur.close()
-con.close()
+licenses.setup_licenses(connection)
+benchmarks.setup_benchmarks(connection)
+benchmarks.populate_files(connection, args.BENCHMARK_FOLDER)
+connection.close()
