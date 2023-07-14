@@ -76,7 +76,7 @@ def populate_files(connection, folder):
     Does not populate metadata fields or anything else.
     """
     count = 0
-    for benchmarkAbs in sorted(folder.glob("*/*/*/**/*.smt2")):
+    for benchmarkAbs in folder.glob("*/*/*/**/*.smt2"):
         count = count + 1
         benchmark = benchmarkAbs.relative_to(folder)
         print(f"Inserting {count:>8} {benchmark}")
