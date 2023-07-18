@@ -6,13 +6,13 @@ from pathlib import Path
 from modules import licenses, benchmarks
 
 parser = argparse.ArgumentParser(
-    prog="populate.py", description="Prepopulates the benchmark database."
+    prog="prepopulate.py", description="Prepopulates the benchmark database."
 )
 
-parser.add_argument("BENCHMARK_FOLDER", type=Path)
+parser.add_argument("DB_FILE", type=Path)
 args = parser.parse_args()
 
-connection = sqlite3.connect("smtlib.sqlite")
+connection = sqlite3.connect(args.DB_FILE)
 
 connection.execute("PRAGMA foreign_keys = ON;")
 
@@ -75,5 +75,4 @@ connection.commit()
 
 licenses.setup_licenses(connection)
 benchmarks.setup_benchmarks(connection)
-benchmarks.populate_files(connection, args.BENCHMARK_FOLDER)
 connection.close()

@@ -7,7 +7,7 @@ def setup_licenses(connection):
 def create_table(connection):
     connection.execute(
         """CREATE TABLE Licenses(
-        id INTNTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY,
         name TEXT,
         link TEXT,
         spdxIdentifier TEXT);"""
@@ -38,12 +38,12 @@ static_data = [
     (
         "GNU General Public License v2.0 or later",
         "https://www.gnu.org/licenses/gpl-2.0.html",
-        " GPL-2.0-or-later",
+        "GPL-2.0-or-later",
     ),
     (
         "GNU General Public License v3.0 or later",
         "https://www.gnu.org/licenses/gpl-3.0.html",
-        " GPL-3.0-or-later",
+        "GPL-3.0-or-later",
     ),
     ("Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "Apache-2.0"),
     ("ISC License", "https://www.isc.org/licenses/", "ISC"),
@@ -52,7 +52,7 @@ static_data = [
     (
         "GNU General Public License Unknown Version",
         "",
-        "",
+        "GPL",
     ),
     # For the following, the full license text is incldude in the benchmarks.  This affects some of the benchmark in this set.
     (
