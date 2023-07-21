@@ -49,6 +49,8 @@ connection.execute(
     );"""
 )
 
+# TODO: add evaluation table, fix solvers table
+
 connection.execute(
     """CREATE TABLE Results(
     id INTEGER PRIMARY KEY,
