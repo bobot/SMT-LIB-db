@@ -210,3 +210,44 @@ def add_benchmark(connection, benchmark):
         ),
     )
     connection.commit()
+
+
+def get_benchmark_id(connection, fullFilename, isIncremental = None, logic = None, setFoldername = None):
+    """
+    Gets the id of a benchmark from a benchmark filepath.  If all optional arguments are None then the
+    path must have the form "[non-]incremental/LOGIC/SETFOLDERNAME/BENCHMARKPATH"
+    
+    If an optional argument is not None, the corresponding component must be omitted from the path.
+    Furthermore, if any of those arguments is not None, the preceding arguments must not be None.
+    Hence, if `logic="QF_UF"` then `isIncremental` must be set and `fullFilename` is of the form
+    "SETFOLDERNAME/BENCHMARKPATH".
+    """
+    if not isIncremental:
+        slashIdx = fullFilename.find("/")
+        if fullFilename[:slashIdx] == "non-incremental":
+            isIncremental = False
+        else:
+            isIncremental = True
+        fullFilename = fullFilename[slashIdx+1:]
+
+    if not logic:
+        slashIdx = fullFilename.find("/")
+        logic = fullFilename[:slashIdx]
+        fullFilename = fullFilename[slashIdx+1:]
+    
+    if not setFoldername:
+        slashIdx = fullFilename.find("/")
+        setFoldername = fullFilename[:slashIdx]
+        fullFilename = fullFilename[slashIdx+1:]
+
+    benchmarkId = None
+    for row in connection.execute(
+        """
+        SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Sets ON Sets.Id = Benchmarks.benchmarkSet
+            WHERE filename=? AND logic=? AND Sets.folderName=?"
+        """, (fullFilename, logic, setFoldername)
+    ):
+        benchmarkId = row[0]
+    if not benchmarkId:
+        pass
+
