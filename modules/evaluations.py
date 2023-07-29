@@ -1,6 +1,7 @@
 import tempfile
 import subprocess
 import csv
+import benchmarks
 
 def setup_evaluations(connection):
     connection.execute(
@@ -24,27 +25,19 @@ def add_smt_comp_2022(connection, folder):
             for row in reader:
                 # remove the 'track_single_query/' from the start
                 fullbench = row['benchmark'][19:]
-                logicidx = fullbench.find('/')
-                logic = fullbench[:logicidx]
-                benchmark = fullbench[logicidx + 1:]
-
-                benchmarkId = None
-                for row in connection.execute(
-                    "SELECT id FROM Behnchmarks WHERE isIncremental=0 AND logic=? AND filename=?", (logic, benchmark)
-                ):
-                    benchmarkId = row[0]
-                if not benchmarkId:
-                    print(f"WARNING: could not find benchmark {fullbench}")
+                try:
+                    benchmarkId = benchmarks.get_benchmark_id(fullbench, isIncremental=False)
+                except NameError:
+                    print("WARNING: Benchmark {fullbench} of SMT-COMP 2022 not found")
                     continue
 
                 # remove "-wrapped" from the end
-                solver = row['benchmark'][:-8]
+                solver = row['solver'][:-8]
 
                 # 'benchmark' track_single_query/LOGIC/
                 # 'solver' with -wrapped
                 # cpu time wallclock time unit? seconds most likely
                 # result   expected  "starexec-unknown"
-                # logic here: get benchmark ID
                 # check if solver variant is known, if not
                 #    Run a "guess solver" routine", if failure print error with info
                 #    Create variant

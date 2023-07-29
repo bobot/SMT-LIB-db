@@ -249,5 +249,5 @@ def get_benchmark_id(connection, fullFilename, isIncremental = None, logic = Non
     ):
         benchmarkId = row[0]
     if not benchmarkId:
-        pass
+        raise NameError
 
