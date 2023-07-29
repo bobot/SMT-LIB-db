@@ -33,19 +33,11 @@ connection.execute(
 )
 
 connection.execute(
-    """CREATE TABLE Solvers(
-    id INTEGER PRIMARY KEY,
-    name TEXT,
-    version TEXT,
-    link TEXT);"""
-)
-
-connection.execute(
     """CREATE TABLE TargetSolvers(
     subbenchmark INT,
-    solver INT,
+    solverVariant INT,
     FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
-    FOREIGN KEY(solver) REFERENCES Solvers(id)
+    FOREIGN KEY(solverVariant) REFERENCES SolverVaraiants(id)
     );"""
 )
 
