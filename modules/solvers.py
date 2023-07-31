@@ -1,4 +1,4 @@
-def setup_licenses(connection):
+def setup_solvers(connection):
     create_tables(connection)
     populate_tables(connection)
     connection.commit()

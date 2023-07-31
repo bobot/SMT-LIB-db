@@ -244,7 +244,7 @@ def get_benchmark_id(connection, fullFilename, isIncremental = None, logic = Non
     for row in connection.execute(
         """
         SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Sets ON Sets.Id = Benchmarks.benchmarkSet
-            WHERE filename=? AND logic=? AND Sets.folderName=?"
+            WHERE filename=? AND logic=? AND Sets.folderName=?
         """, (fullFilename, logic, setFoldername)
     ):
         benchmarkId = row[0]

@@ -3,7 +3,7 @@
 import sqlite3
 import argparse
 from pathlib import Path
-from modules import licenses, benchmarks, evaluations
+from modules import licenses, benchmarks, evaluations, solvers
 
 parser = argparse.ArgumentParser(
     prog="prepopulate.py", description="Prepopulates the benchmark database."
@@ -41,20 +41,6 @@ connection.execute(
     );"""
 )
 
-# TODO: add evaluation table, fix solvers table
-
-connection.execute(
-    """CREATE TABLE Results(
-    id INTEGER PRIMARY KEY,
-    subbenchmark INT,
-    solver INT,
-    solvingTime REAL,
-    status TEXT,
-    FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
-    FOREIGN KEY(solver) REFERENCES Subbenchmarks(id)
-);"""
-)
-
 connection.execute(
     """CREATE TABLE Ratings(
     id INTEGER PRIMARY KEY,
@@ -70,4 +56,5 @@ connection.commit()
 licenses.setup_licenses(connection)
 benchmarks.setup_benchmarks(connection)
 evaluations.setup_evaluations(connection)
+solvers.setup_solvers(connection)
 connection.close()

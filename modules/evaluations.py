@@ -1,7 +1,7 @@
 import tempfile
 import subprocess
 import csv
-import benchmarks
+from modules import benchmarks
 
 def setup_evaluations(connection):
     connection.execute(
@@ -9,12 +9,32 @@ def setup_evaluations(connection):
         id INTEGER PRIMARY KEY,
         name TEXT,
         date DATE,
-        link TEXT,
+        link TEXT
         );"""
     )
-    # TODO: add/move result table here
+
+    connection.execute(
+        """CREATE TABLE Results(
+        id INTEGER PRIMARY KEY,
+        subbenchmark INT,
+        solverVariant INT,
+        cpuTime REAL,
+        wallclockTime REAL,
+        status TEXT,
+        FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
+        FOREIGN KEY(solverVariant) REFERENCES SolverVaraiants(id)
+        );"""
+    )
 
 def add_smt_comp_2022(connection, folder):
+    connection.execute(
+        """
+        INSERT INTO Evaluations(name, date, link)
+        VALUES(?,?,?);
+        """,
+        ("SMT-COMP 2022", "2022-08-10", "https://smt-comp.github.io/2022/"),
+    )
+    connection.commit()
     with tempfile.TemporaryDirectory() as tmpdir:
         subprocess.run(
             f"tar xvf {folder}/2022/results/raw-results.tar.xz -C {tmpdir}",
@@ -26,26 +46,47 @@ def add_smt_comp_2022(connection, folder):
                 # remove the 'track_single_query/' from the start
                 fullbench = row['benchmark'][19:]
                 try:
-                    benchmarkId = benchmarks.get_benchmark_id(fullbench, isIncremental=False)
+                    benchmarkId = benchmarks.get_benchmark_id(connection, fullbench, isIncremental=False)
                 except NameError:
-                    print("WARNING: Benchmark {fullbench} of SMT-COMP 2022 not found")
+                    print(f"WARNING: Benchmark {fullbench} of SMT-COMP 2022 not found")
                     continue
 
-                # remove "-wrapped" from the end
-                solver = row['solver'][:-8]
+                solver = row['solver']
+                solverVariantId = None
+                for row in connection.execute(
+                    """
+                    SELECT Id FROM SolverVariants WHERE fullName=?
+                    """, (solver, )
+                ):
+                    solverVariantId = row[0]
+                if not solverVariantId:
+                    # We do not care about the results from solvers that are not on the list.
+                    continue
 
-                # 'benchmark' track_single_query/LOGIC/
-                # 'solver' with -wrapped
-                # cpu time wallclock time unit? seconds most likely
-                # result   expected  "starexec-unknown"
-                # check if solver variant is known, if not
-                #    Run a "guess solver" routine", if failure print error with info
-                #    Create variant
-                # Write to database
-
-                print(', '.join(row))
-        # TODO: csv parser to add every line, map to solvers
-
+                try:
+                    cpuTime = float(row['cpu time'])
+                except ValueError:
+                    cpuTime = None
+                try:
+                    wallclockTime = float(row['wallclock time'])
+                except ValueError:
+                    wallclockTime = None
+                
+                if row['result'] == "starexec-unknown":
+                    status = "unknown"
+                elif row['result'] != row['expected']:
+                    status = "unknown"
+                else:
+                    status = row['result']
+ 
+                connection.execute(
+                    """
+                    INSERT INTO Results(subbenchmark, solverVariant, cpuTime, wallclockTime, status)
+                    VALUES(?,?,?,?);
+                    """,
+                    (benchmarkId, solverVariantId, cpuTime, wallclockTime, status),
+                )
+    connection.commit()
 
 def add_smt_comps(connection, folder):
     add_smt_comp_2022(connection, folder)
