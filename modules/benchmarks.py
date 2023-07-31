@@ -222,7 +222,7 @@ def get_benchmark_id(connection, fullFilename, isIncremental = None, logic = Non
     Hence, if `logic="QF_UF"` then `isIncremental` must be set and `fullFilename` is of the form
     "SETFOLDERNAME/BENCHMARKPATH".
     """
-    if not isIncremental:
+    if isIncremental == None:
         slashIdx = fullFilename.find("/")
         if fullFilename[:slashIdx] == "non-incremental":
             isIncremental = False
@@ -248,6 +248,5 @@ def get_benchmark_id(connection, fullFilename, isIncremental = None, logic = Non
         """, (fullFilename, logic, setFoldername)
     ):
         benchmarkId = row[0]
-    if not benchmarkId:
-        raise NameError
+    return benchmarkId
 
