@@ -1,7 +1,6 @@
 import tempfile
 import subprocess
 import csv
-import sys
 from modules import benchmarks
 
 def setup_evaluations(connection):
@@ -58,7 +57,12 @@ def add_smt_comp_2022(connection, folder):
             f"tar xvf {folder}/2022/results/raw-results.tar.xz -C {tmpdir}",
             shell=True,
         )
-        with open(f"{tmpdir}/raw-results-sq.csv", newline='') as csvfile:
+        subprocess.run(
+            f"{folder}/2022/scoring/clean_result_csvs.sh",
+            shell=True,
+            cwd=tmpdir
+        )
+        with open(f"{tmpdir}/results-sq.csv", newline='') as csvfile:
             reader = csv.DictReader(csvfile, delimiter=',')
             for row in reader:
                 # remove the 'track_single_query/' from the start
