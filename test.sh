@@ -10,7 +10,7 @@ echo "Prepopulate"
 
 echo "Add benchmarks"
 
-parallel -j 4 ./addbenchmark.py $DB -- `find ~/SMT-LIB/SMT-LIB-mini/ -name '*smt2'`
+parallel -j 4 ./addbenchmark.py $DB -- `find ~/SMT-LIB/SMT-LIB-ss/ -name '*smt2'`
 
 echo "Postpopulate"
 

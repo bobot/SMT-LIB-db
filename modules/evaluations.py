@@ -29,6 +29,19 @@ def setup_evaluations(connection):
         );"""
     )
 
+    connection.execute(
+        """CREATE TABLE Ratings(
+        id INTEGER PRIMARY KEY,
+        subbenchmark INT,
+        evaluation INT,
+        rating REAL,
+        consideredSolvers INT,
+        successfulSolvers INT,
+        FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
+        FOREIGN KEY(evaluation) REFERENCES Evaluations(id)
+        );"""
+    )
+
 def add_smt_comp_2022(connection, folder):
     cursor = connection.execute(
         """
@@ -83,6 +96,7 @@ def add_smt_comp_2022(connection, folder):
                 else:
                     status = row['result']
  
+                # TODO: subbenchmark is here actually the benchmark ID
                 connection.execute(
                     """
                     INSERT INTO Results(evaluation, subbenchmark, solverVariant, cpuTime, wallclockTime, status)
@@ -94,3 +108,65 @@ def add_smt_comp_2022(connection, folder):
 
 def add_smt_comps(connection, folder):
     add_smt_comp_2022(connection, folder)
+
+def add_ratings_for(connection, competition):
+    """
+    - for each logic
+    	- calculate n = |solvers that solve at least one benchmark|
+    	- for each benchmark
+    		- calculate m = |solvers that solve that benchmark|
+    		- rating = 1 - m/n
+    """
+    for r in connection.execute(
+        """
+        SELECT Id FROM Evaluations WHERE name=?
+        """, (competition, )
+    ):
+        evaluationId = r[0]
+
+    for logicRow in connection.execute(
+        """
+        SELECT DISTINCT logic FROM Benchmarks
+        """
+    ):
+        logic = logicRow[0]
+        for logicSolversRow in connection.execute(
+            """
+            SELECT COUNT(DISTINCT sv.id) FROM SolverVariants AS sv 
+                INNER JOIN Results AS r ON sv.Id = r.solverVariant
+                INNER JOIN Benchmarks AS b ON b.id = r.subbenchmark
+            WHERE (r.status = 'unsat' OR r.status = 'sat')
+                AND b.logic=? AND r.evaluation=?
+            """, (logic, evaluationId)
+        ):
+            logicSolvers = logicSolversRow[0]
+        if logicSolvers == 0:
+            continue
+        for benchmarkRow in connection.execute(
+            """
+            SELECT id FROM Benchmarks WHERE logic=?
+            """, (logic, )
+        ):
+            benchmark = benchmarkRow[0]
+            for benchmarkSolversRow in connection.execute(
+                """
+                SELECT COUNT(DISTINCT sv.id) FROM SolverVariants AS sv 
+                    INNER JOIN Results AS r ON sv.Id = r.solverVariant
+                    INNER JOIN Benchmarks AS b ON b.id = r.subbenchmark
+                WHERE (r.status = 'unsat' OR r.status = 'sat')
+                    AND b.id=? AND r.evaluation=?
+                """, (benchmark, evaluationId)
+            ):
+                benchmarkSolvers = benchmarkSolversRow[0]
+            rating = 1 -  benchmarkSolvers / logicSolvers
+            connection.execute(
+                """
+                INSERT INTO Ratings(subbenchmark, evaluation, rating, consideredSolvers, successfulSolvers)
+                VALUES(?,?,?,?,?);
+                """, (benchmark, evaluationId, rating, logicSolvers, benchmarkSolvers)
+            )
+    connection.commit()
+
+def add_ratings(connection):
+    print("Adding ratings for SMT-COMP 2022")
+    add_ratings_for(connection, "SMT-COMP 2022")

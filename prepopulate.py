@@ -41,16 +41,6 @@ connection.execute(
     );"""
 )
 
-connection.execute(
-    """CREATE TABLE Ratings(
-    id INTEGER PRIMARY KEY,
-    subbenchmark INT,
-    evaluation INT,
-    rating REAL,
-    FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
-    FOREIGN KEY(evaluation) REFERENCES Evaluations(id)
-);"""
-)
 connection.commit()
 
 licenses.setup_licenses(connection)

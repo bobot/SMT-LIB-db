@@ -17,5 +17,6 @@ connection = sqlite3.connect(args.DB_FILE)
 
 benchmarks.calculate_benchmark_count(connection)
 evaluations.add_smt_comps(connection, args.SMTCOMP_FOLDER)
+evaluations.add_ratings(connection)
 
 connection.close()
