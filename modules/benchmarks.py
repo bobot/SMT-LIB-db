@@ -147,8 +147,8 @@ def add_benchmark(connection, benchmark):
     )
     compressedSize = int(cc.stdout)
 
-    with open(benchmark, "r+b") as f:
-        mm = mmap.mmap(f.fileno(), 0)
+    with open(benchmark, "rb") as f:
+        mm = mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ)
 
         licenseRegex = re.compile(b'\(\s*set-info\s*:license\s*"([^"]+)"\s*\)')
         embeddedLicenseRegex = re.compile(b"\(\s*set-info\s*:license\s*\|")

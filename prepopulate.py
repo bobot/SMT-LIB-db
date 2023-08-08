@@ -15,6 +15,7 @@ args = parser.parse_args()
 connection = sqlite3.connect(args.DB_FILE)
 
 connection.execute("PRAGMA foreign_keys = ON;")
+connection.execute('PRAGMA journal_mode=wal')
 
 connection.execute(
     """CREATE TABLE SyntacticFeatures(
