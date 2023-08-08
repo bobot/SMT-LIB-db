@@ -47,7 +47,8 @@ def setup_benchmarks(connection):
         name NVARCHAR(100) NOT NULL,
         folderName TEXT NOT NULL,
         date DATE,
-        benchmarkCount INT NOT NULL
+        benchmarkCount INT NOT NULL,
+        UNIQUE(folderName)
     );"""
     )
 
@@ -122,19 +123,25 @@ def add_benchmark(connection, benchmark):
     fileName = "/".join(parts[3:])
 
     setId = None
+    # short circuit
     for row in connection.execute(
         "SELECT id FROM Sets WHERE folderName=?", (setFolder,)
     ):
         setId = row[0]
+
     if not setId:
-        cursor = connection.execute(
+        connection.execute(
             """
-            INSERT INTO Sets(name, foldername, date, benchmarkCount)
+            INSERT OR IGNORE INTO Sets(name, foldername, date, benchmarkCount)
             VALUES(?,?,?,?);
             """,
             (setName, setFolder, date, 0),
         )
-        setId = cursor.lastrowid
+        connection.commit()
+        for row in connection.execute(
+            "SELECT id FROM Sets WHERE folderName=?", (setFolder,)
+        ):
+            setId = row[0]
 
     size = benchmark.stat().st_size
 
