@@ -1,5 +1,7 @@
 # Project specific stuff
 *.sqlite
+klhm/zig-cache/
+klhm/zig-out/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
