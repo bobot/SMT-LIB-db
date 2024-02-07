@@ -160,6 +160,7 @@ def add_benchmark(connection, benchmark):
         licenseRegex = re.compile(b'\(\s*set-info\s*:license\s*"([^"]+)"\s*\)')
         embeddedLicenseRegex = re.compile(b"\(\s*set-info\s*:license\s*\|")
         categoryRegex = re.compile(b'\(\s*set-info\s*:category\s*"([a-zA-Z]+)"\s*\)')
+        # TODO: handle check-sat-assumption
         checksatRegex = re.compile(b"\(\s*check-sat\s*\)")
 
         matchResult = re.search(licenseRegex, mm)
