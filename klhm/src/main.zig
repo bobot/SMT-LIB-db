@@ -4,9 +4,8 @@ const print = std.debug.print;
 
 const BenchmarkData = struct {
     logic: ?[]const u8 = null,
-    isIncremental: bool = false,
-    size: ?usize = null,
-    compressedSize: ?usize = null,
+    size: usize = 0,
+    compressedSize: usize = 0,
     license: ?[]const u8 = null,
     generatedOn: ?[]const u8 = null,
     generatedBy: ?[]const u8 = null,
@@ -14,7 +13,8 @@ const BenchmarkData = struct {
     application: ?[]const u8 = null,
     description: ?[]const u8 = null,
     category: ?[]const u8 = null,
-    subbenchmarkCount: ?usize = 0,
+    subbenchmarkCount: usize = 0,
+    isIncremental: bool = false,
 };
 
 const SubBenchmarkData = struct {
@@ -136,7 +136,7 @@ fn skip_to_level(str: []u8, start_idx: usize, start_level: usize, target_level: 
 }
 
 const span = struct { start: usize, end: usize };
-fn get_command(str: []u8, start_idx: usize) span {
+fn get_symbol(str: []u8, start_idx: usize) span {
     var idx = start_idx;
 
     while (idx < str.len) {
@@ -149,14 +149,18 @@ fn get_command(str: []u8, start_idx: usize) span {
     const cmd_start = idx;
     while (idx < str.len) {
         const char = str[idx];
-        if (char != '-' and (char < 'a' or char > 'z'))
+        //TODO: incomplete for symbol
+        if (!(char == '-' or
+            char == '_' or
+            (char >= 'a' and char <= 'z') or
+            (char >= 'A' and char <= 'Z')))
             break;
         idx += 1;
     }
     return .{ .start = cmd_start, .end = idx };
 }
 
-fn print_scopes(out: anytype, str: []u8, scopes: *std.ArrayList(Scope)) !void {
+fn print_subproblem(out: anytype, str: []u8, scopes: *std.ArrayList(Scope), command: []const u8) !void {
     for (scopes.items) |scope| {
         var i: usize = 0;
         while (i < scope.intervals.items.len) : ({
@@ -167,6 +171,7 @@ fn print_scopes(out: anytype, str: []u8, scopes: *std.ArrayList(Scope)) !void {
             try out.print("{s}", .{str[start..end]});
         }
     }
+    try out.print("{s}\n", .{command});
 }
 
 pub fn main() !u8 {
@@ -207,6 +212,9 @@ pub fn main() !u8 {
     );
     defer std.os.munmap(ptr);
 
+    var benchmarkData: BenchmarkData = .{};
+    benchmarkData.size = size;
+
     var scopes = std.ArrayList(Scope).init(allocator);
     try scopes.append(Scope{ .intervals = std.ArrayList(usize).init(allocator) });
     var top = &scopes.items[scopes.items.len - 1];
@@ -217,11 +225,16 @@ pub fn main() !u8 {
         idx = skip_to_level(ptr, idx, 0, 1) orelse break;
         const level_start_idx = idx - 1;
 
-        const cmdSpan = get_command(ptr, idx);
+        const cmdSpan = get_symbol(ptr, idx);
         const cmdStr = ptr[cmdSpan.start..cmdSpan.end];
 
         if (CmdMap.get(cmdStr)) |cmd| {
             switch (cmd) {
+                .set_logic => {
+                    const logicSpan = get_symbol(ptr, idx);
+                    benchmarkData.logic = ptr[logicSpan.start..logicSpan.end];
+                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
+                },
                 .push => {
                     // calculate end of old level
                     try top.intervals.append(level_start_idx);
@@ -232,14 +245,22 @@ pub fn main() !u8 {
                 },
                 .pop => {
                     try top.intervals.append(level_start_idx);
-                    try stdout.print("---------\n", .{});
-                    try print_scopes(stdout, ptr, &scopes);
-                    try stdout.print("---------\n", .{});
-                    try bw.flush();
                     idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
                     top.intervals.deinit();
                     _ = scopes.pop();
                     top = &scopes.items[scopes.items.len - 1];
+                    try top.intervals.append(idx);
+                },
+                .check_sat, .check_sat_assuming => {
+                    try top.intervals.append(level_start_idx);
+                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
+
+                    try stdout.print("---------\n", .{});
+                    try print_subproblem(stdout, ptr, &scopes, ptr[level_start_idx..idx]);
+                    try stdout.print("---------\n", .{});
+                    try bw.flush();
+                    benchmarkData.subbenchmarkCount += 1;
+
                     try top.intervals.append(idx);
                 },
                 .exit => {
@@ -255,6 +276,8 @@ pub fn main() !u8 {
         }
     }
 
+    benchmarkData.isIncremental = benchmarkData.subbenchmarkCount > 1;
+    try stdout.print("{any}\n", .{benchmarkData});
     try bw.flush();
     return 0;
 }
