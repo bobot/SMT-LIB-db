@@ -79,18 +79,25 @@ const BenchmarkData = struct {
 };
 
 const SubBenchmarkData = struct {
-    normalizedSize: ?usize = null,
-    compressedSize: ?usize = null,
-    assertsCount: ?usize = null,
-    declareFunCount: ?usize = null,
-    declareSortCount: ?usize = null,
-    defineFunCount: ?usize = null,
-    defineSortCount: ?usize = null,
-    maxTermDepth: ?usize = null,
+    normalizedSize: usize = 0,
+    compressedSize: usize = 0,
+    assertsCount: usize = 0,
+    declareFunCount: usize = 0,
+    declareSortCount: usize = 0,
+    defineFunCount: usize = 0,
+    defineSortCount: usize = 0,
+    maxTermDepth: usize = 0,
+    status: ?[]const u8 = null,
+
+    fn print(self: SubBenchmarkData, out: anytype) !void {
+        const options = std.json.StringifyOptions{ .whitespace = .indent_2 };
+        try std.json.stringify(self, options, out);
+    }
 };
 
 const Scope = struct {
     intervals: std.ArrayList(usize),
+    data: SubBenchmarkData = .{},
 };
 
 const Commands = enum {
@@ -401,7 +408,8 @@ pub fn main() !u8 {
                                     benchmarkData.category = ptr[x.start..x.end];
                             },
                             .status => {
-                                // TODO: this is per subbenchmark!
+                                const x = get_symbol(ptr, attrSpan.end);
+                                top.data.status = ptr[x.start..x.end];
                             },
                             .source => {
                                 if (get_string(ptr, attrSpan.end)) |x|
@@ -412,11 +420,36 @@ pub fn main() !u8 {
                     // TODO: the skip starts too early
                     idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
                 },
-                .push => {
-                    // calculate end of old level
-                    try top.intervals.append(level_start_idx);
+                .assert => {
+                    top.data.assertsCount += 1;
                     idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
-                    try scopes.append(Scope{ .intervals = std.ArrayList(usize).init(allocator) });
+                },
+                .declare_fun, .declare_const => {
+                    top.data.declareFunCount += 1;
+                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
+                },
+                .declare_sort => {
+                    top.data.declareSortCount += 1;
+                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
+                },
+                .define_fun => {
+                    top.data.defineFunCount += 1;
+                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
+                },
+                .define_sort => {
+                    top.data.defineSortCount += 1;
+                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
+                },
+                .push => {
+                    const old_idx = top.intervals.items[top.intervals.items.len - 1];
+                    top.data.normalizedSize += (level_start_idx - old_idx);
+
+                    try top.intervals.append(level_start_idx);
+
+                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
+
+                    const new = Scope{ .intervals = std.ArrayList(usize).init(allocator), .data = top.data };
+                    try scopes.append(new);
                     top = &scopes.items[scopes.items.len - 1];
                     try top.intervals.append(idx);
                 },
@@ -429,14 +462,20 @@ pub fn main() !u8 {
                     try top.intervals.append(idx);
                 },
                 .check_sat, .check_sat_assuming => {
+                    const old_idx = top.intervals.items[top.intervals.items.len - 1];
+
                     try top.intervals.append(level_start_idx);
                     idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
 
-                    try stdout.print("---------\n", .{});
-                    try print_subproblem(stdout, ptr, &scopes, ptr[level_start_idx..idx]);
-                    try stdout.print("---------\n", .{});
-                    try bw.flush();
                     benchmarkData.subbenchmarkCount += 1;
+                    // With check-sat we have to use the idx after the command,
+                    // because we want to take its size into account.
+                    top.data.normalizedSize += (idx - old_idx);
+
+                    try top.data.print(stdout);
+                    // try print_subproblem(stdout, ptr, &scopes, ptr[level_start_idx..idx]);
+                    _ = try stdout.write("\n");
+                    try bw.flush();
 
                     try top.intervals.append(idx);
                 },
@@ -455,6 +494,7 @@ pub fn main() !u8 {
 
     benchmarkData.isIncremental = benchmarkData.subbenchmarkCount > 1;
     try benchmarkData.print(stdout);
+    _ = try stdout.write("\n");
     try bw.flush();
     return 0;
 }
