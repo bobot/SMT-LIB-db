@@ -19,6 +19,7 @@ pkgs.stdenv.mkDerivation {
       python3
       sqlitebrowser
       zig
+      zstd
   ];
 
 }
