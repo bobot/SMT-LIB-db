@@ -1,5 +1,6 @@
 const std = @import("std");
 const fs = std.fs;
+const compress = @import("compress.zig");
 const print = std.debug.print;
 
 const BenchmarkData = struct {
@@ -388,6 +389,9 @@ pub fn main() !u8 {
     );
     defer std.os.munmap(ptr);
 
+    var compressor = try compress.init();
+    defer compressor.deinit();
+
     var benchmarkData: BenchmarkData = .{};
     benchmarkData.size = ptr.len;
 
@@ -513,6 +517,7 @@ pub fn main() !u8 {
     }
 
     benchmarkData.isIncremental = benchmarkData.subbenchmarkCount > 1;
+    benchmarkData.compressedSize = try compressor.compressedSizeSlice(ptr);
     try benchmarkData.print(stdout);
     _ = try stdout.write("\n");
     try bw.flush();
