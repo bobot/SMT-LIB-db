@@ -84,10 +84,9 @@ pub const BenchmarkData = struct {
                         break;
                     }
                 }
-            } else
-            {
-            if (colon == 0 and str[idx] == ':')
-                colon = idx;
+            } else {
+                if (colon == 0 and str[idx] == ':')
+                    colon = idx;
             }
         }
         // At least one character left
