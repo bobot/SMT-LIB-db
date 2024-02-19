@@ -6,6 +6,13 @@ const compress = @import("compress.zig");
 const data = @import("data.zig");
 const tokens = @import("tokens.zig");
 
+const Errors = error{
+    ImbalancedParentheses,
+    UnexpectedToken,
+    OutOfTokens,
+    UnsupportedPlatform,
+};
+
 const Commands = enum {
     assert,
     check_sat,
@@ -90,7 +97,7 @@ fn skip_to_level(
     tokenIt: *tokens.TokenIterator,
     start_level: usize,
     target_level: usize,
-) ?usize {
+) !usize {
     var level: usize = start_level;
 
     while (true) {
@@ -103,25 +110,25 @@ fn skip_to_level(
                 },
                 tokens.TokenType.Closing => {
                     if (level == 0)
-                        return null;
+                        return Errors.ImbalancedParentheses;
                     level -= 1;
                     if (level == target_level)
                         return tokenIt.pos;
                 },
                 else => {},
             }
-        } else return null;
+        } else return Errors.OutOfTokens;
     }
-    return null;
+    return Errors.OutOfTokens;
 }
 
-fn get_string(tokenIt: *tokens.TokenIterator) ?[]const u8 {
+fn get_string(tokenIt: *tokens.TokenIterator) ![]const u8 {
     if (tokenIt.next()) |token| {
         if (token.type != tokens.TokenType.String)
-            return null;
+            return error.UnexpectedToken;
         return token.span;
     }
-    return null;
+    return error.UnexpectedToken;
 }
 
 fn print_subproblem(
@@ -154,7 +161,7 @@ pub fn main() !u8 {
 
     if (.windows == @import("builtin").os.tag) {
         print("Windows is not supported.\n", .{});
-        return 1;
+        return Errors.UnsupportedPlatform;
     }
 
     if (std.os.argv.len < 2) {
@@ -194,7 +201,7 @@ pub fn main() !u8 {
 
     var idx: usize = 0;
     while (true) {
-        idx = skip_to_level(&tokenIt, 0, 1) orelse break;
+        idx = try skip_to_level(&tokenIt, 0, 1);
         const level_start_idx = idx - 1;
 
         if (tokenIt.next()) |token| {
@@ -203,7 +210,7 @@ pub fn main() !u8 {
                     .set_logic => {
                         if (tokenIt.next()) |logicToken| {
                             benchmarkData.logic = logicToken.span;
-                            idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                            idx = try skip_to_level(&tokenIt, 1, 0);
                         } else break;
                     },
                     .set_info => {
@@ -212,32 +219,32 @@ pub fn main() !u8 {
                                 switch (attr) {
                                     .license => {
                                         // TODO: special case for embedded license!
-                                        if (get_string(&tokenIt)) |x|
-                                            benchmarkData.license = x;
+                                        const str = try get_string(&tokenIt);
+                                        benchmarkData.license = str;
                                     },
                                     .category => {
-                                        if (get_string(&tokenIt)) |x|
-                                            benchmarkData.category = x;
+                                        const str = try get_string(&tokenIt);
+                                        benchmarkData.category = str;
                                     },
                                     .status => {
-                                        if (tokenIt.next()) |x| {
+                                        try if (tokenIt.next()) |x| {
                                             if (x.type != tokens.TokenType.Symbol)
-                                                break;
+                                                return Errors.UnexpectedToken;
                                             top.data.status = x.span;
-                                        } else break;
+                                        } else Errors.OutOfTokens;
                                     },
                                     .source => {
-                                        if (get_string(&tokenIt)) |x|
-                                            benchmarkData.set_source(x);
+                                        const str = try get_string(&tokenIt);
+                                        benchmarkData.set_source(str);
                                     },
                                 }
                             }
                         } else break;
-                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                        idx = try skip_to_level(&tokenIt, 1, 0);
                     },
                     .assert => {
                         top.data.assertsCount += 1;
-                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                        idx = try skip_to_level(&tokenIt, 1, 0);
                     },
                     .declare_fun => {
                         _ = tokenIt.next(); // name
@@ -245,20 +252,20 @@ pub fn main() !u8 {
                         if (tokenIt.next()) |tkn| {
                             if (tkn.type == tokens.TokenType.Closing) {
                                 top.data.declareConstCount += 1;
-                                idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                                idx = try skip_to_level(&tokenIt, 1, 0);
                             } else {
                                 top.data.declareFunCount += 1;
-                                idx = skip_to_level(&tokenIt, 2, 0) orelse break;
+                                idx = try skip_to_level(&tokenIt, 2, 0);
                             }
                         } else break;
                     },
                     .declare_const => {
                         top.data.declareConstCount += 1;
-                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                        idx = try skip_to_level(&tokenIt, 1, 0);
                     },
                     .declare_sort => {
                         top.data.declareSortCount += 1;
-                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                        idx = try skip_to_level(&tokenIt, 1, 0);
                     },
                     .define_fun => {
                         _ = tokenIt.next(); // name
@@ -266,16 +273,16 @@ pub fn main() !u8 {
                         if (tokenIt.next()) |tkn| {
                             if (tkn.type == tokens.TokenType.Closing) {
                                 top.data.constantFunCount += 1;
-                                idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                                idx = try skip_to_level(&tokenIt, 1, 0);
                             } else {
                                 top.data.defineFunCount += 1;
-                                idx = skip_to_level(&tokenIt, 2, 0) orelse break;
+                                idx = try skip_to_level(&tokenIt, 2, 0);
                             }
-                        } else break;
+                        } else return Errors.OutOfTokens;
                     },
                     .define_sort => {
                         top.data.defineSortCount += 1;
-                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                        idx = try skip_to_level(&tokenIt, 1, 0);
                     },
                     .push => {
                         const old_idx = top.intervals.items[top.intervals.items.len - 1];
@@ -283,7 +290,7 @@ pub fn main() !u8 {
 
                         try top.intervals.append(level_start_idx);
 
-                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                        idx = try skip_to_level(&tokenIt, 1, 0);
 
                         const new = data.Scope{
                             .intervals = std.ArrayList(usize).init(allocator),
@@ -295,7 +302,7 @@ pub fn main() !u8 {
                     },
                     .pop => {
                         try top.intervals.append(level_start_idx);
-                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                        idx = try skip_to_level(&tokenIt, 1, 0);
                         top.intervals.deinit();
                         _ = scopes.pop();
                         top = &scopes.items[scopes.items.len - 1];
@@ -305,7 +312,7 @@ pub fn main() !u8 {
                         const old_idx = top.intervals.items[top.intervals.items.len - 1];
 
                         try top.intervals.append(level_start_idx);
-                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                        idx = try skip_to_level(&tokenIt, 1, 0);
 
                         benchmarkData.subbenchmarkCount += 1;
                         // With check-sat we have to use the idx after the command,
@@ -328,16 +335,15 @@ pub fn main() !u8 {
                         break;
                     },
                     else => {
-                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                        idx = try skip_to_level(&tokenIt, 1, 0);
                     },
                 }
             } else {
                 // Unkown command, do nothing
-                idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                idx = try skip_to_level(&tokenIt, 1, 0);
             }
         } else {
-            print("Token Error!", .{});
-            return 1;
+            return Errors.OutOfTokens;
         }
     }
 
