@@ -239,8 +239,21 @@ pub fn main() !u8 {
                         top.data.assertsCount += 1;
                         idx = skip_to_level(&tokenIt, 1, 0) orelse break;
                     },
-                    .declare_fun, .declare_const => {
-                        top.data.declareFunCount += 1;
+                    .declare_fun => {
+                        _ = tokenIt.next(); // name
+                        _ = tokenIt.next(); // Skip (
+                        if (tokenIt.next()) |tkn| {
+                            if (tkn.type == tokens.TokenType.Closing) {
+                                top.data.declareConstCount += 1;
+                                idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                            } else {
+                                top.data.declareFunCount += 1;
+                                idx = skip_to_level(&tokenIt, 2, 0) orelse break;
+                            }
+                        } else break;
+                    },
+                    .declare_const => {
+                        top.data.declareConstCount += 1;
                         idx = skip_to_level(&tokenIt, 1, 0) orelse break;
                     },
                     .declare_sort => {
@@ -248,8 +261,17 @@ pub fn main() !u8 {
                         idx = skip_to_level(&tokenIt, 1, 0) orelse break;
                     },
                     .define_fun => {
-                        top.data.defineFunCount += 1;
-                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                        _ = tokenIt.next(); // name
+                        _ = tokenIt.next(); // Skip (
+                        if (tokenIt.next()) |tkn| {
+                            if (tkn.type == tokens.TokenType.Closing) {
+                                top.data.constantFunCount += 1;
+                                idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                            } else {
+                                top.data.defineFunCount += 1;
+                                idx = skip_to_level(&tokenIt, 2, 0) orelse break;
+                            }
+                        } else break;
                     },
                     .define_sort => {
                         top.data.defineSortCount += 1;
