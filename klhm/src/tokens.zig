@@ -2,15 +2,15 @@ const std = @import("std");
 const print = std.debug.print;
 const testing = std.testing;
 
-const TokenType = enum {
+pub const TokenType = enum {
     Symbol, // Includes constants etc.
     Opening,
     Closing,
     String, // Includes |.| symbols
 };
-const Token = struct { type: TokenType, span: []const u8 };
+pub const Token = struct { type: TokenType, span: []const u8 };
 
-const TokenIterator = struct {
+pub const TokenIterator = struct {
     data: []const u8,
     pos: usize = 0,
     cached: ?Token = null,

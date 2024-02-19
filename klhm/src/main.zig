@@ -4,6 +4,7 @@ const print = std.debug.print;
 
 const compress = @import("compress.zig");
 const data = @import("data.zig");
+const tokens = @import("tokens.zig");
 
 const Commands = enum {
     assert,
@@ -85,145 +86,42 @@ const AttrMap = std.ComptimeStringMap(Attribute, .{
     .{ ":source", .source },
 });
 
-fn skip_to_level(str: []u8, start_idx: usize, start_level: usize, target_level: usize) ?usize {
+fn skip_to_level(
+    tokenIt: *tokens.TokenIterator,
+    start_level: usize,
+    target_level: usize,
+) ?usize {
     var level: usize = start_level;
-    var idx = start_idx;
 
-    var in_str: bool = false;
-    var in_symb: bool = false;
-    var in_comment: bool = false;
-    while (idx < str.len) : ({
-        idx += 1;
-    }) {
-        const chr = str[idx];
-        switch (chr) {
-            '\n' => {
-                if (in_comment) in_comment = false;
-            },
-            ';' => {
-                if (!(in_str or in_comment or in_symb)) in_comment = true;
-            },
-            '|' => {
-                if (in_comment or in_str) continue;
-                in_symb = !in_symb;
-            },
-            '"' => {
-                if (in_comment or in_symb) continue;
-                in_str = !in_str;
-            },
-            '(' => {
-                if (in_comment or in_symb or in_str) continue;
-                level += 1;
-                if (level == target_level)
-                    return idx + 1;
-            },
-            ')' => {
-                if (in_comment or in_symb or in_str) continue;
-                if (level == 0)
-                    return null;
-                level -= 1;
-                if (level == target_level)
-                    return idx + 1;
-            },
-            else => {},
-        }
+    while (true) {
+        if (tokenIt.next()) |token| {
+            switch (token.type) {
+                tokens.TokenType.Opening => {
+                    level += 1;
+                    if (level == target_level)
+                        return tokenIt.pos;
+                },
+                tokens.TokenType.Closing => {
+                    if (level == 0)
+                        return null;
+                    level -= 1;
+                    if (level == target_level)
+                        return tokenIt.pos;
+                },
+                else => {},
+            }
+        } else return null;
     }
     return null;
 }
 
-const span = struct { start: usize, end: usize };
-
-fn skip_whitespace(str: []const u8, start_idx: usize) usize {
-    var idx = start_idx;
-
-    var in_comment = false;
-    while (idx < str.len) : ({
-        idx += 1;
-    }) {
-        const char = str[idx];
-        if (char == ';') {
-            in_comment = true;
-            continue;
-        }
-        if (in_comment and char == '\n') {
-            in_comment = false;
-            continue;
-        }
-        if (!in_comment and !(char == 9 or char == 10 or char == 13 or char == 32)) {
-            break;
-        }
-    }
-    return idx;
-}
-
-// scans the next symbol (also covers numerals and attributes)
-fn get_symbol(str: []u8, start_idx: usize) span {
-    var idx = skip_whitespace(str, start_idx);
-    const cmd_start = idx;
-    while (idx < str.len) : ({
-        idx += 1;
-    }) {
-        const char = str[idx];
-        if (!(char == '~' or
-            char == '!' or
-            char == '@' or
-            char == '$' or
-            char == '%' or
-            char == '^' or
-            char == '&' or
-            char == '*' or
-            char == '_' or
-            char == '-' or
-            char == '+' or
-            char == '=' or
-            char == '<' or
-            char == '>' or
-            char == '.' or
-            char == '?' or
-            char == '/' or
-            char == ':' or
-            char == '.' or
-            (char >= '0' and char <= '9') or
-            (char >= 'a' and char <= 'z') or
-            (char >= 'A' and char <= 'Z')))
-            break;
-    }
-    return .{ .start = cmd_start, .end = idx };
-}
-
-// scans the next string or quoted symbol
-fn get_string(str: []u8, start_idx: usize) ?span {
-    var idx = skip_whitespace(str, start_idx);
-    var in_symb = false;
-    var in_str = false;
-    switch (str[idx]) {
-        '|' => {
-            in_symb = true;
-        },
-        '"' => {
-            in_str = true;
-        },
-        else => {
+fn get_string(tokenIt: *tokens.TokenIterator) ?[]const u8 {
+    if (tokenIt.next()) |token| {
+        if (token.type != tokens.TokenType.String)
             return null;
-        },
+        return token.span;
     }
-    idx += 1;
-    const cmd_start = idx;
-
-    while (idx < str.len) : ({
-        idx += 1;
-    }) {
-        const char = str[idx];
-        if (in_str and char == '"') {
-            // Escaped
-            if (idx < str.len - 1 and str[idx + 1] == '"')
-                continue;
-            break;
-        }
-        if (in_symb and char == '|')
-            break;
-    }
-    return .{ .start = cmd_start, .end = idx };
+    return null;
 }
 
 fn print_subproblem(
@@ -281,6 +179,8 @@ pub fn main() !u8 {
     );
     defer std.os.munmap(ptr);
 
+    var tokenIt = tokens.TokenIterator{ .data = ptr };
+
     var zstd = try compress.init();
     defer zstd.deinit();
 
@@ -293,123 +193,129 @@ pub fn main() !u8 {
     try top.intervals.append(0);
 
     var idx: usize = 0;
-    while (idx < ptr.len) {
-        idx = skip_to_level(ptr, idx, 0, 1) orelse break;
+    while (true) {
+        idx = skip_to_level(&tokenIt, 0, 1) orelse break;
         const level_start_idx = idx - 1;
 
-        const cmdSpan = get_symbol(ptr, idx);
-        const cmdStr = ptr[cmdSpan.start..cmdSpan.end];
+        if (tokenIt.next()) |token| {
+            if (CmdMap.get(token.span)) |cmd| {
+                switch (cmd) {
+                    .set_logic => {
+                        if (tokenIt.next()) |logicToken| {
+                            benchmarkData.logic = logicToken.span;
+                            idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                        } else break;
+                    },
+                    .set_info => {
+                        if (tokenIt.next()) |attrToken| {
+                            if (AttrMap.get(attrToken.span)) |attr| {
+                                switch (attr) {
+                                    .license => {
+                                        // TODO: special case for embedded license!
+                                        if (get_string(&tokenIt)) |x|
+                                            benchmarkData.license = x;
+                                    },
+                                    .category => {
+                                        if (get_string(&tokenIt)) |x|
+                                            benchmarkData.category = x;
+                                    },
+                                    .status => {
+                                        if (tokenIt.next()) |x| {
+                                            if (x.type != tokens.TokenType.Symbol)
+                                                break;
+                                            top.data.status = x.span;
+                                        } else break;
+                                    },
+                                    .source => {
+                                        if (get_string(&tokenIt)) |x|
+                                            benchmarkData.set_source(x);
+                                    },
+                                }
+                            }
+                        } else break;
+                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                    },
+                    .assert => {
+                        top.data.assertsCount += 1;
+                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                    },
+                    .declare_fun, .declare_const => {
+                        top.data.declareFunCount += 1;
+                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                    },
+                    .declare_sort => {
+                        top.data.declareSortCount += 1;
+                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                    },
+                    .define_fun => {
+                        top.data.defineFunCount += 1;
+                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                    },
+                    .define_sort => {
+                        top.data.defineSortCount += 1;
+                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                    },
+                    .push => {
+                        const old_idx = top.intervals.items[top.intervals.items.len - 1];
+                        top.data.normalizedSize += (level_start_idx - old_idx);
 
-        if (CmdMap.get(cmdStr)) |cmd| {
-            switch (cmd) {
-                .set_logic => {
-                    const logicSpan = get_symbol(ptr, cmdSpan.end);
-                    benchmarkData.logic = ptr[logicSpan.start..logicSpan.end];
-                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
-                },
-                .set_info => {
-                    const attrSpan = get_symbol(ptr, cmdSpan.end);
-                    if (AttrMap.get(ptr[attrSpan.start..attrSpan.end])) |attr| {
-                        switch (attr) {
-                            .license => {
-                                // TODO: special case for embedded license!
-                                if (get_string(ptr, attrSpan.end)) |x|
-                                    benchmarkData.license = ptr[x.start..x.end];
-                            },
-                            .category => {
-                                if (get_string(ptr, attrSpan.end)) |x|
-                                    benchmarkData.category = ptr[x.start..x.end];
-                            },
-                            .status => {
-                                const x = get_symbol(ptr, attrSpan.end);
-                                top.data.status = ptr[x.start..x.end];
-                            },
-                            .source => {
-                                if (get_string(ptr, attrSpan.end)) |x|
-                                    benchmarkData.set_source(ptr[x.start..x.end]);
-                            },
-                        }
-                    }
-                    // TODO: the skip starts too early
-                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
-                },
-                .assert => {
-                    top.data.assertsCount += 1;
-                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
-                },
-                .declare_fun, .declare_const => {
-                    top.data.declareFunCount += 1;
-                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
-                },
-                .declare_sort => {
-                    top.data.declareSortCount += 1;
-                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
-                },
-                .define_fun => {
-                    top.data.defineFunCount += 1;
-                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
-                },
-                .define_sort => {
-                    top.data.defineSortCount += 1;
-                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
-                },
-                .push => {
-                    const old_idx = top.intervals.items[top.intervals.items.len - 1];
-                    top.data.normalizedSize += (level_start_idx - old_idx);
+                        try top.intervals.append(level_start_idx);
 
-                    try top.intervals.append(level_start_idx);
+                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
 
-                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
+                        const new = data.Scope{
+                            .intervals = std.ArrayList(usize).init(allocator),
+                            .data = top.data,
+                        };
+                        try scopes.append(new);
+                        top = &scopes.items[scopes.items.len - 1];
+                        try top.intervals.append(idx);
+                    },
+                    .pop => {
+                        try top.intervals.append(level_start_idx);
+                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                        top.intervals.deinit();
+                        _ = scopes.pop();
+                        top = &scopes.items[scopes.items.len - 1];
+                        try top.intervals.append(idx);
+                    },
+                    .check_sat, .check_sat_assuming => {
+                        const old_idx = top.intervals.items[top.intervals.items.len - 1];
 
-                    const new = data.Scope{
-                        .intervals = std.ArrayList(usize).init(allocator),
-                        .data = top.data,
-                    };
-                    try scopes.append(new);
-                    top = &scopes.items[scopes.items.len - 1];
-                    try top.intervals.append(idx);
-                },
-                .pop => {
-                    try top.intervals.append(level_start_idx);
-                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
-                    top.intervals.deinit();
-                    _ = scopes.pop();
-                    top = &scopes.items[scopes.items.len - 1];
-                    try top.intervals.append(idx);
-                },
-                .check_sat, .check_sat_assuming => {
-                    const old_idx = top.intervals.items[top.intervals.items.len - 1];
+                        try top.intervals.append(level_start_idx);
+                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
 
-                    try top.intervals.append(level_start_idx);
-                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
+                        benchmarkData.subbenchmarkCount += 1;
+                        // With check-sat we have to use the idx after the command,
+                        // because we want to take its size into account.
+                        top.data.normalizedSize += (idx - old_idx);
+                        top.data.compressedSize = try zstd.compressedSizeIntervalls(
+                            ptr,
+                            &scopes,
+                            ptr[level_start_idx..idx],
+                        );
 
-                    benchmarkData.subbenchmarkCount += 1;
-                    // With check-sat we have to use the idx after the command,
-                    // because we want to take its size into account.
-                    top.data.normalizedSize += (idx - old_idx);
-                    top.data.compressedSize = try zstd.compressedSizeIntervalls(
-                        ptr,
-                        &scopes,
-                        ptr[level_start_idx..idx],
-                    );
+                        try top.data.print(stdout);
+                        // try print_subproblem(stdout, ptr, &scopes, ptr[level_start_idx..idx]);
+                        _ = try stdout.write("\n");
+                        try bw.flush();
 
-                    try top.data.print(stdout);
-                    // try print_subproblem(stdout, ptr, &scopes, ptr[level_start_idx..idx]);
-                    _ = try stdout.write("\n");
-                    try bw.flush();
-
-                    try top.intervals.append(idx);
-                },
-                .exit => {
-                    break;
-                },
-                else => {
-                    idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
-                },
+                        try top.intervals.append(idx);
+                    },
+                    .exit => {
+                        break;
+                    },
+                    else => {
+                        idx = skip_to_level(&tokenIt, 1, 0) orelse break;
+                    },
+                }
+            } else {
+                // Unkown command, do nothing
+                idx = skip_to_level(&tokenIt, 1, 0) orelse break;
             }
         } else {
-            // Unkown command, do nothing
-            idx = skip_to_level(ptr, cmdSpan.end, 1, 0) orelse break;
+            print("Token Error!", .{});
+            return 1;
         }
     }
 
