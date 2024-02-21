@@ -103,6 +103,8 @@ pub const TokenIterator = struct {
         while (self.pos < self.data.len) : ({
             self.pos += 1;
         }) {
+            // TODO: this might be incomplete and lead to hangs:
+            // everything that is not a whitespace and is not matched here.
             const char = self.data[self.pos];
             if (!(char == '~' or
                 char == '!' or
@@ -123,6 +125,7 @@ pub const TokenIterator = struct {
                 char == '/' or
                 char == ':' or
                 char == '.' or
+                char == '#' or // Bitvector constant start
                 (char >= '0' and char <= '9') or
                 (char >= 'a' and char <= 'z') or
                 (char >= 'A' and char <= 'Z')))

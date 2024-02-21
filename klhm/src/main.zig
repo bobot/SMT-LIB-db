@@ -122,6 +122,34 @@ fn skip_to_level(
     return Errors.OutOfTokens;
 }
 
+// Skips over an term (returns to the same level), and updates benchmark data
+fn pass_term(
+    tokenIt: *tokens.TokenIterator,
+    subBench: *data.SubBenchmarkData,
+) !usize {
+    var level: usize = 0;
+
+    while (true) {
+        if (tokenIt.peek()) |token| {
+            switch (token.type) {
+                tokens.TokenType.Opening => {
+                    level += 1;
+                },
+                tokens.TokenType.Closing => {
+                    if (level > subBench.maxTermDepth)
+                        subBench.maxTermDepth = level;
+                    if (level == 0)
+                        return tokenIt.pos;
+                    level -= 1;
+                },
+                else => {},
+            }
+            _ = tokenIt.next(); // consume
+        } else return Errors.OutOfTokens;
+    }
+    return Errors.OutOfTokens;
+}
+
 fn get_string(tokenIt: *tokens.TokenIterator) ![]const u8 {
     if (tokenIt.next()) |token| {
         if (token.type != tokens.TokenType.String)
@@ -201,7 +229,9 @@ pub fn main() !u8 {
 
     var idx: usize = 0;
     while (true) {
-        idx = try skip_to_level(&tokenIt, 0, 1);
+        idx = skip_to_level(&tokenIt, 0, 1) catch {
+            break;
+        };
         const level_start_idx = idx - 1;
 
         if (tokenIt.next()) |token| {
@@ -244,6 +274,7 @@ pub fn main() !u8 {
                     },
                     .assert => {
                         top.data.assertsCount += 1;
+                        _ = try pass_term(&tokenIt, &top.data);
                         idx = try skip_to_level(&tokenIt, 1, 0);
                     },
                     .declare_fun => {
@@ -273,12 +304,21 @@ pub fn main() !u8 {
                         if (tokenIt.next()) |tkn| {
                             if (tkn.type == tokens.TokenType.Closing) {
                                 top.data.constantFunCount += 1;
-                                idx = try skip_to_level(&tokenIt, 1, 0);
                             } else {
                                 top.data.defineFunCount += 1;
-                                idx = try skip_to_level(&tokenIt, 2, 0);
+                                idx = try skip_to_level(&tokenIt, 2, 1);
                             }
                         } else return Errors.OutOfTokens;
+                        // Return sort of the defined function
+                        if (tokenIt.next()) |tkn| {
+                            // Complicated sort like bitvector
+                            if (tkn.type == tokens.TokenType.Opening) {
+                                _ = try skip_to_level(&tokenIt, 1, 0);
+                            }
+                            // Normal case (Int, Real, etc.)
+                        }
+                        _ = try pass_term(&tokenIt, &top.data);
+                        idx = try skip_to_level(&tokenIt, 1, 0);
                     },
                     .define_sort => {
                         top.data.defineSortCount += 1;
