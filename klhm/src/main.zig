@@ -93,26 +93,20 @@ const AttrMap = std.ComptimeStringMap(Attribute, .{
     .{ ":source", .source },
 });
 
-fn skip_to_level(
+fn skip_rest_of_term(
     tokenIt: *tokens.TokenIterator,
-    start_level: usize,
-    target_level: usize,
 ) !usize {
-    var level: usize = start_level;
+    var level: usize = 1;
 
     while (true) {
         if (tokenIt.next()) |token| {
             switch (token.type) {
                 tokens.TokenType.Opening => {
                     level += 1;
-                    if (level == target_level)
-                        return tokenIt.pos;
                 },
                 tokens.TokenType.Closing => {
-                    if (level == 0)
-                        return Errors.ImbalancedParentheses;
                     level -= 1;
-                    if (level == target_level)
+                    if (level == 0)
                         return tokenIt.pos;
                 },
                 else => {},
@@ -122,15 +116,15 @@ fn skip_to_level(
     return Errors.OutOfTokens;
 }
 
-// Skips over an term (returns to the same level), and updates benchmark data
-fn pass_term(
+// Reads an term (returns to the same level), and updates benchmark data
+fn read_term(
     tokenIt: *tokens.TokenIterator,
     subBench: *data.SubBenchmarkData,
 ) !usize {
     var level: usize = 0;
 
     while (true) {
-        if (tokenIt.peek()) |token| {
+        if (tokenIt.next()) |token| {
             switch (token.type) {
                 tokens.TokenType.Opening => {
                     level += 1;
@@ -138,13 +132,15 @@ fn pass_term(
                 tokens.TokenType.Closing => {
                     if (level > subBench.maxTermDepth)
                         subBench.maxTermDepth = level;
+                    level -= 1;
                     if (level == 0)
                         return tokenIt.pos;
-                    level -= 1;
                 },
-                else => {},
+                else => {
+                    if (level == 0)
+                        return tokenIt.pos;
+                },
             }
-            _ = tokenIt.next(); // consume
         } else return Errors.OutOfTokens;
     }
     return Errors.OutOfTokens;
@@ -229,9 +225,11 @@ pub fn main() !u8 {
 
     var idx: usize = 0;
     while (true) {
-        idx = skip_to_level(&tokenIt, 0, 1) catch {
-            break;
-        };
+        if (tokenIt.next()) |token| {
+            if (token.type != tokens.TokenType.Opening)
+                return Errors.UnexpectedToken;
+        } else break;
+        idx = tokenIt.pos;
         const level_start_idx = idx - 1;
 
         if (tokenIt.next()) |token| {
@@ -240,7 +238,7 @@ pub fn main() !u8 {
                     .set_logic => {
                         if (tokenIt.next()) |logicToken| {
                             benchmarkData.logic = logicToken.span;
-                            idx = try skip_to_level(&tokenIt, 1, 0);
+                            idx = try skip_rest_of_term(&tokenIt);
                         } else break;
                     },
                     .set_info => {
@@ -270,12 +268,12 @@ pub fn main() !u8 {
                                 }
                             }
                         } else break;
-                        idx = try skip_to_level(&tokenIt, 1, 0);
+                        idx = try skip_rest_of_term(&tokenIt);
                     },
                     .assert => {
                         top.data.assertsCount += 1;
-                        _ = try pass_term(&tokenIt, &top.data);
-                        idx = try skip_to_level(&tokenIt, 1, 0);
+                        _ = try read_term(&tokenIt, &top.data);
+                        idx = try skip_rest_of_term(&tokenIt);
                     },
                     .declare_fun => {
                         _ = tokenIt.next(); // name
@@ -283,20 +281,20 @@ pub fn main() !u8 {
                         if (tokenIt.next()) |tkn| {
                             if (tkn.type == tokens.TokenType.Closing) {
                                 top.data.declareConstCount += 1;
-                                idx = try skip_to_level(&tokenIt, 1, 0);
                             } else {
                                 top.data.declareFunCount += 1;
-                                idx = try skip_to_level(&tokenIt, 2, 0);
+                                idx = try skip_rest_of_term(&tokenIt);
                             }
+                            idx = try skip_rest_of_term(&tokenIt);
                         } else break;
                     },
                     .declare_const => {
                         top.data.declareConstCount += 1;
-                        idx = try skip_to_level(&tokenIt, 1, 0);
+                        idx = try skip_rest_of_term(&tokenIt);
                     },
                     .declare_sort => {
                         top.data.declareSortCount += 1;
-                        idx = try skip_to_level(&tokenIt, 1, 0);
+                        idx = try skip_rest_of_term(&tokenIt);
                     },
                     .define_fun => {
                         _ = tokenIt.next(); // name
@@ -306,23 +304,18 @@ pub fn main() !u8 {
                                 top.data.constantFunCount += 1;
                             } else {
                                 top.data.defineFunCount += 1;
-                                idx = try skip_to_level(&tokenIt, 2, 1);
+                                idx = try skip_rest_of_term(&tokenIt);
                             }
                         } else return Errors.OutOfTokens;
                         // Return sort of the defined function
-                        if (tokenIt.next()) |tkn| {
-                            // Complicated sort like bitvector
-                            if (tkn.type == tokens.TokenType.Opening) {
-                                _ = try skip_to_level(&tokenIt, 1, 0);
-                            }
-                            // Normal case (Int, Real, etc.)
-                        }
-                        _ = try pass_term(&tokenIt, &top.data);
-                        idx = try skip_to_level(&tokenIt, 1, 0);
+                        _ = try read_term(&tokenIt, &top.data);
+                        // Definition
+                        _ = try read_term(&tokenIt, &top.data);
+                        idx = try skip_rest_of_term(&tokenIt);
                     },
                     .define_sort => {
                         top.data.defineSortCount += 1;
-                        idx = try skip_to_level(&tokenIt, 1, 0);
+                        idx = try skip_rest_of_term(&tokenIt);
                     },
                     .push => {
                         const old_idx = top.intervals.items[top.intervals.items.len - 1];
@@ -330,7 +323,7 @@ pub fn main() !u8 {
 
                         try top.intervals.append(level_start_idx);
 
-                        idx = try skip_to_level(&tokenIt, 1, 0);
+                        idx = try skip_rest_of_term(&tokenIt);
 
                         const new = data.Scope{
                             .intervals = std.ArrayList(usize).init(allocator),
@@ -342,7 +335,7 @@ pub fn main() !u8 {
                     },
                     .pop => {
                         try top.intervals.append(level_start_idx);
-                        idx = try skip_to_level(&tokenIt, 1, 0);
+                        idx = try skip_rest_of_term(&tokenIt);
                         top.intervals.deinit();
                         _ = scopes.pop();
                         top = &scopes.items[scopes.items.len - 1];
@@ -352,7 +345,7 @@ pub fn main() !u8 {
                         const old_idx = top.intervals.items[top.intervals.items.len - 1];
 
                         try top.intervals.append(level_start_idx);
-                        idx = try skip_to_level(&tokenIt, 1, 0);
+                        idx = try skip_rest_of_term(&tokenIt);
 
                         benchmarkData.subbenchmarkCount += 1;
                         // With check-sat we have to use the idx after the command,
@@ -375,12 +368,12 @@ pub fn main() !u8 {
                         break;
                     },
                     else => {
-                        idx = try skip_to_level(&tokenIt, 1, 0);
+                        idx = try skip_rest_of_term(&tokenIt);
                     },
                 }
             } else {
                 // Unkown command, do nothing
-                idx = try skip_to_level(&tokenIt, 1, 0);
+                idx = try skip_rest_of_term(&tokenIt);
             }
         } else {
             return Errors.OutOfTokens;
