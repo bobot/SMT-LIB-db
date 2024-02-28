@@ -5,6 +5,7 @@ const print = std.debug.print;
 const compress = @import("compress.zig");
 const data = @import("data.zig");
 const tokens = @import("tokens.zig");
+const symbols = @import("symbols.zig").symbol_map;
 
 const Errors = error{
     ImbalancedParentheses,
@@ -133,6 +134,13 @@ fn read_term(
                     if (level > subBench.maxTermDepth)
                         subBench.maxTermDepth = level;
                     level -= 1;
+                    if (level == 0)
+                        return tokenIt.pos;
+                },
+                tokens.TokenType.Symbol => {
+                    if (symbols.get(token.span)) |idx| {
+                        subBench.symbolFrequency[idx] += 1;
+                    }
                     if (level == 0)
                         return tokenIt.pos;
                 },

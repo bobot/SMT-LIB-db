@@ -1,4 +1,5 @@
 const std = @import("std");
+const symbols = @import("symbols.zig").symbol_map;
 
 pub const BenchmarkData = struct {
     logic: ?[]const u8 = null,
@@ -109,6 +110,7 @@ pub const SubBenchmarkData = struct {
     defineSortCount: usize = 0,
     maxTermDepth: usize = 0,
     status: ?[]const u8 = null,
+    symbolFrequency: [symbols.kvs.len]usize = [_]usize{0} ** symbols.kvs.len,
 
     pub fn print(self: SubBenchmarkData, out: anytype) !void {
         const options = std.json.StringifyOptions{ .whitespace = .indent_2 };
