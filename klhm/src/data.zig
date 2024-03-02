@@ -17,7 +17,7 @@ pub const BenchmarkData = struct {
     isIncremental: bool = false,
 
     pub fn print(self: BenchmarkData, out: anytype) !void {
-        const options = std.json.StringifyOptions{ .whitespace = .indent_2 };
+        const options = std.json.StringifyOptions{ .whitespace = .minified };
         try std.json.stringify(self, options, out);
     }
 
@@ -115,7 +115,7 @@ pub const SubBenchmarkData = struct {
     symbolFrequency: [symbols.kvs.len]usize = [_]usize{0} ** symbols.kvs.len,
 
     pub fn print(self: SubBenchmarkData, out: anytype) !void {
-        const options = std.json.StringifyOptions{ .whitespace = .indent_2 };
+        const options = std.json.StringifyOptions{ .whitespace = .minified };
         try std.json.stringify(self, options, out);
     }
 };
