@@ -255,9 +255,15 @@ pub fn main() !u8 {
                             if (AttrMap.get(attrToken.span)) |attr| {
                                 switch (attr) {
                                     .license => {
-                                        // TODO: special case for embedded license!
                                         const str = try get_string(&tokenIt);
-                                        benchmarkData.license = str;
+                                        if (str.len > 150) {
+                                            // TODO
+                                            // This is a bad hack, There should be
+                                            // a proper detection routine here.
+                                            benchmarkData.license = "CMU SoSy Lab";
+                                        } else {
+                                            benchmarkData.license = str;
+                                        }
                                     },
                                     .category => {
                                         const str = try get_string(&tokenIt);
@@ -320,6 +326,51 @@ pub fn main() !u8 {
                         _ = try read_term(&tokenIt, &top.data);
                         // Definition
                         _ = try read_term(&tokenIt, &top.data);
+                        idx = try skip_rest_of_term(&tokenIt);
+                    },
+                    .define_fun_rec => {
+                        top.data.defineFunRecCount += 1;
+                        _ = tokenIt.next(); // name
+                        _ = try read_term(&tokenIt, &top.data); // In
+                        _ = try read_term(&tokenIt, &top.data); // out sort
+                        _ = try read_term(&tokenIt, &top.data); // Definition
+                        idx = try skip_rest_of_term(&tokenIt);
+                    },
+                    .define_funs_rec => {
+                        var count: usize = 0;
+                        _ = tokenIt.next(); // Opening (
+                        while (true) {
+                            if (tokenIt.peek()) |tkn| {
+                                if (tkn.type == tokens.TokenType.Closing) {
+                                    _ = tokenIt.next();
+                                    break;
+                                } else {
+                                    _ = try read_term(&tokenIt, &top.data); //Signature
+                                    count += 1;
+                                }
+                            } else return Errors.OutOfTokens;
+                        }
+                        top.data.defineFunRecCount += count;
+                        _ = try read_term(&tokenIt, &top.data); //Definition
+                        idx = try skip_rest_of_term(&tokenIt);
+                    },
+                    .declare_datatype => {
+                        top.data.declareDatatypeCount += 1;
+                        idx = try skip_rest_of_term(&tokenIt);
+                    },
+                    .declare_datatypes => {
+                        _ = tokenIt.next(); // Opening (
+                        while (true) {
+                            if (tokenIt.peek()) |tkn| {
+                                if (tkn.type == tokens.TokenType.Closing) {
+                                    _ = tokenIt.next();
+                                    break;
+                                } else {
+                                    _ = try read_term(&tokenIt, &top.data); //Signature
+                                    top.data.declareDatatypeCount += 1;
+                                }
+                            } else return Errors.OutOfTokens;
+                        }
                         idx = try skip_rest_of_term(&tokenIt);
                     },
                     .define_sort => {
