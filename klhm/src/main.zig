@@ -12,6 +12,7 @@ const Errors = error{
     UnexpectedToken,
     OutOfTokens,
     UnsupportedPlatform,
+    UnsupportedCmd,
 };
 
 const Commands = enum {
@@ -331,22 +332,41 @@ pub fn main() !u8 {
 
                         try top.intervals.append(level_start_idx);
 
+                        if (tokenIt.next()) |tkn| {
+                            if (tkn.type == tokens.TokenType.Symbol) {
+                                const num = try std.fmt.parseInt(usize, tkn.span, 10);
+                                for (0..num) |_| {
+                                    const new = data.Scope{
+                                        .intervals = std.ArrayList(usize).init(allocator),
+                                        .data = top.data,
+                                    };
+                                    try scopes.append(new);
+                                    top = &scopes.items[scopes.items.len - 1];
+                                }
+                            } else {
+                                return Errors.UnexpectedToken;
+                            }
+                        } else return Errors.OutOfTokens;
                         idx = try skip_rest_of_term(&tokenIt);
-
-                        const new = data.Scope{
-                            .intervals = std.ArrayList(usize).init(allocator),
-                            .data = top.data,
-                        };
-                        try scopes.append(new);
-                        top = &scopes.items[scopes.items.len - 1];
                         try top.intervals.append(idx);
                     },
                     .pop => {
                         try top.intervals.append(level_start_idx);
+
+                        if (tokenIt.next()) |tkn| {
+                            if (tkn.type == tokens.TokenType.Symbol) {
+                                const num = try std.fmt.parseInt(usize, tkn.span, 10);
+                                for (0..num) |_| {
+                                    top.intervals.deinit();
+                                    _ = scopes.pop();
+                                    top = &scopes.items[scopes.items.len - 1];
+                                }
+                            } else {
+                                return Errors.UnexpectedToken;
+                            }
+                        } else return Errors.OutOfTokens;
+
                         idx = try skip_rest_of_term(&tokenIt);
-                        top.intervals.deinit();
-                        _ = scopes.pop();
-                        top = &scopes.items[scopes.items.len - 1];
                         try top.intervals.append(idx);
                     },
                     .check_sat, .check_sat_assuming => {
@@ -374,6 +394,9 @@ pub fn main() !u8 {
                     },
                     .exit => {
                         break;
+                    },
+                    .reset_assertions => {
+                        return Errors.UnsupportedCmd;
                     },
                     else => {
                         idx = try skip_rest_of_term(&tokenIt);
