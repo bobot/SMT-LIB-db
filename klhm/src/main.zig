@@ -191,6 +191,7 @@ pub fn main() !u8 {
     const stdout_file = std.io.getStdOut().writer();
     var bw = std.io.bufferedWriter(stdout_file);
     const stdout = bw.writer();
+    _ = try stdout.write("[\n");
 
     if (.windows == @import("builtin").os.tag) {
         print("Windows is not supported.\n", .{});
@@ -438,7 +439,7 @@ pub fn main() !u8 {
 
                         try top.data.print(stdout);
                         // try print_subproblem(stdout, ptr, &scopes, ptr[level_start_idx..idx]);
-                        _ = try stdout.write("\n");
+                        _ = try stdout.write(",\n");
                         try bw.flush();
 
                         try top.intervals.append(idx);
@@ -465,7 +466,7 @@ pub fn main() !u8 {
     benchmarkData.isIncremental = benchmarkData.subbenchmarkCount > 1;
     benchmarkData.compressedSize = try zstd.compressedSizeSlice(ptr);
     try benchmarkData.print(stdout);
-    _ = try stdout.write("\n");
+    _ = try stdout.write("\n]\n");
     try bw.flush();
     return 0;
 }

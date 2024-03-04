@@ -21,9 +21,9 @@ The compilied binary is in `./zig-out/bin/klhm`.
 
 ## Usage
 
-Klammerhammer has no options.  It takes the path of an SMT-LIB file as input,
-and produces a list of raw JSON objects.  The objects are not pretty-printed.
-Use something like `jq` to get a human readable version.
+Klammerhammer has no options.  It takes the path of an SMT-LIB file as
+input, and produces a JSON list with JSON objects.  The objects are not
+pretty-printed.  Use something like `jq` to get a human readable version.
 
 All but the last object correspond to "sub-benchmarks":  `check-sat` calls.
 The are printed in order of the `check-sat` calls and take `push` and `pop`
