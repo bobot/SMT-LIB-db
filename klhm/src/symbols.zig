@@ -12,9 +12,10 @@ const symbols = blk: {
     var symbol_list: []const map_type = &.{};
     var symbol_iterator = std.mem.tokenize(u8, symbols_file, "\n");
     while (symbol_iterator.next()) |symbol| {
-        if (symbol[0] != ';')
+        if (symbol[0] != ';') {
             symbol_list = symbol_list ++ &[_]map_type{.{ symbol, idx }};
-        idx += 1;
+            idx += 1;
+        }
     }
 
     break :blk symbol_list;
