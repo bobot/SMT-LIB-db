@@ -18,26 +18,10 @@ connection.execute("PRAGMA foreign_keys = ON;")
 connection.execute('PRAGMA journal_mode=wal')
 
 connection.execute(
-    """CREATE TABLE SyntacticFeatures(
-    id INTEGER PRIMARY KEY,
-    name TEXT);"""
-)
-
-connection.execute(
-    """CREATE TABLE SyntacticFeatureCounts(
-    feature INT,
-    benchmark INT,
-    count INT NOT NULL,
-    FOREIGN KEY(feature) REFERENCES SyntacticFeatures(id)
-    FOREIGN KEY(benchmark) REFERENCES Benchmarks(id)
-);"""
-)
-
-connection.execute(
     """CREATE TABLE TargetSolvers(
-    subbenchmark INT,
+    benchmark INT,
     solverVariant INT,
-    FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
+    FOREIGN KEY(benchmark) REFERENCES Benchmarks(id)
     FOREIGN KEY(solverVariant) REFERENCES SolverVaraiants(id)
     );"""
 )

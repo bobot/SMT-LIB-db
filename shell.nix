@@ -20,6 +20,7 @@ pkgs.stdenv.mkDerivation {
       sqlitebrowser
       zig
       zstd
+      black
   ];
 
 }

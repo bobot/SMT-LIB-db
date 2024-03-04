@@ -2,6 +2,7 @@ import re
 import datetime
 import subprocess
 import mmap
+import json
 
 
 def setup_benchmarks(connection):
@@ -33,10 +34,18 @@ def setup_benchmarks(connection):
         benchmark INT,
         normalizedSize INT,
         compressedSize INT,
+        assertsCount INT,
+        declareFunCount INT,
+        declareConstCount INT,
+        declareSortCount INT,
         defineFunCount INT,
+        defineFunRecCount INT,
+        constantFunCount INT,
+        defineSortCount INT
+        declareDatatypeCount INT,
         maxTermDepth INT,
-        numSexps INT,
-        numPatterns INT,
+        status TEXT,
+
         FOREIGN KEY(benchmark) REFERENCES Benchmarks(id)
     );"""
     )
@@ -51,6 +60,36 @@ def setup_benchmarks(connection):
         UNIQUE(folderName)
     );"""
     )
+
+    connection.execute(
+        """CREATE TABLE Symbols(
+        id INTEGER PRIMARY KEY,
+        name TEXT);"""
+    )
+
+    connection.execute(
+        """CREATE TABLE SymbolsCounts(
+        symbol INT,
+        benchmark INT,
+        count INT NOT NULL,
+        FOREIGN KEY(symbol) REFERENCES Symbols(id)
+        FOREIGN KEY(benchmark) REFERENCES Benchmarks(id)
+    );"""
+    )
+
+    with open("./klhm/src/smtlib-symbols", "r") as symbolFile:
+        for line in symbolFile:
+            if line[0] == ";":
+                continue
+            print(line.strip())
+            connection.execute(
+                """
+                INSERT OR IGNORE INTO Symbols(name)
+                VALUES(?);
+                """,
+                (line.strip(),),
+            )
+        connection.commit()
 
 
 def parse_set(name):
@@ -84,6 +123,8 @@ def calculate_benchmark_count(connection):
 
 
 def get_license_id(connection, license):
+    if license == None:
+        license = "https://creativecommons.org/licenses/by/4.0/"
     license = license.replace("http:", "https:")
     for row in connection.execute(
         "SELECT id FROM Licenses WHERE name=? OR link=? OR spdxIdentifier=?",
@@ -143,55 +184,27 @@ def add_benchmark(connection, benchmark):
         ):
             setId = row[0]
 
-    size = benchmark.stat().st_size
-
-    cc = subprocess.run(
-        f"gzip -c {benchmark} | wc -c",
+    klhm = subprocess.run(
+        f"./klhm/zig-out/bin/klhm {benchmark}",
         shell=True,
         check=True,
-        capture_output=True,
+        stdout=subprocess.PIPE,
         text=True,
     )
-    compressedSize = int(cc.stdout)
 
-    with open(benchmark, "rb") as f:
-        mm = mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ)
+    klhmData = json.loads(klhm.stdout)
+    subbenchmarkObjs = klhmData[0:-1]
+    benchmarkObj = klhmData[-1]
 
-        licenseRegex = re.compile(b'\(\s*set-info\s*:license\s*"([^"]+)"\s*\)')
-        embeddedLicenseRegex = re.compile(b"\(\s*set-info\s*:license\s*\|")
-        categoryRegex = re.compile(b'\(\s*set-info\s*:category\s*"([a-zA-Z]+)"\s*\)')
-        # TODO: handle check-sat-assumption
-        checksatRegex = re.compile(b"\(\s*check-sat\s*\)")
+    licenseId = get_license_id(connection, benchmarkObj["license"])
 
-        matchResult = re.search(licenseRegex, mm)
-        if not matchResult:
-            matchResult = re.search(embeddedLicenseRegex, mm)
-            if not matchResult:
-                license = None
-            license = "CMU SoSy Lab"
-        else:
-            license = matchResult.group(1).decode("utf-8")
+    generatedOn = None
+    try:
+        generatedOn = datetime.datetime.fromisoformat(benchmarkObj["generatedOn"])
+    except (ValueError, TypeError):
+        pass
 
-        licenseId = get_license_id(connection, license)
-
-        matchResult = re.search(categoryRegex, mm)
-        if not matchResult:
-            raise Exception("Could not match category.")
-        category = matchResult.group(1).decode("utf-8")
-
-        numChecksats = len(re.findall(checksatRegex, mm))
-        if numChecksats == 0:
-            raise Exception("Could not find any check-sat commands.")
-
-        mm.close()
-
-    # The following are in the metadata header and might be tricky to parse:
-    # generatedOn
-    # generatedBy
-    # description
-    # generator
-    # application
-
+    # TODO: parse target solver
     connection.execute(
         """
         INSERT INTO Benchmarks(filename,
@@ -201,30 +214,49 @@ def add_benchmark(connection, benchmark):
                                size,
                                compressedSize,
                                license,
+                               generatedOn,
+                               generatedBy,
+                               generator,
+                               application,
+                               description,
                                category,
                                subbenchmarkCount)
-        VALUES(?,?,?,?,?,?,?,?,?);
+        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?);
         """,
         (
             fileName,
             setId,
-            logic,
-            isIncremental,
-            size,
-            compressedSize,
+            benchmarkObj["logic"],
+            benchmarkObj["isIncremental"],
+            benchmarkObj["size"],
+            benchmarkObj["compressedSize"],
             licenseId,
-            category,
-            numChecksats,
+            generatedOn,
+            benchmarkObj["generatedBy"],
+            benchmarkObj["generator"],
+            benchmarkObj["application"],
+            benchmarkObj["description"],
+            benchmarkObj["category"],
+            benchmarkObj["subbenchmarkCount"],
         ),
     )
     connection.commit()
+    benchmarkId = None
+    for row in connection.execute(
+        "SELECT id FROM Benchmarks WHERE fileName=? AND benchmarkSet=? AND logic=?",
+        (fileName, setId, benchmarkObj["logic"]),
+    ):
+        benchmarkId = row[0]
+    print(benchmarkId)
 
 
-def get_benchmark_id(connection, fullFilename, isIncremental = None, logic = None, setFoldername = None):
+def get_benchmark_id(
+    connection, fullFilename, isIncremental=None, logic=None, setFoldername=None
+):
     """
     Gets the id of a benchmark from a benchmark filepath.  If all optional arguments are None then the
     path must have the form "[non-]incremental/LOGIC/SETFOLDERNAME/BENCHMARKPATH"
-    
+
     If an optional argument is not None, the corresponding component must be omitted from the path.
     Furthermore, if any of those arguments is not None, the preceding arguments must not be None.
     Hence, if `logic="QF_UF"` then `isIncremental` must be set and `fullFilename` is of the form
@@ -236,25 +268,25 @@ def get_benchmark_id(connection, fullFilename, isIncremental = None, logic = Non
             isIncremental = False
         else:
             isIncremental = True
-        fullFilename = fullFilename[slashIdx+1:]
+        fullFilename = fullFilename[slashIdx + 1 :]
 
     if not logic:
         slashIdx = fullFilename.find("/")
         logic = fullFilename[:slashIdx]
-        fullFilename = fullFilename[slashIdx+1:]
-    
+        fullFilename = fullFilename[slashIdx + 1 :]
+
     if not setFoldername:
         slashIdx = fullFilename.find("/")
         setFoldername = fullFilename[:slashIdx]
-        fullFilename = fullFilename[slashIdx+1:]
+        fullFilename = fullFilename[slashIdx + 1 :]
 
     benchmarkId = None
     for row in connection.execute(
         """
         SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Sets ON Sets.Id = Benchmarks.benchmarkSet
             WHERE filename=? AND logic=? AND Sets.folderName=?
-        """, (fullFilename, logic, setFoldername)
+        """,
+        (fullFilename, logic, setFoldername),
     ):
         benchmarkId = row[0]
     return benchmarkId
-
