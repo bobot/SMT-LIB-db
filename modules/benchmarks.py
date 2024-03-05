@@ -32,6 +32,7 @@ def setup_benchmarks(connection):
         """CREATE TABLE Subbenchmarks(
         id INTEGER PRIMARY KEY,
         benchmark INT,
+        number INT,
         normalizedSize INT,
         compressedSize INT,
         assertsCount INT,
@@ -41,7 +42,7 @@ def setup_benchmarks(connection):
         defineFunCount INT,
         defineFunRecCount INT,
         constantFunCount INT,
-        defineSortCount INT
+        defineSortCount INT,
         declareDatatypeCount INT,
         maxTermDepth INT,
         status TEXT,
@@ -61,34 +62,39 @@ def setup_benchmarks(connection):
     );"""
     )
 
+    # id is declared INT to force it to not be an alias to rowid
     connection.execute(
         """CREATE TABLE Symbols(
-        id INTEGER PRIMARY KEY,
+        id INT PRIMARY KEY,
         name TEXT);"""
     )
 
     connection.execute(
         """CREATE TABLE SymbolsCounts(
         symbol INT,
-        benchmark INT,
+        subbenchmark INT,
         count INT NOT NULL,
         FOREIGN KEY(symbol) REFERENCES Symbols(id)
-        FOREIGN KEY(benchmark) REFERENCES Benchmarks(id)
+        FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
     );"""
     )
 
     with open("./klhm/src/smtlib-symbols", "r") as symbolFile:
+        count = 1
         for line in symbolFile:
             if line[0] == ";":
                 continue
-            print(line.strip())
             connection.execute(
                 """
-                INSERT OR IGNORE INTO Symbols(name)
-                VALUES(?);
+                INSERT OR IGNORE INTO Symbols(id,name)
+                VALUES(?,?);
                 """,
-                (line.strip(),),
+                (
+                    count,
+                    line.strip(),
+                ),
             )
+            count = count + 1
         connection.commit()
 
 
@@ -247,7 +253,66 @@ def add_benchmark(connection, benchmark):
         (fileName, setId, benchmarkObj["logic"]),
     ):
         benchmarkId = row[0]
-    print(benchmarkId)
+
+    for idx in range(len(subbenchmarkObjs)):
+        subbenchmarkObj = subbenchmarkObjs[idx]
+        connection.execute(
+            """
+            INSERT INTO Subbenchmarks(benchmark,
+                                      number,
+                                      normalizedSize,
+                                      compressedSize,
+                                      assertsCount,
+                                      declareFunCount,
+                                      declareConstCount,
+                                      declareSortCount,
+                                      defineFunCount,
+                                      defineFunRecCount,
+                                      constantFunCount,
+                                      defineSortCount,
+                                      declareDatatypeCount,
+                                      maxTermDepth,
+                                      status)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+            """,
+            (
+                benchmarkId,
+                idx + 1,
+                subbenchmarkObj["normalizedSize"],
+                subbenchmarkObj["compressedSize"],
+                subbenchmarkObj["assertsCount"],
+                subbenchmarkObj["declareFunCount"],
+                subbenchmarkObj["declareConstCount"],
+                subbenchmarkObj["declareSortCount"],
+                subbenchmarkObj["defineFunCount"],
+                subbenchmarkObj["defineFunRecCount"],
+                subbenchmarkObj["constantFunCount"],
+                subbenchmarkObj["defineSortCount"],
+                subbenchmarkObj["declareDatatypeCount"],
+                subbenchmarkObj["maxTermDepth"],
+                subbenchmarkObj["status"],
+            ),
+        )
+        connection.commit()
+        subbenchmarkId = None
+        for row in connection.execute(
+            "SELECT id FROM Subbenchmarks WHERE benchmark=? AND number=?",
+            (benchmarkId, idx + 1),
+        ):
+            subbenchmarkId = row[0]
+        symbolCounts = subbenchmarkObj["symbolFrequency"]
+        for symbolIdx in range(len(symbolCounts)):
+            if symbolCounts[symbolIdx] > 0:
+                connection.execute(
+                    """
+                    INSERT INTO SymbolsCounts(symbol,
+                                              subbenchmark,
+                                              count)
+                    VALUES(?,?,?);
+                    """,
+                    (symbolIdx + 1, subbenchmarkId, symbolCounts[symbolIdx]),
+                )
+    connection.commit()
 
 
 def get_benchmark_id(
