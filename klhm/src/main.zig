@@ -236,8 +236,9 @@ pub fn main() !u8 {
     var idx: usize = 0;
     while (true) {
         if (tokenIt.next()) |token| {
-            if (token.type != tokens.TokenType.Opening)
+            if (token.type != tokens.TokenType.Opening) {
                 return Errors.UnexpectedToken;
+            }
         } else break;
         idx = tokenIt.pos;
         const level_start_idx = idx - 1;
@@ -294,9 +295,10 @@ pub fn main() !u8 {
                     .declare_fun => {
                         _ = tokenIt.next(); // name
                         _ = tokenIt.next(); // Skip (
-                        if (tokenIt.next()) |tkn| {
+                        if (tokenIt.peek()) |tkn| {
                             if (tkn.type == tokens.TokenType.Closing) {
                                 top.data.declareConstCount += 1;
+                                _ = tokenIt.next(); // Consume
                             } else {
                                 top.data.declareFunCount += 1;
                                 idx = try skip_rest_of_term(&tokenIt);
@@ -315,9 +317,10 @@ pub fn main() !u8 {
                     .define_fun => {
                         _ = tokenIt.next(); // name
                         _ = tokenIt.next(); // Skip (
-                        if (tokenIt.next()) |tkn| {
+                        if (tokenIt.peek()) |tkn| {
                             if (tkn.type == tokens.TokenType.Closing) {
                                 top.data.constantFunCount += 1;
+                                _ = tokenIt.next(); // Consume
                             } else {
                                 top.data.defineFunCount += 1;
                                 idx = try skip_rest_of_term(&tokenIt);
