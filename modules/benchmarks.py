@@ -155,7 +155,7 @@ def add_benchmark(connection, benchmark):
 
     if count != 1:
         raise Exception(
-            "Benchmark path does not contain at most one 'incremental' or 'non-incremental'."
+            f"Benchmark path {benchmark} does not contain at most one 'incremental' or 'non-incremental'."
         )
     if incrementalCount > 0:
         parts = parts[parts.index("incremental") :]

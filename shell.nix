@@ -21,6 +21,7 @@ pkgs.stdenv.mkDerivation {
       zig
       zstd
       black
+      parallel
   ];
 
 }
