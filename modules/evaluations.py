@@ -3,6 +3,7 @@ import subprocess
 import csv
 from modules import benchmarks
 
+
 def setup_evaluations(connection):
     connection.execute(
         """CREATE TABLE Evaluations(
@@ -41,6 +42,7 @@ def setup_evaluations(connection):
         );"""
     )
 
+
 def add_smt_comp_2022(connection, folder):
     cursor = connection.execute(
         """
@@ -58,26 +60,27 @@ def add_smt_comp_2022(connection, folder):
             shell=True,
         )
         subprocess.run(
-            f"{folder}/2022/scoring/clean_result_csvs.sh",
-            shell=True,
-            cwd=tmpdir
+            f"{folder}/2022/scoring/clean_result_csvs.sh", shell=True, cwd=tmpdir
         )
-        with open(f"{tmpdir}/results-sq.csv", newline='') as csvfile:
-            reader = csv.DictReader(csvfile, delimiter=',')
+        with open(f"{tmpdir}/results-sq.csv", newline="") as csvfile:
+            reader = csv.DictReader(csvfile, delimiter=",")
             for row in reader:
                 # remove the 'track_single_query/' from the start
-                fullbench = row['benchmark'][19:]
-                benchmarkId = benchmarks.get_benchmark_id(connection, fullbench, isIncremental=False)
+                fullbench = row["benchmark"][19:]
+                benchmarkId = benchmarks.get_benchmark_id(
+                    connection, fullbench, isIncremental=False
+                )
                 if not benchmarkId:
                     print(f"WARNING: Benchmark {fullbench} of SMT-COMP 2022 not found")
                     continue
 
-                solver = row['solver']
+                solver = row["solver"]
                 solverVariantId = None
                 for r in connection.execute(
                     """
                     SELECT Id FROM SolverVariants WHERE fullName=?
-                    """, (solver, )
+                    """,
+                    (solver,),
                 ):
                     solverVariantId = r[0]
                 if not solverVariantId:
@@ -85,46 +88,56 @@ def add_smt_comp_2022(connection, folder):
                     continue
 
                 try:
-                    cpuTime = float(row['cpu time'])
+                    cpuTime = float(row["cpu time"])
                 except ValueError:
                     cpuTime = None
                 try:
-                    wallclockTime = float(row['wallclock time'])
+                    wallclockTime = float(row["wallclock time"])
                 except ValueError:
                     wallclockTime = None
-                
-                if row['result'] == "starexec-unknown":
+
+                if row["result"] == "starexec-unknown":
                     status = "unknown"
-                elif row['result'] != row['expected']:
+                elif row["result"] != row["expected"]:
                     status = "unknown"
                 else:
-                    status = row['result']
- 
+                    status = row["result"]
+
                 # TODO: subbenchmark is here actually the benchmark ID
                 connection.execute(
                     """
                     INSERT INTO Results(evaluation, subbenchmark, solverVariant, cpuTime, wallclockTime, status)
                     VALUES(?,?,?,?,?,?);
                     """,
-                    (evaluationId, benchmarkId, solverVariantId, cpuTime, wallclockTime, status),
+                    (
+                        evaluationId,
+                        benchmarkId,
+                        solverVariantId,
+                        cpuTime,
+                        wallclockTime,
+                        status,
+                    ),
                 )
     connection.commit()
+
 
 def add_smt_comps(connection, folder):
     add_smt_comp_2022(connection, folder)
 
+
 def add_ratings_for(connection, competition):
     """
     - for each logic
-    	- calculate n = |solvers that solve at least one benchmark|
-    	- for each benchmark
-    		- calculate m = |solvers that solve that benchmark|
-    		- rating = 1 - m/n
+        - calculate n = |solvers that solve at least one benchmark|
+        - for each benchmark
+                - calculate m = |solvers that solve that benchmark|
+                - rating = 1 - m/n
     """
     for r in connection.execute(
         """
         SELECT Id FROM Evaluations WHERE name=?
-        """, (competition, )
+        """,
+        (competition,),
     ):
         evaluationId = r[0]
 
@@ -141,7 +154,8 @@ def add_ratings_for(connection, competition):
                 INNER JOIN Benchmarks AS b ON b.id = r.subbenchmark
             WHERE (r.status = 'unsat' OR r.status = 'sat')
                 AND b.logic=? AND r.evaluation=?
-            """, (logic, evaluationId)
+            """,
+            (logic, evaluationId),
         ):
             logicSolvers = logicSolversRow[0]
         if logicSolvers == 0:
@@ -149,7 +163,8 @@ def add_ratings_for(connection, competition):
         for benchmarkRow in connection.execute(
             """
             SELECT id FROM Benchmarks WHERE logic=?
-            """, (logic, )
+            """,
+            (logic,),
         ):
             benchmark = benchmarkRow[0]
             for benchmarkSolversRow in connection.execute(
@@ -159,17 +174,20 @@ def add_ratings_for(connection, competition):
                     INNER JOIN Benchmarks AS b ON b.id = r.subbenchmark
                 WHERE (r.status = 'unsat' OR r.status = 'sat')
                     AND b.id=? AND r.evaluation=?
-                """, (benchmark, evaluationId)
+                """,
+                (benchmark, evaluationId),
             ):
                 benchmarkSolvers = benchmarkSolversRow[0]
-            rating = 1 -  benchmarkSolvers / logicSolvers
+            rating = 1 - benchmarkSolvers / logicSolvers
             connection.execute(
                 """
                 INSERT INTO Ratings(subbenchmark, evaluation, rating, consideredSolvers, successfulSolvers)
                 VALUES(?,?,?,?,?);
-                """, (benchmark, evaluationId, rating, logicSolvers, benchmarkSolvers)
+                """,
+                (benchmark, evaluationId, rating, logicSolvers, benchmarkSolvers),
             )
     connection.commit()
+
 
 def add_ratings(connection):
     print("Adding ratings for SMT-COMP 2022")

@@ -22,23 +22,28 @@ def create_tables(connection):
         );"""
     )
 
+
 static_solvers = [
-    ( 1, "Bitwuzla", "https://bitwuzla.github.io/"),
-    ( 2, "COLIBRI", "https://colibri.frama-c.com/"),
-    ( 3, "CVC4", "https://cvc4.github.io/"),
-    ( 4, "cvc5", "https://cvc5.github.io/"),
-    ( 5, "MathSAT", "https://mathsat.fbk.eu/"),
-    ( 6, "NRA-LS", "https://github.com/minghao-liu/NRA-LS"),      
-    ( 7, "OpenSMT", "https://verify.inf.usi.ch/opensmt"),
-    ( 8, "OSTRICH", "https://github.com/uuverifiers/ostrich"),
-    ( 9, "Par4", ""),
+    (1, "Bitwuzla", "https://bitwuzla.github.io/"),
+    (2, "COLIBRI", "https://colibri.frama-c.com/"),
+    (3, "CVC4", "https://cvc4.github.io/"),
+    (4, "cvc5", "https://cvc5.github.io/"),
+    (5, "MathSAT", "https://mathsat.fbk.eu/"),
+    (6, "NRA-LS", "https://github.com/minghao-liu/NRA-LS"),
+    (7, "OpenSMT", "https://verify.inf.usi.ch/opensmt"),
+    (8, "OSTRICH", "https://github.com/uuverifiers/ostrich"),
+    (9, "Par4", ""),
     (10, "Q3B", "https://github.com/martinjonas/Q3B/"),
     (11, "Q3B-pBNN", "https://www.fi.muni.cz/~xpavlik5/Q3B-pBDD/"),
     (12, "SMTInterpol", "https://ultimate.informatik.uni-freiburg.de/smtinterpol"),
-    (13, "SMT-RAT", "https://smtrat.github.io/"), 
+    (13, "SMT-RAT", "https://smtrat.github.io/"),
     (14, "solmt", "https://github.com/ethereum/solidity/"),
     (15, "STP", "https://stp.github.io/"),
-    (16, "UltimateEliminator+MathSAT", "https://ultimate.informatik.uni-freiburg.de/eliminator/"),
+    (
+        16,
+        "UltimateEliminator+MathSAT",
+        "https://ultimate.informatik.uni-freiburg.de/eliminator/",
+    ),
     (17, "Vampire", "https://vprover.github.io/"),
     (18, "veriT", "https://verit-solver.org/"),
     (19, "veriT+raSAT+Redlog", "https://verit-solver.org/"),
@@ -78,8 +83,9 @@ static_solver_variants = [
     ("z3++0715", 23),
     ("z3-4.8.17", 24),
     ("z3++bv_0702", 25),
-    ("Z3str4", 26)
+    ("Z3str4", 26),
 ]
+
 
 def populate_tables(connetion):
     connetion.executemany(
@@ -87,5 +93,6 @@ def populate_tables(connetion):
     )
 
     connetion.executemany(
-        "INSERT INTO SolverVariants(fullName, solver) VALUES(?,?);", static_solver_variants
+        "INSERT INTO SolverVariants(fullName, solver) VALUES(?,?);",
+        static_solver_variants,
     )
