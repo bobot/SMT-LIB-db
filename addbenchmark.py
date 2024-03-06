@@ -20,6 +20,9 @@ connection = sqlite3.connect(args.DB_FILE, timeout=30.0)
 # This should not be necessary, because WAL mode is persistent, but we
 # add it here to be sure.
 connection.execute("PRAGMA journal_mode=wal")
+# Disable to-disc syncing, might corrupt database on system crash, but since
+# this script is used to build the database upfront, this is mostly harmless.
+connection.execute("PRAGMA synchronous = OFF")
 
 benchmarks.add_benchmark(connection, args.BENCHMARK)
 connection.close()

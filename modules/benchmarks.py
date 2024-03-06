@@ -169,26 +169,21 @@ def add_benchmark(connection, benchmark):
     date, setName = parse_set(setFolder)
     fileName = "/".join(parts[3:])
 
+    cursor = connection.cursor()
     setId = None
     # short circuit
-    for row in connection.execute(
-        "SELECT id FROM Sets WHERE folderName=?", (setFolder,)
-    ):
+    for row in cursor.execute("SELECT id FROM Sets WHERE folderName=?", (setFolder,)):
         setId = row[0]
 
     if not setId:
-        connection.execute(
+        cursor.execute(
             """
             INSERT OR IGNORE INTO Sets(name, foldername, date, benchmarkCount)
             VALUES(?,?,?,?);
             """,
             (setName, setFolder, date, 0),
         )
-        connection.commit()
-        for row in connection.execute(
-            "SELECT id FROM Sets WHERE folderName=?", (setFolder,)
-        ):
-            setId = row[0]
+        setId = cursor.lastrowid
 
     klhm = subprocess.run(
         f"./klhm/zig-out/bin/klhm {benchmark}",
@@ -211,7 +206,7 @@ def add_benchmark(connection, benchmark):
         pass
 
     # TODO: parse target solver
-    connection.execute(
+    cursor.execute(
         """
         INSERT INTO Benchmarks(filename,
                                benchmarkSet,
@@ -246,17 +241,11 @@ def add_benchmark(connection, benchmark):
             benchmarkObj["subbenchmarkCount"],
         ),
     )
-    connection.commit()
-    benchmarkId = None
-    for row in connection.execute(
-        "SELECT id FROM Benchmarks WHERE fileName=? AND benchmarkSet=? AND logic=?",
-        (fileName, setId, benchmarkObj["logic"]),
-    ):
-        benchmarkId = row[0]
+    benchmarkId = cursor.lastrowid
 
     for idx in range(len(subbenchmarkObjs)):
         subbenchmarkObj = subbenchmarkObjs[idx]
-        connection.execute(
+        cursor.execute(
             """
             INSERT INTO Subbenchmarks(benchmark,
                                       number,
@@ -293,13 +282,7 @@ def add_benchmark(connection, benchmark):
                 subbenchmarkObj["status"],
             ),
         )
-        connection.commit()
-        subbenchmarkId = None
-        for row in connection.execute(
-            "SELECT id FROM Subbenchmarks WHERE benchmark=? AND number=?",
-            (benchmarkId, idx + 1),
-        ):
-            subbenchmarkId = row[0]
+        subbenchmarkId = cursor.lastrowid
         symbolCounts = subbenchmarkObj["symbolFrequency"]
         for symbolIdx in range(len(symbolCounts)):
             if symbolCounts[symbolIdx] > 0:
