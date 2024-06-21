@@ -10,8 +10,8 @@ echo "Prepopulate"
 
 echo "Add benchmarks"
 
-parallel -j 4 ./addbenchmark.py $DB -- `find ~/SMT-LIB/SMT-LIB-ss/ -name '*smt2'`
+find ~/Work/SMT-LIB-db/SMT-LIB-ss/ -name '*smt2' | parallel -j 4 ./addbenchmark.py $DB
 
 echo "Postpopulate"
 
-./postprocess.py $DB ~/SMT-COMP/smt-comp-master
+# ./postprocess.py $DB ~/SMT-COMP/smt-comp-master
