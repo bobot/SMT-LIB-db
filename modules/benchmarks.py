@@ -4,6 +4,8 @@ import subprocess
 import mmap
 import json
 
+import modules.solvers
+
 
 def setup_benchmarks(connection):
     connection.execute(
@@ -59,6 +61,16 @@ def setup_benchmarks(connection):
         date DATE,
         benchmarkCount INT NOT NULL,
         UNIQUE(folderName)
+    );"""
+    )
+
+    connection.execute(
+        """CREATE TABLE TargetSolvers(
+        id INTEGER PRIMARY KEY,
+        benchmark INTEGER NOT NULL,
+        solverVariant TEXT NOT NULL,
+        FOREIGN KEY(benchmark) REFERENCES Benchmarks(id),
+        FOREIGN KEY(solverVariant) REFERENCES SolverVariants(id)
     );"""
     )
 
@@ -205,7 +217,6 @@ def add_benchmark(connection, benchmark):
     except (ValueError, TypeError):
         pass
 
-    # TODO: parse target solver
     cursor.execute(
         """
         INSERT INTO Benchmarks(filename,
@@ -242,6 +253,29 @@ def add_benchmark(connection, benchmark):
         ),
     )
     benchmarkId = cursor.lastrowid
+
+    if benchmarkObj["targetSolver"]:
+        # Split on '/', " or ", and ","
+        targetSolvers = benchmarkObj["targetSolver"].replace("/", ",")
+        targetSolvers = targetSolvers.replace(" or ",",")
+        targetSolvers = targetSolvers.spit(",")
+        targetSolvers = map(
+            lambda x: x.strip(),targetSolvers
+        )
+        for targetSolver in targetSolvers:
+            try:
+                id = modules.solvers.variant_lookup[targetSolver]
+                cursor.execute(
+                    """
+                       INSERT INTO TargetSolvers(benchmark,
+                                                 solverVariant)
+                       VALUES(?,?);
+                       """,
+                    (benchmarkId, id),
+                )
+            except KeyError:
+                print(f"Target solver '{targetSolver}' not known.")
+        connection.commit()
 
     for idx in range(len(subbenchmarkObjs)):
         subbenchmarkObj = subbenchmarkObjs[idx]

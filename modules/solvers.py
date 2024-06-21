@@ -55,15 +55,31 @@ static_solvers = [
     (24, "Z3", "https://github.com/Z3Prover/z3"),
     (25, "Z3++BV", "https://z3-plus-plus.github.io/"),
     (26, "Z3string", "https://z3string.github.io/"),
+    (27, "CVC3", "https://cs.nyu.edu/acsys/cvc3/"),
+    (28, "ABC", "https://dl.acm.org/doi/10.1007/978-3-642-14295-6_5"),
+    (29, "Norn", "https://user.it.uu.se/~jarst116/norn/"),
+    (30, "S3P", "https://trinhmt.github.io/home/S3/"),
+    (31, "Trau", "https://github.com/diepbp/Trau"),
+    (32, "Alt-Ergo", "https://alt-ergo.ocamlpro.com/"),
+    (33, "Barcelogic", "https://www.cs.upc.edu/~oliveras/bclt-main.html"),
+    (34, "Boolector", "https://boolector.github.io/"),
+    (35, "Yices", "https://yices.csl.sri.com/old/yices1-documentation.html"),
+    (36, "CryptoMiniSat", "https://www.msoos.org/cryptominisat5/"),
+    (37, "Z3-Trau", "https://github.com/diepbp/z3-trau"),
+    (38, "Kaluza", "https://doi.org/10.1109/SP.2010.38"),
+    (39, "SLENT", "https://github.com/NTU-ALComLab/SLENT"),
+    (40, "Woorpje", "https://www.informatik.uni-kiel.de/~mku/woorpje/"),
+    (41, "Kepler_22", "https://doi.org/10.1007/978-3-030-02768-1_19"),
+    (42, "SPASS-IQ", "https://www.mpi-inf.mpg.de/de/departments/automation-of-logic/software/spass-workbench/spass-iq"),
 ]
 
 # Lists solver variants in SMT-COMP results, etc.
 static_solver_variants = {
-    "Bitwuzla": ["Bitwuzla-fixed", "bitwuzla"],
+    "Bitwuzla": ["Bitwuzla-fixed", "bitwuzla", "Bitwuzla (with SymFPU)"],
     "COLIBRI": ["COLIBRI 22_06_18"],
-    "CVC4": ["CVC4-sq-final"],
-    "cvc5": ["cvc5-default-2022-07-02-b15e116-wrapped"],
-    "MathSAT": ["MathSAT-5.6.8", "Mathsat5"],
+    "CVC4": ["CVC4-sq-final", "CVC4 (with SymFPU)"],
+    "cvc5": ["cvc5-default-2022-07-02-b15e116-wrapped", "CVC5"],
+    "MathSAT": ["MathSAT-5.6.8", "Mathsat5", "MathSAT5", "Mathsat"],
     "NRA-LS": ["NRA-LS-FINAL"],
     "OpenSMT": ["opensmt fixed"],
     "OSTRICH": ["OSTRICH 1.2", "Ostrich"],
@@ -82,31 +98,56 @@ static_solver_variants = {
     "Yices-ismt": ["yices-ismt-0721"],
     "YicesQS": ["yicesQS-2022-07-02-optim-under10"],
     "Z3++": ["z3++0715"],
-    "Z3": ["z3-4.8.17"],
+    "Z3": ["z3-4.8.17", "z3", "z3;"],
     "Z3++BV": ["z3++bv_0702"],
-    "Z3string": ["Z3-str2", "Z3str3", "Z3str4"],
+    "Z3string": ["Z3-str2", "Z3str3", "Z3str4", "Z3str3RE"],
+    "CVC3": [],
+    "ABC": [],
+    "Norn": [],
+    "S3P": [],
+    "Trau": [],
+    "Alt-Ergo": [],
+    "Barcelogic": [],
+    "Boolector": [],
+    "Yices": [],
+    "CryptoMiniSat": [],
+    "Z3-Trau": [],
+    "Kaluza": [],
+    "SLENT": [],
+    "Woorpje": ["WOORPJE"],
+    "Yices": ["YICES"],
 }
 
-# Build a lost for creating the SolverVariants table
-count = 1
+solver_table = []
 variant_table = []
+
+solver_count = 1
+variant_count = 1
 
 # Helper to insert benchmarks with fewer database queries
 variant_lookup = {}
-for id, name, url in static_solvers:
+for name, url in static_solvers:
+    id = solver_count
+    solver_count = solver_count + 1
+    solver_table.append((id, name, url))
+
+    variant_table.append((variant_count, name, id))
     # Also add the original name as a variant
-    variant_table.append((count, name, id))
-    variant_lookup[name] = count
-    count = count + 1
-    for variant in static_solver_variants[name]:
-        variant_table.append((count, variant, id))
-        variant_lookup[variant] = count
-        count = count + 1
+    variant_table.append((variant_count, name, id))
+    variant_lookup[name] = variant_count
+    variant_count = variant_count + 1
+    try:
+        for variant in static_solver_variants[name]:
+            variant_table.append((variant_count, variant, id))
+            variant_lookup[variant] = variant_count
+            variant_count = variant_count + 1
+    except KeyError:
+        pass
 
 
 def populate_tables(connetion):
     connetion.executemany(
-        "INSERT INTO Solvers(id, name, link) VALUES(?,?,?);", static_solvers
+        "INSERT INTO Solvers(id, name, link) VALUES(?,?,?);", solver_table
     )
 
     connetion.executemany(

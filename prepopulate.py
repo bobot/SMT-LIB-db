@@ -16,20 +16,10 @@ connection = sqlite3.connect(args.DB_FILE)
 
 connection.execute("PRAGMA foreign_keys = ON;")
 connection.execute("PRAGMA journal_mode=wal")
-
-connection.execute(
-    """CREATE TABLE TargetSolvers(
-    benchmark INT,
-    solverVariant INT,
-    FOREIGN KEY(benchmark) REFERENCES Benchmarks(id)
-    FOREIGN KEY(solverVariant) REFERENCES SolverVaraiants(id)
-    );"""
-)
-
 connection.commit()
 
 licenses.setup_licenses(connection)
+solvers.setup_solvers(connection)
 benchmarks.setup_benchmarks(connection)
 evaluations.setup_evaluations(connection)
-solvers.setup_solvers(connection)
 connection.close()
