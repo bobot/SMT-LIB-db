@@ -255,13 +255,18 @@ def add_benchmark(connection, benchmark):
     benchmarkId = cursor.lastrowid
 
     if benchmarkObj["targetSolver"]:
-        # Split on '/', " or ", and ","
-        targetSolvers = benchmarkObj["targetSolver"].replace("/", ",")
-        targetSolvers = targetSolvers.replace(" or ",",")
-        targetSolvers = targetSolvers.spit(",")
-        targetSolvers = map(
-            lambda x: x.strip(),targetSolvers
-        )
+        targetSolvers = benchmarkObj["targetSolver"]
+        # Hacks for the two space sperated cases
+        if targetSolvers == "Boolector Z3 STP":
+            targetSolvers = ["Boolector", "Z3", "STP"]
+        elif targetSolvers == "CVC4 Mathsat SPASS-IQ YICES Z3":
+            targetSolvers = ["CVC4", "Mathsat", "SPASS-IQ", "YICES", "Z3"]
+        else:
+            # Split on '/', " or ", and ","
+            targetSolvers = targetSolvers.replace("/", ",")
+            targetSolvers = targetSolvers.replace(" or ", ",")
+            targetSolvers = targetSolvers.split(",")
+            targetSolvers = map(lambda x: x.strip(), targetSolvers)
         for targetSolver in targetSolvers:
             try:
                 id = modules.solvers.variant_lookup[targetSolver]

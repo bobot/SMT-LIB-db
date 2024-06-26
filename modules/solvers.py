@@ -120,7 +120,6 @@ for name, url in static_solvers:
     solver_count = solver_count + 1
     solver_table.append((id, name, url))
 
-    variant_table.append((variant_count, name, id))
     # Also add the original name as a variant
     variant_table.append((variant_count, name, id))
     variant_lookup[name] = variant_count
