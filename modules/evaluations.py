@@ -67,7 +67,7 @@ def add_smt_comp_2022(connection, folder):
             for row in reader:
                 # remove the 'track_single_query/' from the start
                 fullbench = row["benchmark"][19:]
-                benchmarkId = benchmarks.get_benchmark_id(
+                benchmarkId = benchmarks.guess_benchmark_id(
                     connection, fullbench, isIncremental=False
                 )
                 if not benchmarkId:

@@ -337,17 +337,26 @@ def add_benchmark(connection, benchmark):
     connection.commit()
 
 
-def get_benchmark_id(
-    connection, fullFilename, isIncremental=None, logic=None, setFoldername=None
-):
+def guess_benchmark_id(connection, fullFilename, isIncremental=None):
     """
-    Gets the id of a benchmark from a benchmark filepath.  If all optional arguments are None then the
-    path must have the form "[non-]incremental/LOGIC/SETFOLDERNAME/BENCHMARKPATH"
+    Guess the id of a benchmark from a path
+    "[non-]incremental/LOGIC/SETFOLDERNAME/BENCHMARKPATH".  The guessing is
+    necessary, because benchmarks might have moved paths between competitions.
+    The function first tests whether there one unique benchmark with a subset
+    of the parameters.  First, it uses only "BENCHMARKPATH", then
+    additionally SETFOLDERNAME, then additionally isIncremental
+    then LOGIC.
+    If any of these thests returns one unique benchmark, its id is returned.
+    If any returns non, or if all return more than one benchmark,
+    None is returned.
 
-    If an optional argument is not None, the corresponding component must be omitted from the path.
-    Furthermore, if any of those arguments is not None, the preceding arguments must not be None.
-    Hence, if `logic="QF_UF"` then `isIncremental` must be set and `fullFilename` is of the form
-    "SETFOLDERNAME/BENCHMARKPATH".
+    The priorities are informed by how often a component of the path change.
+    E.g., the LOGIC changed in the past for some benchmarks, because they were
+    missclassified.
+
+    If `isIncremental` is given, the `fullFilepath` should not contain
+    the `[non-]incremental` part.
+
     """
     if isIncremental == None:
         slashIdx = fullFilename.find("/")
@@ -357,23 +366,57 @@ def get_benchmark_id(
             isIncremental = True
         fullFilename = fullFilename[slashIdx + 1 :]
 
-    if not logic:
-        slashIdx = fullFilename.find("/")
-        logic = fullFilename[:slashIdx]
-        fullFilename = fullFilename[slashIdx + 1 :]
+    slashIdx = fullFilename.find("/")
+    logic = fullFilename[:slashIdx]
+    fullFilename = fullFilename[slashIdx + 1 :]
 
-    if not setFoldername:
-        slashIdx = fullFilename.find("/")
-        setFoldername = fullFilename[:slashIdx]
-        fullFilename = fullFilename[slashIdx + 1 :]
+    slashIdx = fullFilename.find("/")
+    setFoldername = fullFilename[:slashIdx]
+    fullFilename = fullFilename[slashIdx + 1 :]
 
-    benchmarkId = None
-    for row in connection.execute(
+    r = connection.execute(
+        """
+        SELECT Benchmarks.Id FROM Benchmarks WHERE filename=?
+        """,
+        (fullFilename),
+    )
+    l = r.fetchall()
+    if len(l) == 0:
+        return None
+    if len(l) == 1:
+        return l[0][0]
+    r = connection.execute(
         """
         SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Sets ON Sets.Id = Benchmarks.benchmarkSet
-            WHERE filename=? AND logic=? AND Sets.folderName=?
+            WHERE filename=? AND Sets.folderName=?
         """,
-        (fullFilename, logic, setFoldername),
-    ):
-        benchmarkId = row[0]
-    return benchmarkId
+        (fullFilename, setFoldername),
+    )
+    if len(l) == 0:
+        return None
+    if len(l) == 1:
+        return l[0][0]
+
+    r = connection.execute(
+        """
+        SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Sets ON Sets.Id = Benchmarks.benchmarkSet
+            WHERE filename=? AND isIncremental=? AND Sets.folderName=?
+        """,
+        (fullFilename, isIncremental, setFoldername),
+    )
+    if len(l) == 0:
+        return None
+    if len(l) == 1:
+        return l[0][0]
+    r = connection.execute(
+        """
+        SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Sets ON Sets.Id = Benchmarks.benchmarkSet
+            WHERE filename=? AND logic=? AND isIncremental=? AND Sets.folderName=?
+        """,
+        (fullFilename, isIncremental, logic, setFoldername),
+    )
+    if len(l) == 0:
+        return None
+    if len(l) == 1:
+        return l[0][0]
+    return None
