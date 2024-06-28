@@ -43,24 +43,24 @@ def setup_evaluations(connection):
     )
 
 
-def add_smt_comp_2022(connection, folder):
+def add_smt_comp_generic(connection, folder, year, date):
     cursor = connection.execute(
         """
         INSERT INTO Evaluations(name, date, link)
         VALUES(?,?,?);
         """,
-        ("SMT-COMP 2022", "2022-08-10", "https://smt-comp.github.io/2022/"),
+        (f"SMT-COMP {year}", date, f"https://smt-comp.github.io/{year}/"),
     )
     evaluationId = cursor.lastrowid
     connection.commit()
-    print("Adding SMT-COMP 2022 results")
+    print(f"Adding SMT-COMP {year} results")
     with tempfile.TemporaryDirectory() as tmpdir:
         subprocess.run(
-            f"tar xvf {folder}/2022/results/raw-results.tar.xz -C {tmpdir}",
+            f"tar xvf {folder}/{year}/results/raw-results.tar.xz -C {folder}/{year}/results",
             shell=True,
         )
         subprocess.run(
-            f"{folder}/2022/scoring/clean_result_csvs.sh", shell=True, cwd=tmpdir
+            f"{folder}/{year}/scoring/clean_result_csvs.sh", shell=True, cwd=tmpdir
         )
         with open(f"{tmpdir}/results-sq.csv", newline="") as csvfile:
             reader = csv.DictReader(csvfile, delimiter=",")
@@ -71,8 +71,15 @@ def add_smt_comp_2022(connection, folder):
                     connection, fullbench, isIncremental=False
                 )
                 if not benchmarkId:
-                    print(f"WARNING: Benchmark {fullbench} of SMT-COMP 2022 not found")
+                    # print(f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found")
                     continue
+                for r in connection.execute(
+                    """
+                    SELECT Id FROM Subbenchmarks WHERE benchmark=?
+                    """,
+                    (benchmarkId,),
+                ):
+                    subbenchmarkId = r[0]
 
                 solver = row["solver"]
                 solverVariantId = None
@@ -85,6 +92,8 @@ def add_smt_comp_2022(connection, folder):
                     solverVariantId = r[0]
                 if not solverVariantId:
                     # We do not care about the results from solvers that are not on the list.
+                    # Note that some solvers are omitted on purpose, for example
+                    # if there is a fixed version.
                     continue
 
                 try:
@@ -111,7 +120,7 @@ def add_smt_comp_2022(connection, folder):
                     """,
                     (
                         evaluationId,
-                        benchmarkId,
+                        subbenchmarkId,
                         solverVariantId,
                         cpuTime,
                         wallclockTime,
@@ -122,7 +131,8 @@ def add_smt_comp_2022(connection, folder):
 
 
 def add_smt_comps(connection, folder):
-    add_smt_comp_2022(connection, folder)
+    add_smt_comp_generic(connection, folder, "2022", "2022-08-10")
+    add_smt_comp_generic(connection, folder, "2023", "2023-07-06")
 
 
 def add_ratings_for(connection, competition):
@@ -192,3 +202,5 @@ def add_ratings_for(connection, competition):
 def add_ratings(connection):
     print("Adding ratings for SMT-COMP 2022")
     add_ratings_for(connection, "SMT-COMP 2022")
+    print("Adding ratings for SMT-COMP 2023")
+    add_ratings_for(connection, "SMT-COMP 2023")

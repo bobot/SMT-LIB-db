@@ -279,7 +279,7 @@ def add_benchmark(connection, benchmark):
                     (benchmarkId, id),
                 )
             except KeyError:
-                print(f"Target solver '{targetSolver}' not known.")
+                print(f"WARNING: Target solver '{targetSolver}' not known.")
         connection.commit()
 
     for idx in range(len(subbenchmarkObjs)):
@@ -378,7 +378,7 @@ def guess_benchmark_id(connection, fullFilename, isIncremental=None):
         """
         SELECT Benchmarks.Id FROM Benchmarks WHERE filename=?
         """,
-        (fullFilename),
+        (fullFilename,),
     )
     l = r.fetchall()
     if len(l) == 0:
