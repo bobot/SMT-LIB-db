@@ -22,6 +22,7 @@ pkgs.stdenv.mkDerivation {
       zstd
       black
       parallel
+      csvkit
   ];
 
 }

@@ -3,6 +3,8 @@ import subprocess
 import csv
 from modules import benchmarks
 
+import modules.solvers
+
 
 def setup_evaluations(connection):
     connection.execute(
@@ -44,14 +46,16 @@ def setup_evaluations(connection):
 
 
 def add_smt_comp_generic(connection, folder, year, date):
+    name = f"SMT-COMP {year}"
     cursor = connection.execute(
         """
         INSERT INTO Evaluations(name, date, link)
         VALUES(?,?,?);
         """,
-        (f"SMT-COMP {year}", date, f"https://smt-comp.github.io/{year}/"),
+        (name, date, f"https://smt-comp.github.io/{year}/"),
     )
     evaluationId = cursor.lastrowid
+    modules.solvers.populate_evaluation_solvers(connection, name, evaluationId)
     connection.commit()
     print(f"Adding SMT-COMP {year} results")
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -65,6 +69,22 @@ def add_smt_comp_generic(connection, folder, year, date):
         with open(f"{tmpdir}/results-sq.csv", newline="") as csvfile:
             reader = csv.DictReader(csvfile, delimiter=",")
             for row in reader:
+                solver = row["solver"]
+                solverVariantId = None
+                for r in connection.execute(
+                    """
+                    SELECT Id FROM SolverVariants WHERE fullName=? AND evaluation=?
+                    """,
+                    (solver, evaluationId),
+                ):
+                    solverVariantId = r[0]
+                if not solverVariantId:
+                    # We do not care about the results from solvers that are not on the list.
+                    # Note that some solvers are omitted on purpose, for example
+                    # if there is a fixed version.
+                    print(f"nf: {solver}")
+                    continue
+
                 # remove the 'track_single_query/' from the start
                 fullbench = row["benchmark"][19:]
                 benchmarkId = benchmarks.guess_benchmark_id(
@@ -80,21 +100,6 @@ def add_smt_comp_generic(connection, folder, year, date):
                     (benchmarkId,),
                 ):
                     subbenchmarkId = r[0]
-
-                solver = row["solver"]
-                solverVariantId = None
-                for r in connection.execute(
-                    """
-                    SELECT Id FROM SolverVariants WHERE fullName=?
-                    """,
-                    (solver,),
-                ):
-                    solverVariantId = r[0]
-                if not solverVariantId:
-                    # We do not care about the results from solvers that are not on the list.
-                    # Note that some solvers are omitted on purpose, for example
-                    # if there is a fixed version.
-                    continue
 
                 try:
                     cpuTime = float(row["cpu time"])
@@ -131,8 +136,9 @@ def add_smt_comp_generic(connection, folder, year, date):
 
 
 def add_smt_comps(connection, folder):
-    add_smt_comp_generic(connection, folder, "2022", "2022-08-10")
-    add_smt_comp_generic(connection, folder, "2023", "2023-07-06")
+    add_smt_comp_generic(connection, folder, "2021", "2021-07-18")
+    # add_smt_comp_generic(connection, folder, "2022", "2022-08-10")
+    # add_smt_comp_generic(connection, folder, "2023", "2023-07-06")
 
 
 def add_ratings_for(connection, competition):
@@ -200,6 +206,7 @@ def add_ratings_for(connection, competition):
 
 
 def add_ratings(connection):
+    return
     print("Adding ratings for SMT-COMP 2022")
     add_ratings_for(connection, "SMT-COMP 2022")
     print("Adding ratings for SMT-COMP 2023")

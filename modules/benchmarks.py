@@ -269,7 +269,7 @@ def add_benchmark(connection, benchmark):
             targetSolvers = map(lambda x: x.strip(), targetSolvers)
         for targetSolver in targetSolvers:
             try:
-                id = modules.solvers.variant_lookup[targetSolver]
+                id = modules.solvers.global_variant_lookup[targetSolver]
                 cursor.execute(
                     """
                        INSERT INTO TargetSolvers(benchmark,

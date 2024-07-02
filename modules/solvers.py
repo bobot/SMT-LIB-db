@@ -18,13 +18,15 @@ def create_tables(connection):
         id INTEGER PRIMARY KEY,
         fullName TEXT,
         solver INT,
+        evaluation INT,
         FOREIGN KEY(solver) REFERENCES Solvers(id)
+        FOREIGN KEY(evaluation) REFERENCES Evaluations(id)
         );"""
     )
 
 
 # Canonical names of SMT solvers
-static_solvers = [
+known_solvers = [
     ("Bitwuzla", "https://bitwuzla.github.io/"),
     ("COLIBRI", "https://colibri.frama-c.com/"),
     ("CVC4", "https://cvc4.github.io/"),
@@ -79,68 +81,133 @@ static_solvers = [
     ("Z3alpha", "https://github.com/JohnLyu2/z3alpha"),
     ("Z3-Noodler", "https://github.com/VeriFIT/z3-noodler"),
     ("Z3-Owl", "https://z3-owl.github.io/"),
+    ("Yaga", "https://d3s.mff.cuni.cz/software/yaga/"),
+    ("mc2", "https://github.com/c-cube/mc2"),
+    ("AProVE", "https://aprove.informatik.rwth-aachen.de/"),
+    ("YicesLS", "https://smt-comp.github.io/2021/system-descriptions/YicesLS.pdf"),
 ]
 
-# Lists solver variants in SMT-COMP results, etc.
-static_solver_variants = {
-    # TODO: there is a "-fixed" version of Bitwuzla in 2022, but we can't
-    # distinguish this one.
+solver_count = 1
+solver_table = []
+
+# Lists solver variants that are not in scope of a comptetition.
+# E.g., those used as "Target Solver"
+global_solver_variants = {
     "Bitwuzla": ["Bitwuzla-wrapped", "bitwuzla", "Bitwuzla (with SymFPU)"],
-    "COLIBRI": ["COLIBRI 22_06_18", "COLIBRI 2023_05_10"],
-    "CVC4": ["CVC4-sq-final", "CVC4 (with SymFPU)"],
-    "cvc5": ["cvc5-default-2022-07-02-b15e116-wrapped", "CVC5", "cvc5-default-2023-05-16-ea045f305"],
-    "MathSAT": ["MathSAT-5.6.8", "Mathsat5", "MathSAT5", "Mathsat"],
-    "NRA-LS": ["NRA-LS-FINAL"],
-    "OpenSMT": ["opensmt fixed", "OpenSMT a78dcf01"],
-    "OSTRICH": ["OSTRICH 1.2", "Ostrich", "OSTRICH 1.3 SMT-COMP fixed"],
-    "Par4": ["Par4-wrapped-sq"],
-    "Q3B": ["Q3B"],
-    "Q3B-pBNN": ["Q3B-pBDD SMT-COMP 2022 final"],
-    "SMTInterpol": ["smtinterpol-fixed-2.5-1148-gf2d8e6b0", "smtinterpol-2.5-1272-g2d6d356c"],
-    "SMT-RAT": ["SMT-RAT-MCSAT"],
-    "solmt": ["solsmt-5b37426cad388922a-wrapped"],
-    "STP": ["STP 2022.4"],
-    "UltimateEliminator+MathSAT": ["UltimateEliminator+MathSAT-5.6.7-wrapped", "UltimateEliminator+MathSAT-5.6.9"],
-    "Vampire": ["vampire_4.7_smt_fix-wrapped", "vampire", "vampire_4.8_smt_pre"],
-    "veriT": ["veriT"],
-    "veriT+raSAT+Redlog": ["veriT+raSAT+Redlog"],
-    "Yices2": ["Yices 2.6.2 for SMTCOMP 2021", "yices2", "Yices 2", "Yices 2 for SMTCOMP 2023"],
-    "Yices-ismt": ["yices-ismt-0721","yices-ismt-sq-0526"],
-    "YicesQS": ["yicesQS-2022-07-02-optim-under10"],
-    "Z3++": ["z3++0715","Z3++_sq_0526"],
-    "Z3": ["z3-4.8.17", "z3", "z3;", "z3-4.8.11"],
-    "Z3++BV": ["z3++bv_0702"],
+    "CVC4": ["CVC4 (with SymFPU)"],
+    "cvc5": ["CVC5"],
+    "MathSAT": ["Mathsat5", "MathSAT5", "Mathsat"],
+    "OSTRICH": ["Ostrich"],
+    "Vampire": ["vampire"],
+    "Yices2": ["yices2", "Yices 2"],
+    "Z3": ["z3", "z3;"],
     "Z3string": ["Z3-str2", "Z3str3", "Z3str4", "Z3str3RE"],
     "Woorpje": ["WOORPJE"],
     "Yices": ["YICES"],
-    "iProver": ["iProver-3.8-fix"],
-    "NRA-LS": ["cvc5-NRA-LS-sq"],
-    "Z3alpha": ["z3alpha"],
-    "Z3-Owl": ["z3-Owl-Final"],
 }
 
-solver_table = []
-variant_table = []
+# TODO: is it possible that solvers occur in two names that count (i.e. not
+#       just a non-fixed and a fixed version.
+evaluation_solver_variants = {
+    # TODO: what is "master-2018-06-10-b19c840-competition-default"
+    "SMT-COMP 2021": [
+        ("AProVE", "AProVE NIA 2014"),
+        ("Bitwuzla", "Bitwuzla-fixed"),
+        ("COLIBRI", "COLIBRI_21_06_23"),
+        ("cvc5", "cvc5-fixed"),
+        ("iProver", "iProver-v3.5-final-fix2"),
+        ("MathSAT", "mathsat-5.6.6"),
+        ("mc2", "mc2 2021-06-07"),
+        ("OpenSMT", "OpenSMT-fixed"),
+        ("Par4", "Par4-wrapped-sq"),
+        ("SMTInterpol", "smtinterpol-2.5-823-g881e8631"),
+        ("SMT-RAT", "smtrat-SMTCOMP"),
+        ("STP", "STP 2021.0"),
+        ("UltimateEliminator+MathSAT", "UltimateEliminator+MathSAT-5.6.6"),
+        ("Vampire", "vampire_smt_4.6-fixed"),
+        ("veriT+raSAT+Redlog", "veriT+raSAT+Redlog"),
+        ("veriT", "veriT"),
+        ("Yices2", "Yices 2.6.2 bug fix"),
+        ("YicesLS", "YicesLS_0611_1448"),
+        ("YicesQS", "yices-QS-2021-06-13under10"),
+        ("Z3string", "Z3str4 SMTCOMP 2021 v1.1"),
+        ("Z3", "z3-4.8.11"),
+    ],
+    "SMT-COMP 2022": [
+        ("Bitwuzla", "Bitwuzla-fixed"),
+        ("COLIBRI", "COLIBRI 22_06_18"),
+        ("CVC4", "CVC4-sq-final"),
+        ("cvc5", "cvc5-default-2022-07-02-b15e116-wrapped"),
+        ("MathSAT", "MathSAT-5.6.8"),
+        ("NRA-LS", "NRA-LS-FINAL"),
+        ("OpenSMT", "opensmt fixed"),
+        ("OSTRICH", "OSTRICH 1.2"),
+        ("Par4", "Par4-wrapped-sq"),
+        ("Q3B", "Q3B"),
+        ("Q3B-pBNN", "Q3B-pBDD SMT-COMP 2022 final"),
+        ("SMTInterpol", "smtinterpol-fixed-2.5-1148-gf2d8e6b0"),
+        ("SMT-RAT", "SMT-RAT-MCSAT"),
+        ("STP", "STP 2022.4"),
+        ("UltimateEliminator+MathSAT", "UltimateEliminator+MathSAT-5.6.7-wrapped"),
+        ("Vampire", "vampire_4.7_smt_fix-wrapped"),
+        ("veriT+raSAT+Redlog", "veriT+raSAT+Redlog"),
+        ("veriT", "veriT"),
+        ("Yices2", "Yices 2.6.2 for SMTCOMP 2021"),
+        ("Yices-ismt", "yices-ismt-0721"),
+        ("YicesQS", "yicesQS-2022-07-02-optim-under10"),
+        ("Z3++BV", "z3++bv_0702"),
+        ("Z3string", "Z3str4"),
+        ("Z3++", "z3++0715"),
+        ("Z3", "z3-4.8.17"),
+        ("solsmt", "solsmt-5b37426cad388922a-wrapped"),
+    ],
+    "SMT-COMP 2023": [
+        ("Bitwuzla", "Bitwuzla-fixed"),
+        ("COLIBRI", "COLIBRI 2023_05_10"),
+        ("CVC4", "CVC4-sq-final"),
+        ("cvc5", "cvc5-default-2023-05-16-ea045f305"),
+        ("iProver", "iProver-3.8-fix"),
+        ("NRA-LS", "cvc5-NRA-LS-sq"),
+        ("OpenSMT", "OpenSMT a78dcf01"),
+        ("OSTRICH", "OSTRICH 1.3 SMT-COMP fixed"),
+        ("Par4", "Par4-wrapped-sq"),
+        ("Q3B", "Q3B"),
+        ("SMTInterpol", "smtinterpol-2.5-1272-g2d6d356c"),
+        ("SMT-RAT", "SMT-RAT-MCSAT"),
+        ("STP", "STP 2022.4"),
+        ("UltimateEliminator+MathSAT", "UltimateEliminator+MathSAT-5.6.9"),
+        ("Vampire", "vampire_4.8_smt_pre"),
+        ("Yices2", "Yices 2 for SMTCOMP 2023"),
+        ("Yices-ismt", "yices-ismt-sq-0526"),
+        ("YicesQS", "yicesQS-2022-07-02-optim-under10"),
+        ("Z3alpha", "z3alpha"),
+        ("Z3-Noodler", "Z3-Noodler"),
+        ("Z3-Owl", "z3-Owl-Final"),
+        ("Z3++", "z3++0715"),  # TODO: there is also Z3++_sq_0526.
+        ("Z3", "z3-4.8.17"),
+        ("Yaga", "Yaga_SMT-COMP-2023_presubmition"),
+    ],
+}
 
-solver_count = 1
-variant_count = 1
+global_variant_table = []
+global_variant_count = 1
 
 # Helper to insert benchmarks with fewer database queries
-variant_lookup = {}
-for name, url in static_solvers:
+global_variant_lookup = {}
+for name, url in known_solvers:
     id = solver_count
     solver_count = solver_count + 1
     solver_table.append((id, name, url))
 
     # Also add the original name as a variant
-    variant_table.append((variant_count, name, id))
-    variant_lookup[name] = variant_count
-    variant_count = variant_count + 1
+    global_variant_table.append((global_variant_count, name, id))
+    global_variant_lookup[name] = global_variant_count
+    global_variant_count = global_variant_count + 1
     try:
-        for variant in static_solver_variants[name]:
-            variant_table.append((variant_count, variant, id))
-            variant_lookup[variant] = variant_count
-            variant_count = variant_count + 1
+        for variant in global_solver_variants[name]:
+            global_variant_table.append((global_variant_count, variant, id))
+            global_variant_lookup[variant] = global_variant_count
+            global_variant_count = global_variant_count + 1
     except KeyError:
         pass
 
@@ -152,5 +219,19 @@ def populate_tables(connetion):
 
     connetion.executemany(
         "INSERT INTO SolverVariants(id, fullName, solver) VALUES(?,?,?);",
-        variant_table,
+        global_variant_table,
     )
+
+
+def populate_evaluation_solvers(connection, evaluationName, evaluationId):
+    solvers = evaluation_solver_variants[evaluationName]
+    for solver, variant in solvers:
+        for row in connection.execute(
+            "SELECT id FROM Solvers WHERE name=?",
+            (solver,),
+        ):
+            solverId = row[0]
+        connection.execute(
+            "INSERT INTO SolverVariants(fullName, solver, evaluation) VALUES(?,?,?);",
+            (variant, solverId, evaluationId),
+        )

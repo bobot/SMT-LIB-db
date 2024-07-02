@@ -19,7 +19,7 @@ connection.execute("PRAGMA journal_mode=wal")
 connection.commit()
 
 licenses.setup_licenses(connection)
+evaluations.setup_evaluations(connection)
 solvers.setup_solvers(connection)
 benchmarks.setup_benchmarks(connection)
-evaluations.setup_evaluations(connection)
 connection.close()
