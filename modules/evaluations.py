@@ -1,6 +1,7 @@
 import tempfile
 import subprocess
-import csv
+import json
+
 from modules import benchmarks
 
 import modules.solvers
@@ -60,16 +61,15 @@ def add_smt_comp_generic(connection, folder, year, date):
     print(f"Adding SMT-COMP {year} results")
     with tempfile.TemporaryDirectory() as tmpdir:
         subprocess.run(
-            f"tar xvf {folder}/{year}/results/raw-results.tar.xz -C {folder}/{year}/results",
+            f"gunzip -fk {folder}/data/results-sq-{year}.json.gz",
             shell=True,
         )
-        subprocess.run(
-            f"{folder}/{year}/scoring/clean_result_csvs.sh", shell=True, cwd=tmpdir
-        )
-        with open(f"{tmpdir}/results-sq.csv", newline="") as csvfile:
-            reader = csv.DictReader(csvfile, delimiter=",")
-            for row in reader:
-                solver = row["solver"]
+        with open(f"{folder}/data/results-sq-{year}.json") as resultfile:
+            jsonObject = json.load(resultfile)
+            results = jsonObject["results"]
+            for result in results:
+                assert result["track"] == "SingleQuery"
+                solver = result["solver"]
                 solverVariantId = None
                 for r in connection.execute(
                     """
@@ -82,13 +82,15 @@ def add_smt_comp_generic(connection, folder, year, date):
                     # We do not care about the results from solvers that are not on the list.
                     # Note that some solvers are omitted on purpose, for example
                     # if there is a fixed version.
-                    print(f"nf: {solver}")
+                    # print(f"nf: {solver}")
                     continue
 
-                # remove the 'track_single_query/' from the start
-                fullbench = row["benchmark"][19:]
+                fileField = result["file"]
+                setField = fileField["family"][0]
+                fullbench = "/".join(fileField["family"][1:] + [fileField["name"]])
+
                 benchmarkId = benchmarks.guess_benchmark_id(
-                    connection, fullbench, isIncremental=False
+                    connection, False, fileField["logic"], setField, fullbench
                 )
                 if not benchmarkId:
                     # print(f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found")
@@ -101,23 +103,10 @@ def add_smt_comp_generic(connection, folder, year, date):
                 ):
                     subbenchmarkId = r[0]
 
-                try:
-                    cpuTime = float(row["cpu time"])
-                except ValueError:
-                    cpuTime = None
-                try:
-                    wallclockTime = float(row["wallclock time"])
-                except ValueError:
-                    wallclockTime = None
+                cpuTime = result["cpu_time"]
+                wallclockTime = result["wallclock_time"]
+                status = result["result"]
 
-                if row["result"] == "starexec-unknown":
-                    status = "unknown"
-                elif row["result"] != row["expected"]:
-                    status = "unknown"
-                else:
-                    status = row["result"]
-
-                # TODO: subbenchmark is here actually the benchmark ID
                 connection.execute(
                     """
                     INSERT INTO Results(evaluation, subbenchmark, solverVariant, cpuTime, wallclockTime, status)
@@ -136,9 +125,9 @@ def add_smt_comp_generic(connection, folder, year, date):
 
 
 def add_smt_comps(connection, folder):
-    add_smt_comp_generic(connection, folder, "2021", "2021-07-18")
+    # add_smt_comp_generic(connection, folder, "2021", "2021-07-18")
     # add_smt_comp_generic(connection, folder, "2022", "2022-08-10")
-    # add_smt_comp_generic(connection, folder, "2023", "2023-07-06")
+    add_smt_comp_generic(connection, folder, "2023", "2023-07-06")
 
 
 def add_ratings_for(connection, competition):

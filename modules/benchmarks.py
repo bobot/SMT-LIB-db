@@ -337,42 +337,25 @@ def add_benchmark(connection, benchmark):
     connection.commit()
 
 
-def guess_benchmark_id(connection, fullFilename, isIncremental=None):
+def guess_benchmark_id(connection, isIncremental, logic, setFoldername, fullFilename):
     """
-    Guess the id of a benchmark from a path
-    "[non-]incremental/LOGIC/SETFOLDERNAME/BENCHMARKPATH".  The guessing is
-    necessary, because benchmarks might have moved paths between competitions.
-    The function first tests whether there one unique benchmark with a subset
-    of the parameters.  First, it uses only "BENCHMARKPATH", then
-    additionally SETFOLDERNAME, then additionally isIncremental
-    then LOGIC.
-    If any of these thests returns one unique benchmark, its id is returned.
-    If any returns non, or if all return more than one benchmark,
-    None is returned.
+    Guess the id of a benchmark.  The guessing is necessary, because
+    benchmarks might have moved paths between competitions.  The function
+    first tests whether there one unique benchmark with a subset of the
+    parameters.  First, it uses only `fullFilename`, then additionally
+    `setFoldername`, then additionally `isIncremental`
+    then `logic`.
+    The `isIncremental` field is always enforced.
+    If any of these thests returns one unique benchmark, its id is
+    returned.  If any returns non, or if all return more than one
+    benchmark, None is returned.
 
     The priorities are informed by how often a component of the path change.
-    E.g., the LOGIC changed in the past for some benchmarks, because they were
+    E.g., the logic changed in the past for some benchmarks, because they were
     missclassified.
-
-    If `isIncremental` is given, the `fullFilepath` should not contain
-    the `[non-]incremental` part.
-
     """
-    if isIncremental == None:
-        slashIdx = fullFilename.find("/")
-        if fullFilename[:slashIdx] == "non-incremental":
-            isIncremental = False
-        else:
-            isIncremental = True
-        fullFilename = fullFilename[slashIdx + 1 :]
 
-    slashIdx = fullFilename.find("/")
-    logic = fullFilename[:slashIdx]
-    fullFilename = fullFilename[slashIdx + 1 :]
-
-    slashIdx = fullFilename.find("/")
-    setFoldername = fullFilename[:slashIdx]
-    fullFilename = fullFilename[slashIdx + 1 :]
+    _, benchmarkSet = parse_set(setFoldername)
 
     r = connection.execute(
         """
