@@ -125,8 +125,11 @@ def add_smt_comp_generic(connection, folder, year, date):
 
 
 def add_smt_comps(connection, folder):
-    # add_smt_comp_generic(connection, folder, "2021", "2021-07-18")
-    # add_smt_comp_generic(connection, folder, "2022", "2022-08-10")
+    add_smt_comp_generic(connection, folder, "2018", "2018-07-14")
+    add_smt_comp_generic(connection, folder, "2019", "2019-07-07")
+    add_smt_comp_generic(connection, folder, "2020", "2020-07-06")
+    add_smt_comp_generic(connection, folder, "2021", "2021-07-18")
+    add_smt_comp_generic(connection, folder, "2022", "2022-08-10")
     add_smt_comp_generic(connection, folder, "2023", "2023-07-06")
 
 
@@ -195,7 +198,14 @@ def add_ratings_for(connection, competition):
 
 
 def add_ratings(connection):
-    return
+    print("Adding ratings for SMT-COMP 2018")
+    add_ratings_for(connection, "SMT-COMP 2018")
+    print("Adding ratings for SMT-COMP 2019")
+    add_ratings_for(connection, "SMT-COMP 2019")
+    print("Adding ratings for SMT-COMP 2020")
+    add_ratings_for(connection, "SMT-COMP 2020")
+    print("Adding ratings for SMT-COMP 2021")
+    add_ratings_for(connection, "SMT-COMP 2021")
     print("Adding ratings for SMT-COMP 2022")
     add_ratings_for(connection, "SMT-COMP 2022")
     print("Adding ratings for SMT-COMP 2023")
