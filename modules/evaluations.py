@@ -1,7 +1,9 @@
 import tempfile
 import subprocess
 import json
+import csv
 
+from pathlib import Path
 from modules import benchmarks
 
 import modules.solvers
@@ -46,6 +48,169 @@ def setup_evaluations(connection):
     )
 
 
+def write_result(
+    connection, evaluationId, solver, subbenchmarkId, outcome, cpuTime, wallclockTime
+):
+    solverVariantId = None
+    for r in connection.execute(
+        """
+            SELECT Id FROM SolverVariants WHERE fullName=? AND evaluation=?
+            """,
+        (solver, evaluationId),
+    ):
+        solverVariantId = r[0]
+    if not solverVariantId:
+        # We do not care about the results from solvers that are not on the list.
+        # Note that some solvers are omitted on purpose, for example
+        # if there is a fixed version.
+        print(f"nf: {solver}")
+        return
+    connection.execute(
+        """
+            INSERT INTO Results(evaluation, subbenchmark, solverVariant, cpuTime, wallclockTime, status)
+            VALUES(?,?,?,?,?,?);
+            """,
+        (
+            evaluationId,
+            subbenchmarkId,
+            solverVariantId,
+            cpuTime,
+            wallclockTime,
+            outcome,
+        ),
+    )
+
+
+# CSV format used 2014
+def add_smt_comp_2014(connection, compressedCsvFilename):
+    name = f"SMT-COMP 2014"
+    cursor = connection.execute(
+        """
+        INSERT INTO Evaluations(name, date, link)
+        VALUES(?,?,?);
+        """,
+        (name, "2014-07-21", f"https://smt-comp.github.io/2014/"),
+    )
+    evaluationId = cursor.lastrowid
+    modules.solvers.populate_evaluation_solvers(connection, name, evaluationId)
+    connection.commit()
+    print(f"Adding SMT-COMP 2014 results")
+    with tempfile.TemporaryDirectory() as tmpdir:
+        subprocess.run(
+            f"tar -xf '{compressedCsvFilename}'",
+            cwd=tmpdir,
+            shell=True,
+        )
+        csvName = Path(compressedCsvFilename.stem).stem
+        with open(f"{tmpdir}/{csvName}.csv", newline="") as csvfile:
+            reader = csv.reader(csvfile, delimiter=",")
+            for row in reader:
+                solver = row[3]
+                cpuTime = row[8]
+                wallclockTime = row[9]
+                status = row[10]
+                # Discard disagreements
+                if status == "starexec-unknown":
+                    status = "unknown"
+                else:
+                    if row[11] != "starexec-unknown" and status != "starexec-unknown":
+                        status = "unknown"
+                benchmarkField = row[1].split("/")
+                logic = benchmarkField[0]
+                benchmarkSet = benchmarkField[1]
+                benchmarkName = "/".join(benchmarkField[2:])
+                benchmarkId = benchmarks.guess_benchmark_id(
+                    connection, False, logic, benchmarkSet, benchmarkName
+                )
+                if not benchmarkId:
+                    # print(f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found")
+                    benchmarkId = 1
+                    # continue
+                for r in connection.execute(
+                    """
+                    SELECT Id FROM Subbenchmarks WHERE benchmark=?
+                    """,
+                    (benchmarkId,),
+                ):
+                    subbenchmarkId = r[0]
+                write_result(
+                    connection,
+                    evaluationId,
+                    solver,
+                    subbenchmarkId,
+                    status,
+                    cpuTime,
+                    wallclockTime,
+                )
+    connection.commit()
+
+
+# CSV format used 2015-2017
+def add_smt_comp_oldstyle(connection, compressedCsvFilename, year, date):
+    name = f"SMT-COMP {year}"
+    cursor = connection.execute(
+        """
+        INSERT INTO Evaluations(name, date, link)
+        VALUES(?,?,?);
+        """,
+        (name, date, f"https://smt-comp.github.io/{year}/"),
+    )
+    evaluationId = cursor.lastrowid
+    modules.solvers.populate_evaluation_solvers(connection, name, evaluationId)
+    connection.commit()
+    print(f"Adding oldstyle SMT-COMP {year} results")
+    with tempfile.TemporaryDirectory() as tmpdir:
+        subprocess.run(
+            f"tar -xf '{compressedCsvFilename}'",
+            cwd=tmpdir,
+            shell=True,
+        )
+        csvName = Path(compressedCsvFilename.stem).stem
+        with open(f"{tmpdir}/{csvName}.csv", newline="") as csvfile:
+            reader = csv.DictReader(csvfile, delimiter=",")
+            for row in reader:
+                solver = row["solver"]
+                cpuTime = row["cpu time"]
+                wallclockTime = row["wallclock time"]
+                status = row["result"]
+                # Discard disagreements
+                if status == "starexec-unknown":
+                    status = "unknown"
+                else:
+                    if (
+                        row["expected"] != "starexec-unknown"
+                        and status != "starexec-unknown"
+                    ):
+                        status = "unknown"
+                benchmarkField = row["benchmark"].split("/")
+                logic = benchmarkField[0]
+                benchmarkSet = benchmarkField[1]
+                benchmarkName = "/".join(benchmarkField[2:])
+                benchmarkId = benchmarks.guess_benchmark_id(
+                    connection, False, logic, benchmarkSet, benchmarkName
+                )
+                if not benchmarkId:
+                    # print(f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found")
+                    continue
+                for r in connection.execute(
+                    """
+                    SELECT Id FROM Subbenchmarks WHERE benchmark=?
+                    """,
+                    (benchmarkId,),
+                ):
+                    subbenchmarkId = r[0]
+                write_result(
+                    connection,
+                    evaluationId,
+                    solver,
+                    subbenchmarkId,
+                    status,
+                    cpuTime,
+                    wallclockTime,
+                )
+    connection.commit()
+
+
 def add_smt_comp_generic(connection, folder, year, date):
     name = f"SMT-COMP {year}"
     cursor = connection.execute(
@@ -70,20 +235,6 @@ def add_smt_comp_generic(connection, folder, year, date):
             for result in results:
                 assert result["track"] == "SingleQuery"
                 solver = result["solver"]
-                solverVariantId = None
-                for r in connection.execute(
-                    """
-                    SELECT Id FROM SolverVariants WHERE fullName=? AND evaluation=?
-                    """,
-                    (solver, evaluationId),
-                ):
-                    solverVariantId = r[0]
-                if not solverVariantId:
-                    # We do not care about the results from solvers that are not on the list.
-                    # Note that some solvers are omitted on purpose, for example
-                    # if there is a fixed version.
-                    # print(f"nf: {solver}")
-                    continue
 
                 fileField = result["file"]
                 setField = fileField["family"][0]
@@ -106,31 +257,34 @@ def add_smt_comp_generic(connection, folder, year, date):
                 cpuTime = result["cpu_time"]
                 wallclockTime = result["wallclock_time"]
                 status = result["result"]
-
-                connection.execute(
-                    """
-                    INSERT INTO Results(evaluation, subbenchmark, solverVariant, cpuTime, wallclockTime, status)
-                    VALUES(?,?,?,?,?,?);
-                    """,
-                    (
-                        evaluationId,
-                        subbenchmarkId,
-                        solverVariantId,
-                        cpuTime,
-                        wallclockTime,
-                        status,
-                    ),
+                write_result(
+                    connection,
+                    evaluationId,
+                    solver,
+                    benchmarkId,
+                    status,
+                    cpuTime,
+                    wallclockTime,
                 )
+
     connection.commit()
 
 
-def add_smt_comps(connection, folder):
-    add_smt_comp_generic(connection, folder, "2018", "2018-07-14")
-    add_smt_comp_generic(connection, folder, "2019", "2019-07-07")
-    add_smt_comp_generic(connection, folder, "2020", "2020-07-06")
-    add_smt_comp_generic(connection, folder, "2021", "2021-07-18")
-    add_smt_comp_generic(connection, folder, "2022", "2022-08-10")
-    add_smt_comp_generic(connection, folder, "2023", "2023-07-06")
+def add_smt_comps(connection, smtcompwwwfolder, smtcompfolder):
+    path2014 = smtcompfolder / "2014/csv/combined.tar.xz"
+    add_smt_comp_2014(connection, path2014)
+    # path2015 = smtcompfolder / "2015/csv/Main_Track.tar.xz"
+    # add_smt_comp_oldstyle(connection, path2015, "2015", "2015-07-02")
+    # path2016 = smtcompfolder / "2016/csv/Main_Track.tar.xz"
+    # add_smt_comp_oldstyle(connection, path2016, "2016", "2016-07-02")
+    # path2017 = smtcompfolder / "2017/csv/Main_Track.tar.xz"
+    # add_smt_comp_oldstyle(connection, path2017, "2017", "2017-07-23")
+    # add_smt_comp_generic(connection, smtcompwwwfolder, "2018", "2018-07-14")
+    # add_smt_comp_generic(connection, smtcompwwwfolder, "2019", "2019-07-07")
+    # add_smt_comp_generic(connection, smtcompwwwfolder, "2020", "2020-07-06")
+    # add_smt_comp_generic(connection, smtcompwwwfolder, "2021", "2021-07-18")
+    # add_smt_comp_generic(connection, smtcompwwwfolder, "2022", "2022-08-10")
+    # add_smt_comp_generic(connection, smtcompwwwfolder, "2023", "2023-07-06")
 
 
 def add_ratings_for(connection, competition):
@@ -198,6 +352,7 @@ def add_ratings_for(connection, competition):
 
 
 def add_ratings(connection):
+    return
     print("Adding ratings for SMT-COMP 2018")
     add_ratings_for(connection, "SMT-COMP 2018")
     print("Adding ratings for SMT-COMP 2019")
