@@ -105,7 +105,7 @@ def add_smt_comp_2014(connection, compressedCsvFilename):
         with open(f"{tmpdir}/{csvName}.csv", newline="") as csvfile:
             reader = csv.reader(csvfile, delimiter=",")
             for row in reader:
-                solver = row[3]
+                solver = f"{row[3]} {row[5]}"
                 cpuTime = row[8]
                 wallclockTime = row[9]
                 status = row[10]
