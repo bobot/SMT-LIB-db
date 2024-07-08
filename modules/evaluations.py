@@ -123,9 +123,8 @@ def add_smt_comp_2014(connection, compressedCsvFilename):
                     connection, False, logic, benchmarkSet, benchmarkName
                 )
                 if not benchmarkId:
-                    # print(f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found")
-                    benchmarkId = 1
-                    # continue
+                    print(f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found")
+                    continue
                 for r in connection.execute(
                     """
                     SELECT Id FROM Subbenchmarks WHERE benchmark=?
@@ -169,7 +168,7 @@ def add_smt_comp_oldstyle(connection, compressedCsvFilename, year, date):
         with open(f"{tmpdir}/{csvName}.csv", newline="") as csvfile:
             reader = csv.DictReader(csvfile, delimiter=",")
             for row in reader:
-                solver = row["solver"]
+                solver = f"{row['solver']} {row['configuration']}"
                 cpuTime = row["cpu time"]
                 wallclockTime = row["wallclock time"]
                 status = row["result"]
@@ -190,7 +189,7 @@ def add_smt_comp_oldstyle(connection, compressedCsvFilename, year, date):
                     connection, False, logic, benchmarkSet, benchmarkName
                 )
                 if not benchmarkId:
-                    # print(f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found")
+                    print(f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found")
                     continue
                 for r in connection.execute(
                     """
@@ -244,7 +243,7 @@ def add_smt_comp_generic(connection, folder, year, date):
                     connection, False, fileField["logic"], setField, fullbench
                 )
                 if not benchmarkId:
-                    # print(f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found")
+                    print(f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found")
                     continue
                 for r in connection.execute(
                     """
@@ -261,7 +260,7 @@ def add_smt_comp_generic(connection, folder, year, date):
                     connection,
                     evaluationId,
                     solver,
-                    benchmarkId,
+                    subbenchmarkId,
                     status,
                     cpuTime,
                     wallclockTime,
@@ -273,18 +272,18 @@ def add_smt_comp_generic(connection, folder, year, date):
 def add_smt_comps(connection, smtcompwwwfolder, smtcompfolder):
     path2014 = smtcompfolder / "2014/csv/combined.tar.xz"
     add_smt_comp_2014(connection, path2014)
-    # path2015 = smtcompfolder / "2015/csv/Main_Track.tar.xz"
-    # add_smt_comp_oldstyle(connection, path2015, "2015", "2015-07-02")
-    # path2016 = smtcompfolder / "2016/csv/Main_Track.tar.xz"
-    # add_smt_comp_oldstyle(connection, path2016, "2016", "2016-07-02")
-    # path2017 = smtcompfolder / "2017/csv/Main_Track.tar.xz"
-    # add_smt_comp_oldstyle(connection, path2017, "2017", "2017-07-23")
-    # add_smt_comp_generic(connection, smtcompwwwfolder, "2018", "2018-07-14")
-    # add_smt_comp_generic(connection, smtcompwwwfolder, "2019", "2019-07-07")
-    # add_smt_comp_generic(connection, smtcompwwwfolder, "2020", "2020-07-06")
-    # add_smt_comp_generic(connection, smtcompwwwfolder, "2021", "2021-07-18")
-    # add_smt_comp_generic(connection, smtcompwwwfolder, "2022", "2022-08-10")
-    # add_smt_comp_generic(connection, smtcompwwwfolder, "2023", "2023-07-06")
+    path2015 = smtcompfolder / "2015/csv/Main_Track.tar.xz"
+    add_smt_comp_oldstyle(connection, path2015, "2015", "2015-07-02")
+    path2016 = smtcompfolder / "2016/csv/Main_Track.tar.xz"
+    add_smt_comp_oldstyle(connection, path2016, "2016", "2016-07-02")
+    path2017 = smtcompfolder / "2017/csv/Main_Track.tar.xz"
+    add_smt_comp_oldstyle(connection, path2017, "2017", "2017-07-23")
+    add_smt_comp_generic(connection, smtcompwwwfolder, "2018", "2018-07-14")
+    add_smt_comp_generic(connection, smtcompwwwfolder, "2019", "2019-07-07")
+    add_smt_comp_generic(connection, smtcompwwwfolder, "2020", "2020-07-06")
+    add_smt_comp_generic(connection, smtcompwwwfolder, "2021", "2021-07-18")
+    add_smt_comp_generic(connection, smtcompwwwfolder, "2022", "2022-08-10")
+    add_smt_comp_generic(connection, smtcompwwwfolder, "2023", "2023-07-06")
 
 
 def add_ratings_for(connection, competition):
