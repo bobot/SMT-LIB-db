@@ -54,6 +54,7 @@ known_solvers = [
     ("MathSAT", "https://mathsat.fbk.eu/"),
     ("mc2", "https://github.com/c-cube/mc2"),
     ("MinkeyRink", "https://minkeyrink.com/"),
+    ("MiniSmt", "http://cl-informatik.uibk.ac.at/software/minismt/"),
     ("Norn", "https://user.it.uu.se/~jarst116/norn/"),
     ("NRA-LS", "https://github.com/minghao-liu/NRA-LS"),
     ("OpenSMT", "https://verify.inf.usi.ch/opensmt"),
@@ -79,6 +80,7 @@ known_solvers = [
         "https://www.mpi-inf.mpg.de/departments/automation-of-logic/software/spass-workbench/spass-satt/",
     ),
     ("STP", "https://stp.github.io/"),
+    ("Tiffany de Wintermontte", ""),
     ("Toysmt", "https://github.com/msakai/toysolver/"),
     ("Trau", "https://github.com/diepbp/Trau"),
     (
@@ -131,6 +133,112 @@ global_solver_variants = {
 #       to map entries to results on the webpage.
 # TODO: 2014 has solvers in different configurations
 evaluation_solver_variants = {
+    "SMT Evaluation 2013": [
+        ("4Simp", ["4Simp-SMT-COMP-2012 default"]),
+        (
+            "Abziz",
+            [
+                "abziz_portfolio_2011_minfeatures_2 default",
+                "abziz_portfolio_2011_solvers_2 default",
+                "abziz_portfolio_2012_minfeatures default",
+                "abziz_portfolio_2012_solvers default",
+                "AbzizPortfolio-SMT-COMP-2012 default",
+            ],
+        ),
+        (
+            "AProVE",
+            ["AProVE-NIA-SMT-COMP-2010 default", "AProVE-NIA-SMT-COMP-2011 default"],
+        ),
+        (
+            "Boolector",
+            [
+                "Boolector-1.5.118-SMT-EVAL-2013 default",
+                "Boolector-SMT-COMP-2011 default",
+                "Boolector-SMT-COMP-2012 default",
+            ],
+        ),
+        (
+            "CVC3",
+            [
+                "CVC3-SMT-COMP-2010 default",
+                "CVC3-SMT-COMP-2011 default",
+                "CVC3-SMT-COMP-2012 default",
+            ],
+        ),
+        (
+            "CVC4",
+            [
+                "CVC4-SMT-COMP-2010 default",
+                "CVC4-SMT-COMP-2011 default",
+                "CVC4-SMT-COMP-2012-Resubmission default",
+                "CVC4-SMT-EVAL-2013 default",
+            ],
+        ),
+        (
+            "MathSAT",
+            [
+                "MathSAT5-5.2.6-SMT-EVAL-2013 default",
+                "MathSAT5-HeavyBV-SMT-COMP-2012 default",
+                "MathSAT5-SMT-COMP-2010 default",
+                "MathSAT5-SMT-COMP-2011 default",
+                "MathSAT5-SMT-COMP-2012 default",
+                "test_pmathsat-SMT-COMP-2010 default",
+            ],
+        ),
+        (
+            "MiniSmt",
+            ["MiniSMT-0.5-SMT-EVAL-2013 default", "MiniSMT-SMT-COMP-2010 default"],
+        ),
+        (
+            "OpenSMT",
+            [
+                "OpenSMT-SMT-COMP-2010 default",
+                "OpenSMT-SMT-COMP-2011 default",
+                "OpenSMT-SMT-EVAL-2013 default",
+            ],
+        ),
+        (
+            "SMTInterpol",
+            [
+                "SMTInterpol-2.0r8402-SMT-EVAL-2013 default",
+                "SMTInterpol-SMT-COMP-2011 default",
+                "SMTInterpol-SMT-COMP-2012 default",
+            ],
+        ),
+        (
+            "SONOLAR",
+            [
+                "SONOLAR-2013-05-15-SMT-EVAL-2013 default",
+                "SONOLAR-SMT-COMP-2010 default",
+                "SONOLAR-SMT-COMP-2011 default",
+                "SONOLAR-SMT-COMP-2012 default",
+            ],
+        ),
+        (
+            "STP",
+            [
+                "STP2-SMT-COMP-2011 default",
+                "STP2-SMT-COMP-2012 default",
+                "simplifyingSTP-SMT-COMP-2010 default",
+            ],
+        ),
+        ("Tiffany de Wintermontte", ["TdW-SMT-COMP-2012 default"]),
+        (
+            "veriT",
+            [
+                "veriT-SMT-COMP-2010 default",
+                "veriT-SMT-COMP-2011 default",
+                "veriT-SMT-EVAL-2013 default",
+            ],
+        ),
+        (
+            "Z3",
+            [
+                "Z3-4.3.2.a054b099c1d6-x64-debian-6.0.6-SMT-EVAL-2013 default",
+                "Z3-SMT-COMP-2011 default",
+            ],
+        ),
+    ],
     "SMT-COMP 2014": [
         ("4Simp", ["4Simp - 2014 default"]),
         (
@@ -146,7 +254,7 @@ evaluation_solver_variants = {
             ["Boolector boolector", "Boolector boolectord", "Boolector boolectorj"],
         ),
         ("CVC3", ["CVC3 default"]),
-        # Inconsistency: thereis also a "fixed resubmission" version
+        # Inconsistency: there is also a "fixed resubmission" version
         ("CVC4", ["CVC4 f7118b2 default"]),
         (
             "Kleaver",
@@ -276,7 +384,7 @@ evaluation_solver_variants = {
         ("Ctrl-Ergo", ["Ctrl-Ergo-SMTComp-2018_default"]),
         # What is this `master-...` version of CVC4? It appears with solver
         # id "19775" on StarExec.  However, it is not listed as a particiapant,
-        # but is listed as 2018 CVC4 in 2019.
+        # but is listed as 2018-CVC4 in 2019.
         (
             "CVC4",
             [

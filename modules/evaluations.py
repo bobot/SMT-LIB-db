@@ -81,6 +81,86 @@ def write_result(
     )
 
 
+# CSV format used for smt eval 2013
+def add_smt_eval_2013(connection, csvDataFile):
+    name = f"SMT Evaluation 2013"
+    cursor = connection.execute(
+        """
+        INSERT INTO Evaluations(name, date, link)
+        VALUES(?,?,?);
+        """,
+        (name, "2013-07-02", f"https://smtcomp.sourceforge.net/2013/"),
+    )
+    evaluationId = cursor.lastrowid
+    modules.solvers.populate_evaluation_solvers(connection, name, evaluationId)
+    connection.commit()
+
+    # Maps benchmark ids in the csv to ids in the database.
+    # This is necessary for the "FillInRun"s that don't contain full filenames.
+    # TODO: this could be an optimization for the other formats
+    # "FillInRun" are 593 the pairs originally omitted due to a "bug" (see paper).
+    benchmarkIdMapping = {}
+
+    print(f"Adding SMT Evaluation 2013 results")
+    with open(csvDataFile, newline="") as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=",")
+        for row in reader:
+            solver = f"{row[' solver']} {row['configuration']}"
+            # This is wallclock time. It tops out at 1500s, which is the
+            # wallclock time limit specified n the paper.
+            time = row["time(s)"]
+            if time == "-":
+                time = float("NaN")
+            else:
+                time = float(time)
+
+            status = row["result"]
+            # Discard disagreements
+            if status == "-":
+                status = "unknown"
+            benchmarkField = row[" benchmark"].split("/")
+            if row["benchmark id"] in benchmarkIdMapping:
+                subbenchmarkId = benchmarkIdMapping[row["benchmark id"]]
+            else:
+                if benchmarkField[0] == "FillInRun":
+                    print(
+                        f"WARNING: Fill in run {row[' benchmark']} of SMT Evaluation 2013 not found"
+                    )
+                    continue
+
+                logic = benchmarkField[1]
+                benchmarkSet = benchmarkField[2]
+                benchmarkName = "/".join(benchmarkField[3:])
+
+                benchmarkId = benchmarks.guess_benchmark_id(
+                    connection, False, logic, benchmarkSet, benchmarkName
+                )
+                if not benchmarkId:
+                    print(
+                        f"WARNING: Benchmark {benchmarkName} of SMT Evaluation 2013 not found"
+                    )
+                    continue
+                for r in connection.execute(
+                    """
+                    SELECT Id FROM Subbenchmarks WHERE benchmark=?
+                    """,
+                    (benchmarkId,),
+                ):
+                    subbenchmarkId = r[0]
+                benchmarkIdMapping[row["benchmark id"]] = subbenchmarkId
+
+            write_result(
+                connection,
+                evaluationId,
+                solver,
+                subbenchmarkId,
+                status,
+                None,
+                time,
+            )
+    connection.commit()
+
+
 # CSV format used 2014
 def add_smt_comp_2014(connection, compressedCsvFilename):
     name = f"SMT-COMP 2014"
@@ -123,7 +203,9 @@ def add_smt_comp_2014(connection, compressedCsvFilename):
                     connection, False, logic, benchmarkSet, benchmarkName
                 )
                 if not benchmarkId:
-                    print(f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found")
+                    print(
+                        f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found"
+                    )
                     continue
                 for r in connection.execute(
                     """
@@ -189,7 +271,9 @@ def add_smt_comp_oldstyle(connection, compressedCsvFilename, year, date):
                     connection, False, logic, benchmarkSet, benchmarkName
                 )
                 if not benchmarkId:
-                    print(f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found")
+                    print(
+                        f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found"
+                    )
                     continue
                 for r in connection.execute(
                     """
@@ -243,7 +327,9 @@ def add_smt_comp_generic(connection, folder, year, date):
                     connection, False, fileField["logic"], setField, fullbench
                 )
                 if not benchmarkId:
-                    print(f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found")
+                    print(
+                        f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found"
+                    )
                     continue
                 for r in connection.execute(
                     """
@@ -270,20 +356,23 @@ def add_smt_comp_generic(connection, folder, year, date):
 
 
 def add_smt_comps(connection, smtcompwwwfolder, smtcompfolder):
-    path2014 = smtcompfolder / "2014/csv/combined.tar.xz"
-    add_smt_comp_2014(connection, path2014)
-    path2015 = smtcompfolder / "2015/csv/Main_Track.tar.xz"
-    add_smt_comp_oldstyle(connection, path2015, "2015", "2015-07-02")
-    path2016 = smtcompfolder / "2016/csv/Main_Track.tar.xz"
-    add_smt_comp_oldstyle(connection, path2016, "2016", "2016-07-02")
-    path2017 = smtcompfolder / "2017/csv/Main_Track.tar.xz"
-    add_smt_comp_oldstyle(connection, path2017, "2017", "2017-07-23")
-    add_smt_comp_generic(connection, smtcompwwwfolder, "2018", "2018-07-14")
-    add_smt_comp_generic(connection, smtcompwwwfolder, "2019", "2019-07-07")
-    add_smt_comp_generic(connection, smtcompwwwfolder, "2020", "2020-07-06")
-    add_smt_comp_generic(connection, smtcompwwwfolder, "2021", "2021-07-18")
-    add_smt_comp_generic(connection, smtcompwwwfolder, "2022", "2022-08-10")
-    add_smt_comp_generic(connection, smtcompwwwfolder, "2023", "2023-07-06")
+    add_smt_eval_2013(
+        connection, Path("/home/hanse/Work/SMT-COMP/smteval/all-withheader.csv")
+    )
+    # path2014 = smtcompfolder / "2014/csv/combined.tar.xz"
+    # add_smt_comp_2014(connection, path2014)
+    # path2015 = smtcompfolder / "2015/csv/Main_Track.tar.xz"
+    # add_smt_comp_oldstyle(connection, path2015, "2015", "2015-07-02")
+    # path2016 = smtcompfolder / "2016/csv/Main_Track.tar.xz"
+    # add_smt_comp_oldstyle(connection, path2016, "2016", "2016-07-02")
+    # path2017 = smtcompfolder / "2017/csv/Main_Track.tar.xz"
+    # add_smt_comp_oldstyle(connection, path2017, "2017", "2017-07-23")
+    # add_smt_comp_generic(connection, smtcompwwwfolder, "2018", "2018-07-14")
+    # add_smt_comp_generic(connection, smtcompwwwfolder, "2019", "2019-07-07")
+    # add_smt_comp_generic(connection, smtcompwwwfolder, "2020", "2020-07-06")
+    # add_smt_comp_generic(connection, smtcompwwwfolder, "2021", "2021-07-18")
+    # add_smt_comp_generic(connection, smtcompwwwfolder, "2022", "2022-08-10")
+    # add_smt_comp_generic(connection, smtcompwwwfolder, "2023", "2023-07-06")
 
 
 def add_ratings_for(connection, competition):
