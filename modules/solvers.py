@@ -32,7 +32,9 @@ known_solvers = [
     ("Abziz", "https://mabdula.github.io/"),
     ("Alt-Ergo", "https://alt-ergo.ocamlpro.com/"),
     ("AProVE", "https://aprove.informatik.rwth-aachen.de/"),
+    ("ARIO", "http://smtcomp.cs.uiowa.edu/2005/descriptions/ARIOintro.pdf"),
     ("Barcelogic", "https://www.cs.upc.edu/~oliveras/bclt-main.html"),
+    ("BAT", "https://www.khoury.northeastern.edu/home/pete/bat/index.html"),
     ("Bitwuzla", "https://bitwuzla.github.io/"),
     ("Boolector", "https://boolector.github.io/"),
     (
@@ -42,10 +44,15 @@ known_solvers = [
     ("COLIBRI", "https://colibri.frama-c.com/"),
     ("CryptoMiniSat", "https://www.msoos.org/cryptominisat5/"),
     ("Ctrl-Ergo", "https://gitlab.com/iguerNL/Ctrl-Ergo"),
+    ("CVC", "https://doi.org/10.1007/3-540-45657-0_40"),
     ("CVC3", "https://cs.nyu.edu/acsys/cvc3/"),
     ("CVC4", "https://cvc4.github.io/"),
     ("cvc5", "https://cvc5.github.io/"),
+    ("CVC Lite", "https://doi.org/10.1007/978-3-540-27813-9_49"),
+    ("ExtSAT", "http://smtcomp.cs.uiowa.edu/2006/descriptions/extsat_description.pdf"),
+    ("HTP", "https://doi.org/10.1007/11817963_42"),
     ("iProver", "https://gitlab.com/korovin/iprover"),
+    ("Jat", ""),
     ("Kaluza", "https://doi.org/10.1109/SP.2010.38"),
     ("Kepler_22", "https://doi.org/10.1007/978-3-030-02768-1_19"),
     ("Kleaver", "https://klee-se.org/docs/kleaver-options/"),
@@ -57,6 +64,7 @@ known_solvers = [
     ("MiniSmt", "http://cl-informatik.uibk.ac.at/software/minismt/"),
     ("Norn", "https://user.it.uu.se/~jarst116/norn/"),
     ("NRA-LS", "https://github.com/minghao-liu/NRA-LS"),
+    ("NuSMV", "https://nusmv.fbk.eu/"),
     ("OpenSMT", "https://verify.inf.usi.ch/opensmt"),
     ("OSTRICH", "https://github.com/uuverifiers/ostrich"),
     ("Par4", "https://github.com/tjark/Par"),
@@ -66,6 +74,10 @@ known_solvers = [
     ("raSAT", ""),
     ("Redlog", "https://redlog.eu/"),
     ("S3P", "https://trinhmt.github.io/home/S3/"),
+    ("Sammy", "http://combination.cs.uiowa.edu/Sammy/"),
+    ("Sateen", "http://smtcomp.cs.uiowa.edu/2005/descriptions/sateen.pdf"),
+    ("SBT", ""),
+    ("Simplics", "https://fm.csl.sri.com/simplics/index.shtml"),
     ("SLENT", "https://github.com/NTU-ALComLab/SLENT"),
     ("SMTInterpol", "https://ultimate.informatik.uni-freiburg.de/smtinterpol"),
     ("SMT-RAT", "https://smtrat.github.io/"),
@@ -80,6 +92,10 @@ known_solvers = [
         "https://www.mpi-inf.mpg.de/departments/automation-of-logic/software/spass-workbench/spass-satt/",
     ),
     ("STP", "https://stp.github.io/"),
+    (
+        "SVC",
+        "https://web.archive.org/web/20050313143635/http://chicory.stanford.edu/SVC/",
+    ),
     ("Tiffany de Wintermontte", ""),
     ("Toysmt", "https://github.com/msakai/toysolver/"),
     ("Trau", "https://github.com/diepbp/Trau"),
@@ -113,7 +129,9 @@ solver_table = []
 # Lists solver variants that are not in scope of a comptetition.
 # E.g., those used as "Target Solver"
 global_solver_variants = {
+    "Barcelogic": ["barcelogic"],
     "Bitwuzla": ["Bitwuzla-wrapped", "bitwuzla", "Bitwuzla (with SymFPU)"],
+    "CryptoMiniSat": ["CryptoMinisat"],
     "CVC4": ["CVC4 (with SymFPU)"],
     "cvc5": ["CVC5"],
     "MathSAT": ["Mathsat5", "MathSAT5", "Mathsat"],
@@ -121,18 +139,42 @@ global_solver_variants = {
     "Vampire": ["vampire"],
     "Yices2": ["yices2", "Yices 2"],
     "Z3": ["z3", "z3;"],
-    "Z3string": ["Z3-str2", "Z3str3", "Z3str4", "Z3str3RE"],
+    "Z3string": ["Z3str2", "Z3-str2", "Z3str3", "Z3-str3", "Z3str4", "Z3str3RE"],
     "Woorpje": ["WOORPJE"],
     "Yices": ["YICES"],
 }
 
-# TODO: there are entries of the name "master-2018-06-10-b19c840-competition-default"
-#       who are those?
-# TODO: is it possible that solvers occur in two names that count (i.e. not
-#       just a non-fixed and a fixed version.  Maybe there is an automated way
-#       to map entries to results on the webpage.
-# TODO: 2014 has solvers in different configurations
 evaluation_solver_variants = {
+    "SMT-COMP 2005": [
+        ("ARIO", ["Ario"]),
+        ("Barcelogic", ["BarcelogicTools"]),
+        ("CVC", ["CVC"]),
+        ("CVC Lite", ["CVC Lite"]),
+        ("HTP", ["HTP"]),
+        ("MathSAT", ["MathSat"]),
+        ("Sammy", ["Sammy"]),
+        ("Sateen", ["Sateen"]),
+        ("SBT", ["SBT"]),
+        ("Simplics", ["Simplics"]),
+        ("SVC", ["SVC"]),
+        ("Yices", ["Yices"]),
+    ],
+    "SMT-COMP 2006": [
+        ("ARIO", ["Ario 1.2"]),
+        ("Barcelogic", ["Barcelogic 1.1", "Barcelogic 1.0 (2005 winner)"]),
+        ("BAT", ["Bat (hors-concours)"]),
+        ("CVC", ["CVC"]),
+        ("CVC3", ["CVC3"]),
+        ("ExtSAT", ["ExtSAT", "ExtSAT 1.1"]),
+        ("HTP", ["HTP", "HTP patched (hors-concours)"]),
+        ("Jat", ["Jat"]),
+        ("MathSAT", ["MathSAT 3.4"]),
+        ("NuSMV", ["NuSMV"]),
+        ("Sateen", ["Sateen"]),
+        ("Simplics", ["Simplics (2005 winner)"]),
+        ("STP", ["STP"]),
+        ("Yices", ["Yices 1.0", "Yices 0.1 (2005 winner)"]),
+    ],
     "SMT Evaluation 2013": [
         ("4Simp", ["4Simp-SMT-COMP-2012 default"]),
         (

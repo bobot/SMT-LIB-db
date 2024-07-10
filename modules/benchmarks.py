@@ -403,3 +403,23 @@ def guess_benchmark_id(connection, isIncremental, logic, setFoldername, fullFile
     if len(l) == 1:
         return l[0][0]
     return None
+
+
+def guess_subbenchmark_id(connection, logic, setFoldername, fullFilename):
+    """
+    Same as guess_benchmark_id, but returns the id of the sole subbenchmark
+    of a non-incremental benchmark.
+    """
+    benchmarkId = guess_benchmark_id(
+        connection, False, logic, setFoldername, fullFilename
+    )
+    if not benchmarkId:
+        return None
+    for r in connection.execute(
+        """
+        SELECT Id FROM Subbenchmarks WHERE benchmark=?
+        """,
+        (benchmarkId,),
+    ):
+        return r[0]
+    return None

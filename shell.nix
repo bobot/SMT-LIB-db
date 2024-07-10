@@ -23,6 +23,7 @@ pkgs.stdenv.mkDerivation {
       black
       parallel
       csvkit
+      python312Packages.beautifulsoup4
   ];
 
 }

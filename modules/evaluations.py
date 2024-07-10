@@ -2,9 +2,11 @@ import tempfile
 import subprocess
 import json
 import csv
+import re
 
 from pathlib import Path
 from modules import benchmarks
+from bs4 import BeautifulSoup
 
 import modules.solvers
 
@@ -81,6 +83,78 @@ def write_result(
     )
 
 
+old_header_regex = r"^Detailed results for (.+) at ([A-Z0-9_]+)$"
+
+
+def add_smt_comp_early(connection, year, date):
+    name = f"SMT-COMP {year}"
+    # Date is the day the PDPAR (pre. SMT) workshop happened.
+    cursor = connection.execute(
+        """
+        INSERT INTO Evaluations(name, date, link)
+        VALUES(?,?,?);
+        """,
+        (name, date, f"https://smtcomp.sourceforge.net/{year}/"),
+    )
+    evaluationId = cursor.lastrowid
+    modules.solvers.populate_evaluation_solvers(connection, name, evaluationId)
+    connection.commit()
+    print(f"Adding SMT-COMP {year} results")
+    for htmlFile in Path(f"./early-SMT-COMP/{year}").glob("results-*-*.shtml"):
+        soup = BeautifulSoup(open(htmlFile), "html.parser")
+        header = re.match(old_header_regex, soup.find("h1").text)
+        solver = header[1]
+        logic = header[2]
+
+        # Legacy logic, no longer used.
+        if logic == "QF_UFBV32":
+            logic = "QF_BV"
+
+        table = soup.find("table", "score")
+        if not table:
+            table = soup.find("table", "score2")
+        for c in table.find_all("tr"):
+            tds = list(c.find_all("td"))
+            # the header
+            if len(tds) == 0:
+                continue
+            assert len(tds) == 4
+            correct = tds[3].text
+            if not correct == "yes":
+                answer = "unknown"
+            else:
+                answer = tds[1].text
+
+            try:
+                time = float(tds[2].text)
+            except ValueError:
+                time = float("NaN")
+
+            benchmarkFields = tds[0].text.split("/")
+            benchmarkSet = benchmarkFields[0]
+            benchmarkName = "/".join(benchmarkFields[1:]) + "2"
+
+            subbenchmarkId = benchmarks.guess_subbenchmark_id(
+                connection, logic, benchmarkSet, benchmarkName
+            )
+            if not subbenchmarkId:
+                # print(
+                #     f"WARNING: Benchmark {benchmarkName} of SMT-COMP {year} not found"
+                # )
+                subbenchmarkId = 1
+                # continue
+
+            write_result(
+                connection,
+                evaluationId,
+                solver,
+                subbenchmarkId,
+                answer,
+                None,
+                time,
+            )
+
+
 # CSV format used for smt eval 2013
 def add_smt_eval_2013(connection, csvDataFile):
     name = f"SMT Evaluation 2013"
@@ -132,21 +206,14 @@ def add_smt_eval_2013(connection, csvDataFile):
                 benchmarkSet = benchmarkField[2]
                 benchmarkName = "/".join(benchmarkField[3:])
 
-                benchmarkId = benchmarks.guess_benchmark_id(
-                    connection, False, logic, benchmarkSet, benchmarkName
+                subbenchmarkId = benchmarks.guess_subbenchmark_id(
+                    connection, logic, benchmarkSet, benchmarkName
                 )
-                if not benchmarkId:
+                if not subbenchmarkId:
                     print(
                         f"WARNING: Benchmark {benchmarkName} of SMT Evaluation 2013 not found"
                     )
                     continue
-                for r in connection.execute(
-                    """
-                    SELECT Id FROM Subbenchmarks WHERE benchmark=?
-                    """,
-                    (benchmarkId,),
-                ):
-                    subbenchmarkId = r[0]
                 benchmarkIdMapping[row["benchmark id"]] = subbenchmarkId
 
             write_result(
@@ -199,21 +266,14 @@ def add_smt_comp_2014(connection, compressedCsvFilename):
                 logic = benchmarkField[0]
                 benchmarkSet = benchmarkField[1]
                 benchmarkName = "/".join(benchmarkField[2:])
-                benchmarkId = benchmarks.guess_benchmark_id(
-                    connection, False, logic, benchmarkSet, benchmarkName
+                subbenchmarkId = benchmarks.guess_subbenchmark_id(
+                    connection, logic, benchmarkSet, benchmarkName
                 )
-                if not benchmarkId:
+                if not subbenchmarkId:
                     print(
                         f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found"
                     )
                     continue
-                for r in connection.execute(
-                    """
-                    SELECT Id FROM Subbenchmarks WHERE benchmark=?
-                    """,
-                    (benchmarkId,),
-                ):
-                    subbenchmarkId = r[0]
                 write_result(
                     connection,
                     evaluationId,
@@ -267,21 +327,14 @@ def add_smt_comp_oldstyle(connection, compressedCsvFilename, year, date):
                 logic = benchmarkField[0]
                 benchmarkSet = benchmarkField[1]
                 benchmarkName = "/".join(benchmarkField[2:])
-                benchmarkId = benchmarks.guess_benchmark_id(
-                    connection, False, logic, benchmarkSet, benchmarkName
+                subbenchmarkId = benchmarks.guess_subbenchmark_id(
+                    connection, logic, benchmarkSet, benchmarkName
                 )
-                if not benchmarkId:
+                if not subbenchmarkId:
                     print(
                         f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found"
                     )
                     continue
-                for r in connection.execute(
-                    """
-                    SELECT Id FROM Subbenchmarks WHERE benchmark=?
-                    """,
-                    (benchmarkId,),
-                ):
-                    subbenchmarkId = r[0]
                 write_result(
                     connection,
                     evaluationId,
@@ -323,22 +376,14 @@ def add_smt_comp_generic(connection, folder, year, date):
                 setField = fileField["family"][0]
                 fullbench = "/".join(fileField["family"][1:] + [fileField["name"]])
 
-                benchmarkId = benchmarks.guess_benchmark_id(
-                    connection, False, fileField["logic"], setField, fullbench
+                benchmarkId = benchmarks.guess_subbenchmark_id(
+                    connection, fileField["logic"], setField, fullbench
                 )
-                if not benchmarkId:
+                if not subbenchmarkId:
                     print(
                         f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found"
                     )
                     continue
-                for r in connection.execute(
-                    """
-                    SELECT Id FROM Subbenchmarks WHERE benchmark=?
-                    """,
-                    (benchmarkId,),
-                ):
-                    subbenchmarkId = r[0]
-
                 cpuTime = result["cpu_time"]
                 wallclockTime = result["wallclock_time"]
                 status = result["result"]
@@ -355,10 +400,12 @@ def add_smt_comp_generic(connection, folder, year, date):
     connection.commit()
 
 
-def add_smt_comps(connection, smtcompwwwfolder, smtcompfolder):
-    add_smt_eval_2013(
-        connection, Path("/home/hanse/Work/SMT-COMP/smteval/all-withheader.csv")
-    )
+def add_smt_comps(connection, smtcompwwwfolder, smtcompfolder, smtevalcsv):
+    add_smt_comp_early(connection, "2005", "2005-07-12")
+    #add_smt_comp_early(connection, "2006", "2006-08-21")
+    # add_smt_eval_2013(
+    #      connection, smtevalcsv
+    # )
     # path2014 = smtcompfolder / "2014/csv/combined.tar.xz"
     # add_smt_comp_2014(connection, path2014)
     # path2015 = smtcompfolder / "2015/csv/Main_Track.tar.xz"
