@@ -1,0 +1,260 @@
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="author" content="Leonardo de Moura" />
+<meta name="description" content="SMT-COMP: Satisfiability Modulo Theories Competition" />
+<meta name="keywords" content="satisfiability, decision procedures, first-order logic with equality, separation logic, difference logic, EUF, solvers" />
+<link rel="stylesheet" href="https://smtcomp.sourceforge.net/2005/smt-style.css" type="text/css" />
+<title>Detailed results for CVC Lite at QF_LRA</title>
+</head>
+
+<body>
+
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th><a href="participants.shtml">Participants</a></th>
+    <th> &bull; </th> 
+    <th><a href="results.shtml">Results</a></th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+<!-- <img class="rfloat" src="images/sal3.jpg" alt="SAL" /> -->
+<h1>Detailed results for CVC Lite at QF_LRA</h1>
+
+<table class="score"><tr><th align="center">Benchmark</th><th align="left">Answer</th><th align="left">Time</th><th align="center">Correct?</th></tr></hr>
+<tr><td>TM/p-0-bucket_s13.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>TM/p-1-bucket_s9.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>TM/p-2-bucket_s11.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>TM/p-3-bucket_s10.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>TM/p3-driverlogNumeric_s8.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>TM/p4-driverlogNumeric_s8.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>TM/p5-driverlogNumeric_s8.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>TM/p5-driverlogNumeric_s9.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/Carpark2-ausgabe-5.smt</td><td align="center">unsat</td>
+<td align="center">46.4</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/gasburner-prop3-10.smt</td><td align="center">unsat</td>
+<td align="center">0.5</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/gasburner-prop3-15.smt</td><td align="center">unsat</td>
+<td align="center">0.9</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/gasburner-prop3-20.smt</td><td align="center">unsat</td>
+<td align="center">2.3</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/gasburner-prop3-5.smt</td><td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/pursuit-safety-10.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/pursuit-safety-15.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/pursuit-safety-20.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/pursuit-safety-5.smt</td><td align="center">unsat</td>
+<td align="center">19.4</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/tgc_io-nosafe-5.smt</td><td align="center">unsat</td>
+<td align="center">6.7</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/tgc_io-safe-10.smt</td><td align="center">unsat</td>
+<td align="center">186.7</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/tgc_io-safe-15.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/tgc_io-safe-20.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/tgc_io-safe-5.smt</td><td align="center">unsat</td>
+<td align="center">6.7</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/windowreal-no_t_deadlock-10.smt</td><td align="center">unsat</td>
+<td align="center">0.3</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/windowreal-no_t_deadlock-15.smt</td><td align="center">unsat</td>
+<td align="center">0.4</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/windowreal-no_t_deadlock-20.smt</td><td align="center">unsat</td>
+<td align="center">0.6</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/windowreal-no_t_deadlock-5.smt</td><td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>spider_benchmarks/frame_prop.induction.smt</td><td align="center">unsat</td>
+<td align="center">0.4</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>spider_benchmarks/fs_frame_gap.base.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>spider_benchmarks/fs_frame_gap.induction.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>spider_benchmarks/fs_init_no_op_accs.base.smt</td><td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>spider_benchmarks/fs_init_no_op_accs.induction.smt</td><td align="center">unsat</td>
+<td align="center">0.7</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>spider_benchmarks/fs_no_op_accs.base.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>spider_benchmarks/fs_no_op_accs.induction.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>spider_benchmarks/fs_not_sc_seen.base.smt</td><td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>spider_benchmarks/fs_not_sc_seen.induction.smt</td><td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>spider_benchmarks/fs_window.base.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>spider_benchmarks/fs_window.induction.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>spider_benchmarks/good_frame_update.base.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>spider_benchmarks/good_frame_update.induction.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>spider_benchmarks/op_seen_less2.base.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>spider_benchmarks/op_seen_less2.induction.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>spider_benchmarks/op_seen_more1.base.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>spider_benchmarks/op_seen_more1.induction.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>spider_benchmarks/pd_no_op_accs.base.smt</td><td align="center">unsat</td>
+<td align="center">0.9</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>spider_benchmarks/pd_no_op_accs.induction.smt</td><td align="center">unsat</td>
+<td align="center">3.8</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>spider_benchmarks/reint_to_least.induction.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>spider_benchmarks/sc_init_frame_gap.base.smt</td><td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>spider_benchmarks/sc_init_frame_gap.induction.smt</td><td align="center">unsat</td>
+<td align="center">1.4</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>spider_benchmarks/synched.base.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>spider_benchmarks/synched.induction.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+</table>
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th><a href="participants.shtml">Participants</a></th>
+    <th> &bull; </th> 
+    <th><a href="results.shtml">Results</a></th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+
+
+<p class="bottom">
+<i>
+Last modified: Tue 17 Feb 2015 14:59 UTC<br />
+</i>
+</p>
+</body>
+</html>
+

@@ -1,0 +1,709 @@
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="author" content="Leonardo de Moura" />
+<meta name="description" content="SMT-COMP: Satisfiability Modulo Theories Competition" />
+<meta name="keywords" content="satisfiability, decision procedures, first-order logic with equality, separation logic, difference logic, EUF, solvers" />
+<link rel="stylesheet" href="https://smtcomp.sourceforge.net/2006/smt-style.css" type="text/css" />
+<title>Detailed results for Yices 1.0 at QF_UFIDL</title>
+</head>
+
+<body>
+
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="participants.shtml">Participants</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="results.shtml">Results</a> </th>
+    <th> &bull; </th>
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+<!-- <img class="rfloat" src="images/sal3.jpg" alt="SAL" /> -->
+<h1>Detailed results for Yices 1.0 at QF_UFIDL</h1>
+
+<center><table class="score2"><tr><th align="left">Benchmark</th><th align="center">Answer</th><th align="center">Time</th><th align="center">Correct?</th></tr></hr>
+<tr>
+<td>RDS/reverse_acyclic0.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RDS/reverse_acyclic3.smt</td>
+<td align="center">sat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RDS/set_union0.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RDS/set_union4.smt</td>
+<td align="center">sat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RDS/simple_cyclic1.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RDS/sorted_list_insert_noalloc0.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RDS/sorted_list_insert_noalloc1.smt</td>
+<td align="center">sat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RDS/sorted_list_insert_noalloc3.smt</td>
+<td align="center">sat</td>
+<td align="center">0.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RDS/sorted_list_insert_noalloc4.smt</td>
+<td align="center">sat</td>
+<td align="center">0.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RDS/sorted_list_insert_noalloc7.smt</td>
+<td align="center">sat</td>
+<td align="center">0.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/BRP/BRP6.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/BRP/BRP7.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/DLX/DLX1C3.smt</td>
+<td align="center">sat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/DLX/DLX1C4.smt</td>
+<td align="center">sat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/OOO/OOO0.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/OOO/OOO2.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/OOO/OOO4.smt</td>
+<td align="center">sat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/aodv/aodv2.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/bakery/LamportBakery10.smt</td>
+<td align="center">sat</td>
+<td align="center">0.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/bakery/LamportBakery17.smt</td>
+<td align="center">sat</td>
+<td align="center">0.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/bakery/LamportBakery4.smt</td>
+<td align="center">sat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/ibm_cache/ibm_cache_full0.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/ibm_cache/ibm_cache_full1.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/ibm_cache/ibm_cache_full6.smt</td>
+<td align="center">sat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/ibm_cache/ibm_cache_full7.smt</td>
+<td align="center">sat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/ibm_cache/ibm_cache_full9.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/ibm_cache/ibm_cache_full_q_unbounded10.smt</td>
+<td align="center">sat</td>
+<td align="center">0.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/ibm_cache/ibm_cache_full_q_unbounded13.smt</td>
+<td align="center">sat</td>
+<td align="center">0.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/ibm_cache/ibm_cache_full_q_unbounded16.smt</td>
+<td align="center">sat</td>
+<td align="center">0.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/ibm_cache/ibm_cache_full_q_unbounded4.smt</td>
+<td align="center">sat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>UCLID-pred/ibm_cache/ibm_cache_full_q_unbounded5.smt</td>
+<td align="center">sat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>check/bignum_idl1.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>check/bignum_idl2.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete/8stage-flush.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete/9stage-flush.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete/cxs-bp-ex-inp-safety.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete/cxs.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete/fxs-bp.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete/fxs.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c10b_s.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c10bid.smt</td>
+<td align="center">unsat</td>
+<td align="center">1.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c10bidw_s.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c10idw_s.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c10n.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c10nid.smt</td>
+<td align="center">unsat</td>
+<td align="center">2.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c6bi_i.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c6idw_s.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c6n_i.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c6n_s.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c6nidw.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c6nidw_s.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c7bidw.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c7n.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c7n_s.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c7nidw_i.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c8bidw.smt</td>
+<td align="center">unsat</td>
+<td align="center">1.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c8idw.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c8idw_i.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c8idw_s.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c8n_i.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c8nidw.smt</td>
+<td align="center">unsat</td>
+<td align="center">1.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c9bidw_i.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c9idw_s.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c9n_s.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/c9nidw_i.smt</td>
+<td align="center">unsat</td>
+<td align="center">1.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/f10.smt</td>
+<td align="center">unsat</td>
+<td align="center">1.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/f10b.smt</td>
+<td align="center">unsat</td>
+<td align="center">1.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/f10bid.smt</td>
+<td align="center">unsat</td>
+<td align="center">3.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/f6id.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/f6ni.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/f7bidw.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/f8b.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/f9nidw.smt</td>
+<td align="center">unsat</td>
+<td align="center">2.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/g10.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/g10idw.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/g10ni.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/g10nidw.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/g6bid.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/g6id.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/g7b.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/g8b.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/g8idw.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/g9bidw.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete2/g9n.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete3/bug_file2.smt</td>
+<td align="center">sat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete3/bug_file3.smt</td>
+<td align="center">sat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete3/bug_file4.smt</td>
+<td align="center">sat</td>
+<td align="center">0.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>pete3/bug_file5.smt</td>
+<td align="center">sat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uclid/cache.inv12.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uclid/dlx1c.rwmem.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uclid/dlx1c.rwmem1.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uclid/ooo.rf10.smt</td>
+<td align="center">unsat</td>
+<td align="center">1.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uclid/ooo.tag14.smt</td>
+<td align="center">unsat</td>
+<td align="center">1.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uclid/q2.14.smt</td>
+<td align="center">unsat</td>
+<td align="center">1.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uclid/q2.18.smt</td>
+<td align="center">unsat</td>
+<td align="center">24.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uclid/q2.20.smt</td>
+<td align="center">unsat</td>
+<td align="center">116.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uclid2/bug2.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uclid2/cache.inv18.smt</td>
+<td align="center">unsat</td>
+<td align="center">182.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uclid2/elf.rf12.smt</td>
+<td align="center">unsat</td>
+<td align="center">29.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uclid2/ooo.tag15.smt</td>
+<td align="center">unsat</td>
+<td align="center">2.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uclid2/ooo.tag17.smt</td>
+<td align="center">unsat</td>
+<td align="center">16.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uclid2/ooo.tag19.smt</td>
+<td align="center">unsat</td>
+<td align="center">112.1</td>
+<td align="center">yes</td>
+</tr>
+</table></center>
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="participants.shtml">Participants</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="results.shtml">Results</a> </th>
+    <th> &bull; </th>
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+
+
+<p class="bottom">
+<i>
+Last modified: Tue 17 Feb 2015 15:01 UTC<br />
+</i>
+</p>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-271237-2";
+urchinTracker();
+</script>
+
+</body>
+</html>
+

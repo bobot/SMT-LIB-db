@@ -1,0 +1,105 @@
+
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="author" content="Leonardo de Moura" />
+<meta name="description" content="SMT-COMP: Satisfiability Modulo Theories Competition" />
+<meta name="keywords" content="satisfiability, decision procedures, first-order logic with equality, separation logic, difference logic, EUF, solvers" />
+<link rel="stylesheet" href="https://smtcomp.sourceforge.net/2005/smt-style.css" type="text/css" />
+<title>Results</title>
+</head>
+
+<body>
+
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th><a href="participants.shtml">Participants</a></th>
+    <th> &bull; </th> 
+    <th><a href="results.shtml">Results</a></th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+<!-- <img class="rfloat" src="images/sal3.jpg" alt="SAL" /> -->
+<h1>Results</h1>
+
+
+<p><b>The competition has finished.</b></p>
+<p> <a href="answers.shtml">Answers</a> for the benchmarks used in
+the competition.</p>
+
+<ul>
+<li> <a href="results-QF_UF.shtml">QF_UF</a>  </li>
+<li> <a href="results-QF_RDL.shtml">QF_RDL</a>  </li>
+<li> <a href="results-QF_IDL.shtml">QF_IDL</a>  </li>
+<li> <a href="results-QF_UFIDL.shtml">QF_UFIDL</a>  </li>
+<li> <a href="results-QF_LRA.shtml">QF_LRA </a>  </li>
+<li> <a href="results-QF_LIA.shtml">QF_LIA</a>  </li>
+<li> <a href="results-QF_AUFLIA.shtml">QF_AUFLIA</a> </li>
+</ul>
+
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th><a href="participants.shtml">Participants</a></th>
+    <th> &bull; </th> 
+    <th><a href="results.shtml">Results</a></th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+
+
+<p class="bottom">
+<i>
+Last modified: Tue 17 Feb 2015 14:59 UTC<br />
+</i>
+</p>
+</body>
+</html>
+
+
+

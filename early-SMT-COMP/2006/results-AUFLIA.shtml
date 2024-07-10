@@ -1,0 +1,151 @@
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="author" content="Leonardo de Moura" />
+<meta name="description" content="SMT-COMP: Satisfiability Modulo Theories Competition" />
+<meta name="keywords" content="satisfiability, decision procedures, first-order logic with equality, separation logic, difference logic, EUF, solvers" />
+<link rel="stylesheet" href="https://smtcomp.sourceforge.net/2006/smt-style.css" type="text/css" />
+<title>AUFLIA Results</title>
+</head>
+
+<body>
+
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="participants.shtml">Participants</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="results.shtml">Results</a> </th>
+    <th> &bull; </th>
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+<!-- <img class="rfloat" src="images/sal3.jpg" alt="SAL" /> -->
+<h1>AUFLIA Results</h1>
+
+<meta http-equiv="refresh" content="180"; URL="/homes/demoura/public_html/smt-comp/results-AUFLIA.shtml" />
+<center><table class="score"><tr><th align="left">Solver</th><th align="center">Score</th><th align="center">Time</th><th align="center">Unsat</th>
+<th align="center">Sat</th><th align="center">Unknown</th><th align="center">Timeout</th>
+<th align="center">Wrong</th></tr></hr>
+<tr><td><a href="results-AUFLIA-yices_06.shtml">Yices 1.0</a></td>
+<td align="center">96</td>
+<td align="center">104.7</td>
+<td align="center">96</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">0</td>
+</tr>
+<tr><td><a href="results-AUFLIA-CVC3.shtml">CVC3</a></td>
+<td align="center">50</td>
+<td align="center">296.3</td>
+<td align="center">50</td>
+<td align="center">0</td>
+<td align="center">51</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+</tr>
+</table></center>
+<p>Remarks:</p> 
+<ul>
+<li> Column <b>Time</b> has the accumulated time (secs) used to solve the <b>unsat</b> and <b>sat</b> instances. </li>
+<li> Column <b>Unknown</b> has the number of unknown answers produced. </li>
+<li> Column <b>Wrong</b> has the number of wrong answers.</li>
+</ul>
+<center><form method=get action="http://sal.csl.sri.com/cgi-bin/smtcomp-scatter.cgi">
+<p>
+<select NAME="result1">
+<option VALUE="/homes/demoura/public_html/smt-comp/yices_06-AUFLIA.results">Yices 1.0</option>
+<option VALUE="/homes/demoura/public_html/smt-comp/CVC3-AUFLIA.results">CVC3</option>
+</select>
+<select NAME="result2">
+<option VALUE="/homes/demoura/public_html/smt-comp/yices_06-AUFLIA.results">Yices 1.0</option>
+<option VALUE="/homes/demoura/public_html/smt-comp/CVC3-AUFLIA.results">CVC3</option>
+</select>
+<input TYPE="submit" NAME="Request" VALUE="Scattergraph">
+<a href="http://www.csl.sri.com/users/demoura/smt-comp/scattergraphs.shtml">help</a>
+</p></form></center>
+<center><form method=get action="http://sal.csl.sri.com/cgi-bin/smtcomp-compare.cgi">
+<p>
+<select NAME="result1">
+<option VALUE="/homes/demoura/public_html/smt-comp/yices_06-AUFLIA.results">Yices 1.0</option>
+<option VALUE="/homes/demoura/public_html/smt-comp/CVC3-AUFLIA.results">CVC3</option>
+</select>
+<select NAME="result2">
+<option VALUE="/homes/demoura/public_html/smt-comp/yices_06-AUFLIA.results">Yices 1.0</option>
+<option VALUE="/homes/demoura/public_html/smt-comp/CVC3-AUFLIA.results">CVC3</option>
+</select>
+<input TYPE="submit" NAME="Request" VALUE="  Compare  ">
+</p></form></center>
+<p><center><image src="AUFLIA-summary.png"></center></p>
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="participants.shtml">Participants</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="results.shtml">Results</a> </th>
+    <th> &bull; </th>
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+
+
+<p class="bottom">
+<i>
+Last modified: Tue 17 Feb 2015 15:02 UTC<br />
+</i>
+</p>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-271237-2";
+urchinTracker();
+</script>
+
+</body>
+</html>
+

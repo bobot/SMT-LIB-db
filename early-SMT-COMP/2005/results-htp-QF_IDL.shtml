@@ -1,0 +1,263 @@
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="author" content="Leonardo de Moura" />
+<meta name="description" content="SMT-COMP: Satisfiability Modulo Theories Competition" />
+<meta name="keywords" content="satisfiability, decision procedures, first-order logic with equality, separation logic, difference logic, EUF, solvers" />
+<link rel="stylesheet" href="https://smtcomp.sourceforge.net/2005/smt-style.css" type="text/css" />
+<title>Detailed results for HTP at QF_IDL</title>
+</head>
+
+<body>
+
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th><a href="participants.shtml">Participants</a></th>
+    <th> &bull; </th> 
+    <th><a href="results.shtml">Results</a></th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+<!-- <img class="rfloat" src="images/sal3.jpg" alt="SAL" /> -->
+<h1>Detailed results for HTP at QF_IDL</h1>
+
+<table class="score"><tr><th align="center">Benchmark</th><th align="left">Answer</th><th align="left">Time</th><th align="center">Correct?</th></tr></hr>
+<tr><td>DTP/DTP_k2_n35_c175_s9.smt</td><td align="center">sat</td>
+<td align="center">115.4</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>DTP/DTP_k2_n35_c210_s10.smt</td><td align="center">sat</td>
+<td align="center">277.5</td>
+<td align="center"><b><font color="#FF0000">no</font></b></td>
+</tr>
+<tr><td>DTP/DTP_k2_n35_c210_s16.smt</td><td align="center">sat</td>
+<td align="center">280.6</td>
+<td align="center"><b><font color="#FF0000">no</font></b></td>
+</tr>
+<tr><td>DTP/DTP_k2_n35_c210_s2.smt</td><td align="center">sat</td>
+<td align="center">282.0</td>
+<td align="center"><b><font color="#FF0000">no</font></b></td>
+</tr>
+<tr><td>DTP/DTP_k2_n35_c210_s4.smt</td><td align="center">sat</td>
+<td align="center">284.1</td>
+<td align="center"><b><font color="#FF0000">no</font></b></td>
+</tr>
+<tr><td>DTP/DTP_k2_n35_c210_s9.smt</td><td align="center">sat</td>
+<td align="center">274.4</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>DTP/DTP_k2_n35_c245_s10.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>DTP/DTP_k2_n35_c245_s15.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>DTP/DTP_k2_n35_c245_s2.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>DTP/DTP_k2_n35_c245_s20.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>DTP/DTP_k2_n35_c245_s5.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>DTP/DTP_k2_n35_c245_s9.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>check/int_incompleteness1.smt</td><td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center"><b><font color="#FF0000">no</font></b></td>
+</tr>
+<tr><td>diamonds/diamonds.10.2.i.a.u.smt</td><td align="center">sat</td>
+<td align="center">0.2</td>
+<td align="center"><b><font color="#FF0000">no</font></b></td>
+</tr>
+<tr><td>diamonds/diamonds.10.3.i.a.u.smt</td><td align="center">sat</td>
+<td align="center">0.2</td>
+<td align="center"><b><font color="#FF0000">no</font></b></td>
+</tr>
+<tr><td>diamonds/diamonds.14.5.i.a.u.smt</td><td align="center">sat</td>
+<td align="center">1.1</td>
+<td align="center"><b><font color="#FF0000">no</font></b></td>
+</tr>
+<tr><td>diamonds/diamonds.18.10.i.a.u.smt</td><td align="center">sat</td>
+<td align="center">10.7</td>
+<td align="center"><b><font color="#FF0000">no</font></b></td>
+</tr>
+<tr><td>diamonds/diamonds.18.5.i.a.u.smt</td><td align="center">sat</td>
+<td align="center">2.2</td>
+<td align="center"><b><font color="#FF0000">no</font></b></td>
+</tr>
+<tr><td>mathsat/FISCHER10-10-ninc.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/FISCHER10-11-ninc.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/FISCHER10-5-ninc.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/FISCHER13-10-ninc.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/FISCHER13-13-ninc.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/FISCHER13-14-ninc.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/FISCHER13-5-ninc.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/FISCHER14-10-ninc.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/FISCHER14-14-ninc.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/FISCHER14-15-ninc.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/FISCHER5-5-ninc.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/FISCHER9-10-ninc.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/FISCHER9-9-ninc.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/PO3-10-PO3.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/PO3-5-PO3.smt</td><td align="center">unsat</td>
+<td align="center">22.6</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>mathsat/PO3-7-PO3.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/PO4-10-PO4.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/PO4-11-PO4.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/PO4-4-PO4.smt</td><td align="center">unsat</td>
+<td align="center">96.5</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>mathsat/PO4-6-PO4.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>mathsat/PO4-8-PO4.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/inf-bakery-invalid-10.smt</td><td align="center">sat</td>
+<td align="center">0.3</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/inf-bakery-mutex-10.smt</td><td align="center">sat</td>
+<td align="center">0.4</td>
+<td align="center"><b><font color="#FF0000">no</font></b></td>
+</tr>
+<tr><td>sal/inf-bakery-mutex-15.smt</td><td align="center">sat</td>
+<td align="center">1.5</td>
+<td align="center"><b><font color="#FF0000">no</font></b></td>
+</tr>
+<tr><td>sal/inf-bakery-mutex-20.smt</td><td align="center">sat</td>
+<td align="center">4.7</td>
+<td align="center"><b><font color="#FF0000">no</font></b></td>
+</tr>
+<tr><td>sal/lpsat-goal-10.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/lpsat-goal-15.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/lpsat-goal-19.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/lpsat-goal-20.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/lpsat-goal-5.smt</td><td align="center">unsat</td>
+<td align="center">1.3</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sep/LD_ST_neg.2step.smt</td><td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sep/LD_ST_neg.3step.smt</td><td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sep/cache_neg.2step.smt</td><td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+</table>
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th><a href="participants.shtml">Participants</a></th>
+    <th> &bull; </th> 
+    <th><a href="results.shtml">Results</a></th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+
+
+<p class="bottom">
+<i>
+Last modified: Tue 17 Feb 2015 14:59 UTC<br />
+</i>
+</p>
+</body>
+</html>
+

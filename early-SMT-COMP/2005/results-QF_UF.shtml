@@ -1,0 +1,168 @@
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="author" content="Leonardo de Moura" />
+<meta name="description" content="SMT-COMP: Satisfiability Modulo Theories Competition" />
+<meta name="keywords" content="satisfiability, decision procedures, first-order logic with equality, separation logic, difference logic, EUF, solvers" />
+<link rel="stylesheet" href="https://smtcomp.sourceforge.net/2005/smt-style.css" type="text/css" />
+<title>QF_UF Results</title>
+</head>
+
+<body>
+
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th><a href="participants.shtml">Participants</a></th>
+    <th> &bull; </th> 
+    <th><a href="results.shtml">Results</a></th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+<!-- <img class="rfloat" src="images/sal3.jpg" alt="SAL" /> -->
+<h1>QF_UF Results</h1>
+
+<table class="score"><tr><th align="left">Solver</th><th align="center">Score</th><th align="center">Time</th><th align="center">Unsat</th><th align="center">Sat</th><th align="center">Unknown</th><th align="center">Wrong</th></tr></hr><tr><td><a href="results-barcelogic-QF_UF.shtml">BarcelogicTools</a></td>
+<td align="center">39</td>
+<td align="center">1758.2</td>
+<td align="center">31</td>
+<td align="center">8</td>
+<td align="center">11</td>
+<td align="center">0</td>
+</tr>
+<tr><td><a href="results-yices-QF_UF.shtml">Yices</a></td>
+<td align="center">37</td>
+<td align="center">1801.4</td>
+<td align="center">29</td>
+<td align="center">8</td>
+<td align="center">13</td>
+<td align="center">0</td>
+</tr>
+<tr><td><a href="results-mathsat-QF_UF.shtml">MathSat</a></td>
+<td align="center">33</td>
+<td align="center">2186.2</td>
+<td align="center">26</td>
+<td align="center">7</td>
+<td align="center">17</td>
+<td align="center">0</td>
+</tr>
+<tr><td><a href="results-cvcl-QF_UF.shtml">CVC Lite</a></td>
+<td align="center">23</td>
+<td align="center">3779.3</td>
+<td align="center">16</td>
+<td align="center">7</td>
+<td align="center">27</td>
+<td align="center">0</td>
+</tr>
+<tr><td><a href="results-cvc-QF_UF.shtml">CVC</a></td>
+<td align="center">21</td>
+<td align="center">1108.8</td>
+<td align="center">16</td>
+<td align="center">5</td>
+<td align="center">29</td>
+<td align="center">0</td>
+</tr>
+<tr><td><a href="results-svc-QF_UF.shtml">SVC</a></td>
+<td align="center">14</td>
+<td align="center">1297.0</td>
+<td align="center">11</td>
+<td align="center">3</td>
+<td align="center">36</td>
+<td align="center">0</td>
+</tr>
+<tr><td><a href="results-ario-QF_UF.shtml">Ario</a></td>
+<td align="center">11</td>
+<td align="center">792.5</td>
+<td align="center">10</td>
+<td align="center">1</td>
+<td align="center">39</td>
+<td align="center">0</td>
+</tr>
+<tr><td><a href="results-sammy-QF_UF.shtml">Sammy</a></td>
+<td align="center">1</td>
+<td align="center">0.3</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">49</td>
+<td align="center">0</td>
+</tr>
+<tr><td><a href="results-sbt-QF_UF.shtml">SBT</a></td>
+<td align="center">-22</td>
+<td align="center">10.7</td>
+<td align="center">50</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">8</td>
+</tr>
+<tr><td><a href="results-htp-QF_UF.shtml">HTP</a></td>
+<td align="center">-43</td>
+<td align="center">567.5</td>
+<td align="center">0</td>
+<td align="center">12</td>
+<td align="center">38</td>
+<td align="center">11</td>
+</tr>
+</table><p>Remarks: Column <b>Time</b> has the accumulated time (secs) used to solve the <b>unsat</b> and <b>sat</b> instances. Column <b>Wrong</b> has the number of wrong answers.<p><img src="https://smtcomp.sourceforge.net/2005/results-QF_UF.png"></p>
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th><a href="participants.shtml">Participants</a></th>
+    <th> &bull; </th> 
+    <th><a href="results.shtml">Results</a></th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+
+
+<p class="bottom">
+<i>
+Last modified: Tue 17 Feb 2015 14:59 UTC<br />
+</i>
+</p>
+</body>
+</html>
+

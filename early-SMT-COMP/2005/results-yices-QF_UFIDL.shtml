@@ -1,0 +1,271 @@
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="author" content="Leonardo de Moura" />
+<meta name="description" content="SMT-COMP: Satisfiability Modulo Theories Competition" />
+<meta name="keywords" content="satisfiability, decision procedures, first-order logic with equality, separation logic, difference logic, EUF, solvers" />
+<link rel="stylesheet" href="https://smtcomp.sourceforge.net/2005/smt-style.css" type="text/css" />
+<title>Detailed results for Yices at QF_UFIDL</title>
+</head>
+
+<body>
+
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th><a href="participants.shtml">Participants</a></th>
+    <th> &bull; </th> 
+    <th><a href="results.shtml">Results</a></th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+<!-- <img class="rfloat" src="images/sal3.jpg" alt="SAL" /> -->
+<h1>Detailed results for Yices at QF_UFIDL</h1>
+
+<table class="score"><tr><th align="center">Benchmark</th><th align="left">Answer</th><th align="left">Time</th><th align="center">Correct?</th></tr></hr>
+<tr><td>check/int_incompleteness1.smt</td><td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete/6stage-flush.smt</td><td align="center">unsat</td>
+<td align="center">1.4</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete/9stage-flush.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>pete/cxs-bp-ex-inp.smt</td><td align="center">unsat</td>
+<td align="center">8.4</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete/cxs-bp.smt</td><td align="center">unsat</td>
+<td align="center">3.7</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete/cxs-safety.smt</td><td align="center">unsat</td>
+<td align="center">0.5</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete/cxs.smt</td><td align="center">unsat</td>
+<td align="center">0.6</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete/fxs-bp-ex-inp-safety.smt</td><td align="center">unsat</td>
+<td align="center">7.8</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete/fxs-bp-ex.smt</td><td align="center">unsat</td>
+<td align="center">10.3</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete/fxs-safety.smt</td><td align="center">unsat</td>
+<td align="center">5.0</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete/fxs.smt</td><td align="center">unsat</td>
+<td align="center">4.0</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete2/c10ni.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>pete2/c6_s.smt</td><td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete2/c6b_s.smt</td><td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete2/c6bidw_s.smt</td><td align="center">unsat</td>
+<td align="center">2.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete2/c8b_i.smt</td><td align="center">unsat</td>
+<td align="center">6.2</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete2/c8idw_i.smt</td><td align="center">unsat</td>
+<td align="center">301.2</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete2/f10nidw.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>pete2/f8b.smt</td><td align="center">unsat</td>
+<td align="center">466.8</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete2/f8bidw.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>pete2/f9.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>pete2/f9idw.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>pete2/g10bidw.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>pete2/g10i.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>pete2/g6bidw.smt</td><td align="center">unsat</td>
+<td align="center">219.8</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete2/g7.smt</td><td align="center">unsat</td>
+<td align="center">4.7</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>pete2/g8nidw.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>pete2/g9idw.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>pete2/g9n.smt</td><td align="center">unsat</td>
+<td align="center">539.5</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid/22s.smt</td><td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid/43s.smt</td><td align="center">unsat</td>
+<td align="center">3.0</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid/cache.inv12.smt</td><td align="center">unsat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid/cache.inv8.smt</td><td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid/dlx1c.rwmem.smt</td><td align="center">unsat</td>
+<td align="center">0.7</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid/dlx1c.smt</td><td align="center">unsat</td>
+<td align="center">0.3</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid/elf.rf10.smt</td><td align="center">unsat</td>
+<td align="center">6.3</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid/elf.rf8.smt</td><td align="center">unsat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid/ooo.rf10.smt</td><td align="center">unsat</td>
+<td align="center">37.9</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid/ooo.rf6.smt</td><td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid/ooo.tag10.smt</td><td align="center">unsat</td>
+<td align="center">5.0</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid/q2.10.smt</td><td align="center">unsat</td>
+<td align="center">0.3</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid/q2.14.smt</td><td align="center">unsat</td>
+<td align="center">25.2</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid2/bug1.smt</td><td align="center">sat</td>
+<td align="center">0.9</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid2/bug2.smt</td><td align="center">sat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid2/cache.inv15.smt</td><td align="center">unsat</td>
+<td align="center">10.7</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid2/elf.rf12.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>uclid2/ooo.rf13.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>uclid2/ooo.tag15.smt</td><td align="center">unsat</td>
+<td align="center">317.0</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>uclid2/ooo.tag19.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+</table>
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th><a href="participants.shtml">Participants</a></th>
+    <th> &bull; </th> 
+    <th><a href="results.shtml">Results</a></th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+
+
+<p class="bottom">
+<i>
+Last modified: Tue 17 Feb 2015 14:59 UTC<br />
+</i>
+</p>
+</body>
+</html>
+

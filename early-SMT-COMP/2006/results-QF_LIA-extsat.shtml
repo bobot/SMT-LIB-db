@@ -1,0 +1,732 @@
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="author" content="Leonardo de Moura" />
+<meta name="description" content="SMT-COMP: Satisfiability Modulo Theories Competition" />
+<meta name="keywords" content="satisfiability, decision procedures, first-order logic with equality, separation logic, difference logic, EUF, solvers" />
+<link rel="stylesheet" href="https://smtcomp.sourceforge.net/2006/smt-style.css" type="text/css" />
+<title>Detailed results for ExtSAT 1.1 at QF_LIA</title>
+</head>
+
+<body>
+
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="participants.shtml">Participants</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="results.shtml">Results</a> </th>
+    <th> &bull; </th>
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+<!-- <img class="rfloat" src="images/sal3.jpg" alt="SAL" /> -->
+<h1>Detailed results for ExtSAT 1.1 at QF_LIA</h1>
+
+<center><table class="score2"><tr><th align="left">Benchmark</th><th align="center">Answer</th><th align="center">Time</th><th align="center">Correct?</th></tr></hr>
+<tr>
+<td>Averest/parallel_prefix_sum/ParallelPrefixSum_live_bgmc000.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Averest/parallel_prefix_sum/ParallelPrefixSum_live_bgmc002.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Averest/parallel_prefix_sum/ParallelPrefixSum_live_blmc000.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Averest/parallel_prefix_sum/ParallelPrefixSum_live_blmc002.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Averest/parallel_prefix_sum/ParallelPrefixSum_safe_bgmc003.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Averest/parallel_prefix_sum/ParallelPrefixSum_safe_bgmc004.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Averest/parallel_prefix_sum/ParallelPrefixSum_safe_bgmc005.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Averest/parallel_prefix_sum/ParallelPrefixSum_safe_bgmc006.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Averest/parallel_prefix_sum/ParallelPrefixSum_safe_blmc001.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Averest/parallel_prefix_sum/ParallelPrefixSum_safe_blmc003.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Averest/parallel_prefix_sum/ParallelPrefixSum_safe_blmc005.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Averest/parallel_prefix_sum/ParallelPrefixSum_safe_blmc007.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Averest/parallel_prefix_sum/ParallelPrefixSum_safe_blmc008.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier/MULTIPLIER_11.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier/MULTIPLIER_12.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier/MULTIPLIER_13.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier/MULTIPLIER_15.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier/MULTIPLIER_3.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier/MULTIPLIER_32.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier/MULTIPLIER_6.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier/MULTIPLIER_64.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier/MULTIPLIER_8.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier_prime/MULTIPLIER_PRIME_10.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier_prime/MULTIPLIER_PRIME_11.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier_prime/MULTIPLIER_PRIME_12.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier_prime/MULTIPLIER_PRIME_14.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier_prime/MULTIPLIER_PRIME_15.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier_prime/MULTIPLIER_PRIME_16.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier_prime/MULTIPLIER_PRIME_2.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier_prime/MULTIPLIER_PRIME_3.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier_prime/MULTIPLIER_PRIME_32.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier_prime/MULTIPLIER_PRIME_5.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier_prime/MULTIPLIER_PRIME_64.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/multiplier_prime/MULTIPLIER_PRIME_9.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/simplebitadder/SIMPLEBITADDER_COMPOSE_11.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/simplebitadder/SIMPLEBITADDER_COMPOSE_12.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/simplebitadder/SIMPLEBITADDER_COMPOSE_13.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/simplebitadder/SIMPLEBITADDER_COMPOSE_14.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/simplebitadder/SIMPLEBITADDER_COMPOSE_15.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/simplebitadder/SIMPLEBITADDER_COMPOSE_16.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/simplebitadder/SIMPLEBITADDER_COMPOSE_3.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/simplebitadder/SIMPLEBITADDER_COMPOSE_32.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>CIRC/simplebitadder/SIMPLEBITADDER_COMPOSE_64.msat.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RTCL/b04_tf_20/ckt_PROP0_tf_20.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RTCL/b13_tf_10/ckt_PROP3_tf_10.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RTCL/b13_tf_10/ckt_PROP8_tf_10.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RTCL/b13_tf_100/b13_tf_100.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RTCL/b13_tf_12_PROP4/ckt_PROP4_tf_12.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center"><b><font color="#FF0000">no (unsound)
+</font></b></td>
+</tr>
+<tr>
+<td>RTCL/b13_tf_15/ckt_PROP1_tf_15.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RTCL/b13_tf_15/ckt_PROP5_tf_15.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RTCL/b13_tf_15/ckt_PROP8_tf_15.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RTCL/b13_tf_20/ckt_PROP2_tf_20.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RTCL/b13_tf_20/ckt_PROP8_tf_20.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RTCL/b13_tf_30/ckt_PROP5_tf_30.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>RTCL/b13_tf_9_PROP14/ckt_PROP14_tf_9.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center"><b><font color="#FF0000">no (unsound)
+</font></b></td>
+</tr>
+<tr>
+<td>RTCL/b13_tf_9_PROP7/ckt_PROP7_tf_9.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center"><b><font color="#FF0000">no (unsound)
+</font></b></td>
+</tr>
+<tr>
+<td>check/bignum_lia1.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>check/bignum_lia2.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>check/int_incompleteness1.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>check/int_incompleteness2.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>check/int_incompleteness3.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER1-5-fair.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER10-1-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER10-10-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER10-13-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER10-15-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER10-2-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER10-9-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER11-11-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER11-12-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER11-14-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER11-16-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER11-2-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER11-3-fair.smt</td>
+<td align="center">unsat</td>
+<td align="center">1.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER11-6-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER11-9-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER2-1-fair.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center"><b><font color="#FF0000">no (unsound)
+</font></b></td>
+</tr>
+<tr>
+<td>mathsat/FISCHER2-7-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER3-1-fair.smt</td>
+<td align="center">unsat</td>
+<td align="center">452.3</td>
+<td align="center"><b><font color="#FF0000">no (unsound)
+</font></b></td>
+</tr>
+<tr>
+<td>mathsat/FISCHER3-3-fair.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER3-6-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER3-8-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER4-9-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER5-1-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER6-11-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER6-5-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER7-1-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER7-11-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER7-12-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER7-4-fair.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER7-6-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER7-7-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER8-1-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER8-12-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER8-13-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER8-6-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER8-8-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER9-1-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER9-10-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER9-11-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER9-12-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER9-13-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>mathsat/FISCHER9-14-fair.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisa/wisa3.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisa/wisa5.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+</table></center>
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="participants.shtml">Participants</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="results.shtml">Results</a> </th>
+    <th> &bull; </th>
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+
+
+<p class="bottom">
+<i>
+Last modified: Tue 17 Feb 2015 15:01 UTC<br />
+</i>
+</p>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-271237-2";
+urchinTracker();
+</script>
+
+</body>
+</html>
+

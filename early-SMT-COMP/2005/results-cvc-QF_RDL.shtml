@@ -1,0 +1,244 @@
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="author" content="Leonardo de Moura" />
+<meta name="description" content="SMT-COMP: Satisfiability Modulo Theories Competition" />
+<meta name="keywords" content="satisfiability, decision procedures, first-order logic with equality, separation logic, difference logic, EUF, solvers" />
+<link rel="stylesheet" href="https://smtcomp.sourceforge.net/2005/smt-style.css" type="text/css" />
+<title>Detailed results for CVC at QF_RDL</title>
+</head>
+
+<body>
+
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th><a href="participants.shtml">Participants</a></th>
+    <th> &bull; </th> 
+    <th><a href="results.shtml">Results</a></th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+<!-- <img class="rfloat" src="images/sal3.jpg" alt="SAL" /> -->
+<h1>Detailed results for CVC at QF_RDL</h1>
+
+<table class="score"><tr><th align="center">Benchmark</th><th align="left">Answer</th><th align="left">Time</th><th align="center">Correct?</th></tr></hr>
+<tr><td>sal/fischer3-mutex-10.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/fischer3-mutex-11.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/fischer3-mutex-12.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/fischer3-mutex-15.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/fischer3-mutex-20.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/fischer3-mutex-3.smt</td><td align="center">unsat</td>
+<td align="center">0.7</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/fischer3-mutex-5.smt</td><td align="center">unsat</td>
+<td align="center">3.9</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/fischer3-mutex-8.smt</td><td align="center">unsat</td>
+<td align="center">35.2</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/fischer6-mutex-10.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/fischer6-mutex-11.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/fischer6-mutex-12.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/fischer6-mutex-15.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/fischer6-mutex-20.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/fischer6-mutex-3.smt</td><td align="center">unsat</td>
+<td align="center">2.4</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/fischer6-mutex-5.smt</td><td align="center">unsat</td>
+<td align="center">68.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/fischer6-mutex-8.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/fischer9-mutex-10.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/fischer9-mutex-11.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/fischer9-mutex-12.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/fischer9-mutex-15.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/fischer9-mutex-20.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/fischer9-mutex-3.smt</td><td align="center">unsat</td>
+<td align="center">5.0</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>sal/fischer9-mutex-5.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>sal/fischer9-mutex-8.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/abz5_1000.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/abz5_1200.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/abz5_1234.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/abz6_800.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/abz6_900.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/orb01_900.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/orb02_888.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/orb03_1005.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/orb03_950.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/orb07_250.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/orb07_330.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/orb07_397.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/orb09_800.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/orb09_900.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/orb09_934.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/orb10_1000.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/orb10_800.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/yn1_750.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/yn2_750.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/yn2_950.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/yn3_750.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>scheduling/yn3_950.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>skdmxa/skdmxa-3x3-10.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>skdmxa/skdmxa-3x3-15.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>skdmxa/skdmxa-3x3-20.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>skdmxa/skdmxa-3x3-5.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+</table>
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th><a href="participants.shtml">Participants</a></th>
+    <th> &bull; </th> 
+    <th><a href="results.shtml">Results</a></th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+
+
+<p class="bottom">
+<i>
+Last modified: Tue 17 Feb 2015 14:59 UTC<br />
+</i>
+</p>
+</body>
+</html>
+

@@ -1,0 +1,697 @@
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="author" content="Leonardo de Moura" />
+<meta name="description" content="SMT-COMP: Satisfiability Modulo Theories Competition" />
+<meta name="keywords" content="satisfiability, decision procedures, first-order logic with equality, separation logic, difference logic, EUF, solvers" />
+<link rel="stylesheet" href="https://smtcomp.sourceforge.net/2006/smt-style.css" type="text/css" />
+<title>Detailed results for Yices 1.0 at QF_UFBV32</title>
+</head>
+
+<body>
+
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="participants.shtml">Participants</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="results.shtml">Results</a> </th>
+    <th> &bull; </th>
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+<!-- <img class="rfloat" src="images/sal3.jpg" alt="SAL" /> -->
+<h1>Detailed results for Yices 1.0 at QF_UFBV32</h1>
+
+<center><table class="score2"><tr><th align="left">Benchmark</th><th align="center">Answer</th><th align="center">Time</th><th align="center">Correct?</th></tr></hr>
+<tr>
+<td>bench_a/a187test0009.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>bench_a/a208test0005.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>bench_a/a209test0010.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>bench_a/a222test0008.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>bench_a/a28test0002.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>bench_a/a394test0036.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>bench_a/a424test0004.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>bench_a/a493test0006.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>bench_a/a499test0009.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>bench_a/a53test0002.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>bench_a/a641test0030.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>bench_a/a682test0085.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>bench_a/a71test0002.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>bench_a/a83test0001.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>crafted/bbb.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>crafted/bitops1.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>crafted/bitops5.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>crafted/bitops7.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>crafted/bitvec2.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>crafted/bitvec4.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>crafted/bitvec5.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>crafted/bitvec7.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>crafted/boolextract.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>crafted/bvlt.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-0293.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-0497.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-0892.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-0997.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-1836.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-2322.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-2393.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-2564.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-2770.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-2782.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-3306.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-3440.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-3493.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-3561.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-3688.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-4041.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-4218.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-4561.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-4773.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-4819.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-5021.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-5945.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-6183.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-6203.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-6663.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-6700.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-6958.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-7279.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-7584.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-7630.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/easy/egt-7842.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-0056.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-0074.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-0130.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-0231.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-0233.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-0563.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-1100.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-1346.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-1532.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-1604.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-1639.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-1825.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-1827.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-1875.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-1888.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-2406.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-2657.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-2694.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-2698.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-2714.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-2891.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-3042.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-3397.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-3412.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-4176.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-4196.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-4631.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-4702.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-5221.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-5319.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-5335.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-5663.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-5811.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-6363.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-6484.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-6493.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-6502.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-6535.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-6556.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-6583.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-6595.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-7308.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-7500.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-7619.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>egt/hard/egt-7651.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+</table></center>
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="participants.shtml">Participants</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="results.shtml">Results</a> </th>
+    <th> &bull; </th>
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+
+
+<p class="bottom">
+<i>
+Last modified: Tue 17 Feb 2015 15:01 UTC<br />
+</i>
+</p>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-271237-2";
+urchinTracker();
+</script>
+
+</body>
+</html>
+

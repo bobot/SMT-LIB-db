@@ -1,0 +1,709 @@
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="author" content="Leonardo de Moura" />
+<meta name="description" content="SMT-COMP: Satisfiability Modulo Theories Competition" />
+<meta name="keywords" content="satisfiability, decision procedures, first-order logic with equality, separation logic, difference logic, EUF, solvers" />
+<link rel="stylesheet" href="https://smtcomp.sourceforge.net/2006/smt-style.css" type="text/css" />
+<title>Detailed results for ExtSAT 1.1 at QF_RDL</title>
+</head>
+
+<body>
+
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="participants.shtml">Participants</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="results.shtml">Results</a> </th>
+    <th> &bull; </th>
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+<!-- <img class="rfloat" src="images/sal3.jpg" alt="SAL" /> -->
+<h1>Detailed results for ExtSAT 1.1 at QF_RDL</h1>
+
+<center><table class="score2"><tr><th align="left">Benchmark</th><th align="center">Answer</th><th align="center">Time</th><th align="center">Correct?</th></tr></hr>
+<tr>
+<td>check/bignum_rdl1.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>check/bignum_rdl2.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-1.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-10.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-11.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-13.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-14.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-15.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-16.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-17.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-18.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-19.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-20.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-3.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-4.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-5.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-6.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-7.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-8.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer3-mutex-9.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-1.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-10.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-11.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-12.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-13.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-14.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-15.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-16.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-17.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-18.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-19.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-2.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-20.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-3.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-4.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-5.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-6.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-7.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-8.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer6-mutex-9.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-1.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-10.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-11.smt</td>
+<td align="center">timeout</td>
+<td align="center">1209.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-12.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-13.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-14.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-15.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-16.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-17.smt</td>
+<td align="center">timeout</td>
+<td align="center">1209.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-18.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-19.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-2.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-20.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-3.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-5.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-6.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-8.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/fischer9-mutex-9.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>scheduling/abz7_500.smt</td>
+<td align="center">timeout</td>
+<td align="center">1209.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>scheduling/abz7_700.smt</td>
+<td align="center">timeout</td>
+<td align="center">1209.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>scheduling/abz7_800.smt</td>
+<td align="center">timeout</td>
+<td align="center">1209.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>scheduling/orb01_1059.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>scheduling/orb02_1000.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>scheduling/orb02_700.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>scheduling/orb02_900.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>scheduling/orb04_1100.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>scheduling/swv14_2905.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>scheduling/yn2_890.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa/skdmxa-3x3-10.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa/skdmxa-3x3-15.smt</td>
+<td align="center">timeout</td>
+<td align="center">1209.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa/skdmxa-3x3-20.smt</td>
+<td align="center">timeout</td>
+<td align="center">1209.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-10.base.cvc.smt</td>
+<td align="center">unsat</td>
+<td align="center">44.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-10.induction.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1209.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-11.base.cvc.smt</td>
+<td align="center">unsat</td>
+<td align="center">58.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-11.induction.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-12.base.cvc.smt</td>
+<td align="center">unsat</td>
+<td align="center">74.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-12.induction.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1209.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-13.base.cvc.smt</td>
+<td align="center">unsat</td>
+<td align="center">91.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-13.induction.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-14.base.cvc.smt</td>
+<td align="center">unsat</td>
+<td align="center">112.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-14.induction.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1209.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-15.base.cvc.smt</td>
+<td align="center">unsat</td>
+<td align="center">144.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-15.induction.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1209.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-16.base.cvc.smt</td>
+<td align="center">unsat</td>
+<td align="center">174.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-16.induction.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-17.base.cvc.smt</td>
+<td align="center">unsat</td>
+<td align="center">202.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-17.induction.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-18.base.cvc.smt</td>
+<td align="center">unsat</td>
+<td align="center">228.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-18.induction.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-19.base.cvc.smt</td>
+<td align="center">unsat</td>
+<td align="center">303.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-19.induction.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-20.base.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-20.induction.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-5.base.cvc.smt</td>
+<td align="center">unsat</td>
+<td align="center">7.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-5.induction.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1209.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-6.base.cvc.smt</td>
+<td align="center">unsat</td>
+<td align="center">10.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-6.induction.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1209.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-7.base.cvc.smt</td>
+<td align="center">unsat</td>
+<td align="center">15.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-7.induction.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1209.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-8.induction.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1209.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-9.base.cvc.smt</td>
+<td align="center">unsat</td>
+<td align="center">33.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>skdmxa2/skdmxa-3x3-9.induction.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1209.1</td>
+<td align="center">yes</td>
+</tr>
+</table></center>
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="participants.shtml">Participants</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="results.shtml">Results</a> </th>
+    <th> &bull; </th>
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+
+
+<p class="bottom">
+<i>
+Last modified: Tue 17 Feb 2015 15:01 UTC<br />
+</i>
+</p>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-271237-2";
+urchinTracker();
+</script>
+
+</body>
+</html>
+

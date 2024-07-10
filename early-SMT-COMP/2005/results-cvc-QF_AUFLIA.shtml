@@ -1,0 +1,278 @@
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="author" content="Leonardo de Moura" />
+<meta name="description" content="SMT-COMP: Satisfiability Modulo Theories Competition" />
+<meta name="keywords" content="satisfiability, decision procedures, first-order logic with equality, separation logic, difference logic, EUF, solvers" />
+<link rel="stylesheet" href="https://smtcomp.sourceforge.net/2005/smt-style.css" type="text/css" />
+<title>Detailed results for CVC at QF_AUFLIA</title>
+</head>
+
+<body>
+
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th><a href="participants.shtml">Participants</a></th>
+    <th> &bull; </th> 
+    <th><a href="results.shtml">Results</a></th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+<!-- <img class="rfloat" src="images/sal3.jpg" alt="SAL" /> -->
+<h1>Detailed results for CVC at QF_AUFLIA</h1>
+
+<table class="score"><tr><th align="center">Benchmark</th><th align="left">Answer</th><th align="left">Time</th><th align="center">Correct?</th></tr></hr>
+<tr><td>array_benchmarks/pipeline-invalid.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>array_benchmarks/pointer-invalid-10.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>array_benchmarks/pointer-invalid-15.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>array_benchmarks/pointer-invalid-20.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>array_benchmarks/pointer-invalid-5.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>array_benchmarks/pointer-safe-10.smt</td><td align="center">unsat</td>
+<td align="center">4.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>array_benchmarks/pointer-safe-15.smt</td><td align="center">unsat</td>
+<td align="center">11.7</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>array_benchmarks/pointer-safe-20.smt</td><td align="center">unsat</td>
+<td align="center">26.0</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>array_benchmarks/pointer-safe-5.smt</td><td align="center">unsat</td>
+<td align="center">0.7</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>array_benchmarks/qlock-bug-10.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>array_benchmarks/qlock-bug-15.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>array_benchmarks/qlock-bug-20.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>array_benchmarks/qlock-bug-5.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>array_benchmarks/qlock-bug2-10.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>array_benchmarks/qlock-bug2-15.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>array_benchmarks/qlock-bug2-20.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>array_benchmarks/qlock-mutex-10.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>array_benchmarks/qlock-mutex-15.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>array_benchmarks/qlock-mutex-20.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>array_benchmarks/qlock-mutex-5.smt</td><td align="center">unsat</td>
+<td align="center">4.4</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>array_benchmarks/queue-th1-6.smt</td><td align="center">unsat</td>
+<td align="center">0.6</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>array_benchmarks/queue-th2-6.smt</td><td align="center">unsat</td>
+<td align="center">1.3</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>array_benchmarks/stack-invalid-6.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>array_benchmarks/stack-th1-6.smt</td><td align="center">unsat</td>
+<td align="center">0.6</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>array_benchmarks/stack-th2-6.smt</td><td align="center">unsat</td>
+<td align="center">0.4</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>check/array_incompleteness1.smt</td><td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>check/int_incompleteness1.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>cvc/add4.smt</td><td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/add5.smt</td><td align="center">unsat</td>
+<td align="center">0.4</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/add6.smt</td><td align="center">unsat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/dlx-dmem.smt</td><td align="center">unsat</td>
+<td align="center">0.8</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/dlx-pc.smt</td><td align="center">unsat</td>
+<td align="center">0.5</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/dlx-regfile.smt</td><td align="center">unsat</td>
+<td align="center">1.7</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/fb_var_12_11.smt</td><td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/fb_var_27_8.smt</td><td align="center">unknown</td>
+<td align="center">-</td><td align="center">-</td>
+</tr>
+<tr><td>cvc/fb_var_33_6.smt</td><td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/fb_var_5_12.smt</td><td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/fb_var_6_12.smt</td><td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/pp-TakenBranch-s2e.smt</td><td align="center">unsat</td>
+<td align="center">37.0</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/pp-bloaddata-a.smt</td><td align="center">unsat</td>
+<td align="center">1.3</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/pp-bloaddata.smt</td><td align="center">unsat</td>
+<td align="center">2.6</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/pp-dmem-a.smt</td><td align="center">unsat</td>
+<td align="center">0.6</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/pp-dmem.smt</td><td align="center">unsat</td>
+<td align="center">37.4</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/pp-dmem2.smt</td><td align="center">unsat</td>
+<td align="center">1.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/pp-invariant.smt</td><td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/pp-pc-s2i.smt</td><td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/pp-regfile.smt</td><td align="center">unsat</td>
+<td align="center">108.4</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/read2.smt</td><td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/read5.smt</td><td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/read6.smt</td><td align="center">unsat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/read7.smt</td><td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr><td>cvc/read8.smt</td><td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+</table>
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th><a href="participants.shtml">Participants</a></th>
+    <th> &bull; </th> 
+    <th><a href="results.shtml">Results</a></th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+
+
+<p class="bottom">
+<i>
+Last modified: Tue 17 Feb 2015 14:59 UTC<br />
+</i>
+</p>
+</body>
+</html>
+

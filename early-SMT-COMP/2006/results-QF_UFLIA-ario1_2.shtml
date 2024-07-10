@@ -1,0 +1,709 @@
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="author" content="Leonardo de Moura" />
+<meta name="description" content="SMT-COMP: Satisfiability Modulo Theories Competition" />
+<meta name="keywords" content="satisfiability, decision procedures, first-order logic with equality, separation logic, difference logic, EUF, solvers" />
+<link rel="stylesheet" href="https://smtcomp.sourceforge.net/2006/smt-style.css" type="text/css" />
+<title>Detailed results for Ario 1.2 at QF_UFLIA</title>
+</head>
+
+<body>
+
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="participants.shtml">Participants</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="results.shtml">Results</a> </th>
+    <th> &bull; </th>
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+<!-- <img class="rfloat" src="images/sal3.jpg" alt="SAL" /> -->
+<h1>Detailed results for Ario 1.2 at QF_UFLIA</h1>
+
+<center><table class="score2"><tr><th align="left">Benchmark</th><th align="center">Answer</th><th align="center">Time</th><th align="center">Correct?</th></tr></hr>
+<tr>
+<td>check/bignum_lia1.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>check/bignum_lia2.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_10_10.smt</td>
+<td align="center">sat</td>
+<td align="center">0.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_10_20.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_11_11.smt</td>
+<td align="center">sat</td>
+<td align="center">0.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_11_16.smt</td>
+<td align="center">sat</td>
+<td align="center">0.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_11_21.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_12_12.smt</td>
+<td align="center">sat</td>
+<td align="center">0.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_12_17.smt</td>
+<td align="center">sat</td>
+<td align="center">0.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_12_22.smt</td>
+<td align="center">unsat</td>
+<td align="center">1.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_13_13.smt</td>
+<td align="center">sat</td>
+<td align="center">0.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_13_18.smt</td>
+<td align="center">sat</td>
+<td align="center">0.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_13_23.smt</td>
+<td align="center">unsat</td>
+<td align="center">2.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_14_14.smt</td>
+<td align="center">sat</td>
+<td align="center">0.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_14_19.smt</td>
+<td align="center">sat</td>
+<td align="center">0.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_14_24.smt</td>
+<td align="center">sat</td>
+<td align="center">2.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_15_15.smt</td>
+<td align="center">sat</td>
+<td align="center">0.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_15_25.smt</td>
+<td align="center">unsat</td>
+<td align="center">16.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_16_16.smt</td>
+<td align="center">sat</td>
+<td align="center">1.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_16_26.smt</td>
+<td align="center">sat</td>
+<td align="center">6.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_16_36.smt</td>
+<td align="center">unsat</td>
+<td align="center">36.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_17_17.smt</td>
+<td align="center">sat</td>
+<td align="center">2.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_17_27.smt</td>
+<td align="center">sat</td>
+<td align="center">3.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_17_37.smt</td>
+<td align="center">unsat</td>
+<td align="center">91.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_18_18.smt</td>
+<td align="center">sat</td>
+<td align="center">1.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_18_28.smt</td>
+<td align="center">sat</td>
+<td align="center">2.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_18_38.smt</td>
+<td align="center">unsat</td>
+<td align="center">209.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_19_19.smt</td>
+<td align="center">sat</td>
+<td align="center">2.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_19_29.smt</td>
+<td align="center">sat</td>
+<td align="center">4.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_19_39.smt</td>
+<td align="center">unsat</td>
+<td align="center">998.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_20_20.smt</td>
+<td align="center">sat</td>
+<td align="center">2.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_20_30.smt</td>
+<td align="center">sat</td>
+<td align="center">4.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_20_40.smt</td>
+<td align="center">timeout</td>
+<td align="center">1205.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_21_21.smt</td>
+<td align="center">sat</td>
+<td align="center">3.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_21_31.smt</td>
+<td align="center">sat</td>
+<td align="center">3.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_21_41.smt</td>
+<td align="center">timeout</td>
+<td align="center">1207.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_22_22.smt</td>
+<td align="center">sat</td>
+<td align="center">3.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_22_32.smt</td>
+<td align="center">sat</td>
+<td align="center">3.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_22_42.smt</td>
+<td align="center">timeout</td>
+<td align="center">1207.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_23_33.smt</td>
+<td align="center">sat</td>
+<td align="center">4.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_23_43.smt</td>
+<td align="center">timeout</td>
+<td align="center">1205.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_24_24.smt</td>
+<td align="center">sat</td>
+<td align="center">3.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_24_34.smt</td>
+<td align="center">sat</td>
+<td align="center">7.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_24_44.smt</td>
+<td align="center">sat</td>
+<td align="center">526.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_25_25.smt</td>
+<td align="center">sat</td>
+<td align="center">6.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_25_35.smt</td>
+<td align="center">sat</td>
+<td align="center">10.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_25_45.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_26_36.smt</td>
+<td align="center">sat</td>
+<td align="center">7.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_26_46.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_27_27.smt</td>
+<td align="center">sat</td>
+<td align="center">5.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_27_37.smt</td>
+<td align="center">sat</td>
+<td align="center">7.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_27_47.smt</td>
+<td align="center">sat</td>
+<td align="center">153.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_28_28.smt</td>
+<td align="center">sat</td>
+<td align="center">8.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_28_38.smt</td>
+<td align="center">sat</td>
+<td align="center">13.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_28_48.smt</td>
+<td align="center">sat</td>
+<td align="center">88.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_29_29.smt</td>
+<td align="center">sat</td>
+<td align="center">9.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_29_39.smt</td>
+<td align="center">sat</td>
+<td align="center">10.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_29_49.smt</td>
+<td align="center">sat</td>
+<td align="center">455.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_30_30.smt</td>
+<td align="center">sat</td>
+<td align="center">15.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_30_40.smt</td>
+<td align="center">sat</td>
+<td align="center">20.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_30_50.smt</td>
+<td align="center">sat</td>
+<td align="center">255.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_31_41.smt</td>
+<td align="center">sat</td>
+<td align="center">8.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_31_51.smt</td>
+<td align="center">sat</td>
+<td align="center">218.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_32_32.smt</td>
+<td align="center">sat</td>
+<td align="center">11.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_32_42.smt</td>
+<td align="center">sat</td>
+<td align="center">33.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_33_43.smt</td>
+<td align="center">sat</td>
+<td align="center">26.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_33_53.smt</td>
+<td align="center">sat</td>
+<td align="center">80.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_34_34.smt</td>
+<td align="center">sat</td>
+<td align="center">27.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_34_44.smt</td>
+<td align="center">sat</td>
+<td align="center">39.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_34_54.smt</td>
+<td align="center">sat</td>
+<td align="center">53.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_35_35.smt</td>
+<td align="center">sat</td>
+<td align="center">25.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_35_45.smt</td>
+<td align="center">sat</td>
+<td align="center">34.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_36_36.smt</td>
+<td align="center">sat</td>
+<td align="center">20.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_36_46.smt</td>
+<td align="center">sat</td>
+<td align="center">25.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_36_56.smt</td>
+<td align="center">sat</td>
+<td align="center">20.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_37_37.smt</td>
+<td align="center">sat</td>
+<td align="center">16.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_37_47.smt</td>
+<td align="center">sat</td>
+<td align="center">22.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_37_57.smt</td>
+<td align="center">sat</td>
+<td align="center">113.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_38_38.smt</td>
+<td align="center">sat</td>
+<td align="center">33.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_38_48.smt</td>
+<td align="center">sat</td>
+<td align="center">21.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_38_58.smt</td>
+<td align="center">sat</td>
+<td align="center">169.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_39_39.smt</td>
+<td align="center">sat</td>
+<td align="center">19.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_39_49.smt</td>
+<td align="center">sat</td>
+<td align="center">56.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_39_59.smt</td>
+<td align="center">sat</td>
+<td align="center">73.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_40_40.smt</td>
+<td align="center">sat</td>
+<td align="center">26.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_40_50.smt</td>
+<td align="center">sat</td>
+<td align="center">40.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_40_60.smt</td>
+<td align="center">sat</td>
+<td align="center">47.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_5_10.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_5_15.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_5_5.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_6_11.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_6_16.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_6_6.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_7_12.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_7_17.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_7_7.smt</td>
+<td align="center">sat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_8_13.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_8_18.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_8_8.smt</td>
+<td align="center">sat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_9_14.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_9_19.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>wisas/xs_9_9.smt</td>
+<td align="center">sat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+</table></center>
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="participants.shtml">Participants</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="results.shtml">Results</a> </th>
+    <th> &bull; </th>
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+
+
+<p class="bottom">
+<i>
+Last modified: Tue 17 Feb 2015 15:02 UTC<br />
+</i>
+</p>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-271237-2";
+urchinTracker();
+</script>
+
+</body>
+</html>
+

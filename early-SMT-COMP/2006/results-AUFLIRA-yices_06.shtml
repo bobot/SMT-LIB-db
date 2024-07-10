@@ -1,0 +1,739 @@
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="author" content="Leonardo de Moura" />
+<meta name="description" content="SMT-COMP: Satisfiability Modulo Theories Competition" />
+<meta name="keywords" content="satisfiability, decision procedures, first-order logic with equality, separation logic, difference logic, EUF, solvers" />
+<link rel="stylesheet" href="https://smtcomp.sourceforge.net/2006/smt-style.css" type="text/css" />
+<title>Detailed results for Yices 1.0 at AUFLIRA</title>
+</head>
+
+<body>
+
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="participants.shtml">Participants</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="results.shtml">Results</a> </th>
+    <th> &bull; </th>
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+<!-- <img class="rfloat" src="images/sal3.jpg" alt="SAL" /> -->
+<h1>Detailed results for Yices 1.0 at AUFLIRA</h1>
+
+<center><table class="score2"><tr><th align="left">Benchmark</th><th align="center">Answer</th><th align="center">Time</th><th align="center">Correct?</th></tr></hr>
+<tr>
+<td>misc/list2.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>misc/list4.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>misc/list6.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>misc/set14.smt</td>
+<td align="center">timeout</td>
+<td align="center">1207.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>misc/set16.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>misc/set19.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>misc/set9.smt</td>
+<td align="center">timeout</td>
+<td align="center">1206.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/gauss_init_0030.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/gauss_init_0055.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/gauss_init_0070.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/gauss_init_0078.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/gauss_init_0089.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/gauss_init_0129.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/gauss_init_0146.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/gauss_init_0147.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/gauss_init_0175.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/gauss_init_0193.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/gauss_init_0206.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/gauss_init_0314.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/quaternion_ds1_init_0040.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/quaternion_ds1_inuse_0009.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/quaternion_ds1_inuse_0011.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/quaternion_ds1_symm_0400.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/thruster_init_0052.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/thruster_init_0063.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify/thruster_init_0069.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_arithmetics/cl5_nebula_init_0085.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_arithmetics/gauss_init_0090.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_arithmetics/gauss_init_0163.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_arithmetics/gauss_init_0283.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_arithmetics/quaternion_ds1_init_0138.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_arithmetics/quaternion_ds1_symm_0007.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_arithmetics/thruster_init_0069.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_arithmetics/thruster_init_0089.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_arithmetics/thruster_init_0144.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_arithmetics/thruster_inuse_0081.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array/cl5_nebula_init_0063.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array/cl5_nebula_init_0067.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array/cl5_nebula_init_0069.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array/cl5_nebula_init_0080.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array/gauss_init_0037.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array/gauss_init_0055.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array/gauss_init_0067.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array/gauss_init_0079.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array/gauss_init_0123.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array/gauss_init_0141.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array/gauss_init_0264.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array/quaternion_ds1_init_0010.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array/quaternion_ds1_init_0051.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array/quaternion_ds1_init_0057.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array/quaternion_ds1_init_0058.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array/thruster_symm_0190.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/cl5_nebula_init_0305.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/gauss_init_0163.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/gauss_init_0237.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/gauss_init_0263.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/gauss_init_0324.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/gauss_init_0574.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/gauss_init_0654.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/gauss_init_0737.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/gauss_init_0847.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/gauss_init_1078.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/gauss_init_1137.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/quaternion_ds1_init_0050.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/quaternion_ds1_init_0296.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/quaternion_ds1_init_0334.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/thruster_init_1102.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/thruster_init_1164.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/thruster_init_1271.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_array_only/thruster_inuse_2391.fof.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_forall/cl5_nebula_init_0055.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_forall/cl5_nebula_norm_0059.fof.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_forall/gauss_init_0455.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_forall/gauss_init_0578.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_forall/gauss_init_1252.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_forall/quaternion_ds1_init_0173.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_forall/quaternion_ds1_init_0178.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_forall/quaternion_ds1_init_0277.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_forall/quaternion_ds1_init_0292.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_forall/quaternion_ds1_inuse_0417.fof.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_forall/thruster_init_0088.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_forall/thruster_init_0106.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_forall/thruster_init_0125.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_forall/thruster_init_0880.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_forall/thruster_init_0926.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/cl5_nebula_init_0031.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/cl5_nebula_init_0042.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/cl5_nebula_init_0111.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/cl5_nebula_norm_0010.fof.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/gauss_init_0081.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/gauss_init_0094.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/gauss_init_0114.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/gauss_init_0216.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/gauss_init_0274.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/quaternion_ds1_init_0072.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/quaternion_ds1_inuse_0034.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/thruster_init_0107.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/thruster_init_0117.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/thruster_init_0124.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/thruster_init_0161.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/thruster_init_0164.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/thruster_init_0195.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/thruster_inuse_0082.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/fol_simplify_structure_prop/thruster_inuse_0084.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/vc_normalize_subst/cl5_nebula_init_0008.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/vc_normalize_subst/cl5_nebula_init_0030.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>nasa/vc_normalize_subst/gauss_init_0082.fof.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+</table></center>
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="participants.shtml">Participants</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="results.shtml">Results</a> </th>
+    <th> &bull; </th>
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+
+
+<p class="bottom">
+<i>
+Last modified: Tue 17 Feb 2015 15:01 UTC<br />
+</i>
+</p>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-271237-2";
+urchinTracker();
+</script>
+
+</body>
+</html>
+

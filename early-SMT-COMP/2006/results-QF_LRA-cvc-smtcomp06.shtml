@@ -1,0 +1,709 @@
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="author" content="Leonardo de Moura" />
+<meta name="description" content="SMT-COMP: Satisfiability Modulo Theories Competition" />
+<meta name="keywords" content="satisfiability, decision procedures, first-order logic with equality, separation logic, difference logic, EUF, solvers" />
+<link rel="stylesheet" href="https://smtcomp.sourceforge.net/2006/smt-style.css" type="text/css" />
+<title>Detailed results for CVC at QF_LRA</title>
+</head>
+
+<body>
+
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="participants.shtml">Participants</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="results.shtml">Results</a> </th>
+    <th> &bull; </th>
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+<!-- <img class="rfloat" src="images/sal3.jpg" alt="SAL" /> -->
+<h1>Detailed results for CVC at QF_LRA</h1>
+
+<center><table class="score2"><tr><th align="left">Benchmark</th><th align="center">Answer</th><th align="center">Time</th><th align="center">Correct?</th></tr></hr>
+<tr>
+<td>TM/p-0-bucket_s13.smt</td>
+<td align="center">sat</td>
+<td align="center">3.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>TM/p-1-bucket_s9.smt</td>
+<td align="center">sat</td>
+<td align="center">108.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>TM/p-2-bucket_s11.smt</td>
+<td align="center">sat</td>
+<td align="center">11.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>TM/p-3-bucket_s10.smt</td>
+<td align="center">sat</td>
+<td align="center">32.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>TM/p-DepotsNum_s8.msat.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>TM/p5-zenonumeric_s5.smt</td>
+<td align="center">sat</td>
+<td align="center">28.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>TM/p5-zenonumeric_s7.smt</td>
+<td align="center">sat</td>
+<td align="center">117.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>TM/p6-zenonumeric_s9.smt</td>
+<td align="center">unknown</td>
+<td align="center">198.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>check/bignum_lra1.smt</td>
+<td align="center">sat</td>
+<td align="center">0.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>check/bignum_lra2.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>clock_synchro/clocksynchro_10clocks.main_invar.induct.smt</td>
+<td align="center">unknown</td>
+<td align="center">148.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>clock_synchro/clocksynchro_10clocks.worst_case_skew.induct.smt</td>
+<td align="center">unknown</td>
+<td align="center">418.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>clock_synchro/clocksynchro_3clocks.main_invar.base.smt</td>
+<td align="center">unsat</td>
+<td align="center">1.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>clock_synchro/clocksynchro_3clocks.worst_case_skew.induct.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>clock_synchro/clocksynchro_5clocks.main_invar.induct.smt</td>
+<td align="center">unknown</td>
+<td align="center">136.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>clock_synchro/clocksynchro_6clocks.main_invar.induct.smt</td>
+<td align="center">timeout</td>
+<td align="center">1207.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>clock_synchro/clocksynchro_8clocks.worst_case_skew.induct.smt</td>
+<td align="center">timeout</td>
+<td align="center">1207.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/carpark/Carpark2-ausgabe-2.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/carpark/Carpark2-ausgabe-7.smt</td>
+<td align="center">unsat</td>
+<td align="center">3.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/carpark/Carpark2-ausgabe-8.smt</td>
+<td align="center">sat</td>
+<td align="center">4.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/carpark/Carpark2-t1-3.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/gasburner/gasburner-prop3-4.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/gasburner/gasburner-prop3-5.smt</td>
+<td align="center">unsat</td>
+<td align="center">1.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/pursuit/pursuit-safety-10.smt</td>
+<td align="center">unsat</td>
+<td align="center">103.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/pursuit/pursuit-safety-20.smt</td>
+<td align="center">unknown</td>
+<td align="center">1002.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/pursuit/pursuit-safety-4.smt</td>
+<td align="center">unsat</td>
+<td align="center">2.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/pursuit/pursuit-safety-5.smt</td>
+<td align="center">unsat</td>
+<td align="center">7.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/pursuit/pursuit-safety-6.smt</td>
+<td align="center">unsat</td>
+<td align="center">12.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/pursuit/pursuit-safety-7.smt</td>
+<td align="center">unsat</td>
+<td align="center">22.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/tgc/tgc_io-safe-11.smt</td>
+<td align="center">unsat</td>
+<td align="center">14.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/tgc/tgc_io-safe-16.smt</td>
+<td align="center">unsat</td>
+<td align="center">72.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/tgc/tgc_io-safe-7.smt</td>
+<td align="center">unsat</td>
+<td align="center">3.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/windowreal/windowreal-no_t_deadlock-12.smt</td>
+<td align="center">unsat</td>
+<td align="center">4.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sal/windowreal/windowreal-no_t_deadlock-17.smt</td>
+<td align="center">unsat</td>
+<td align="center">9.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-10.induction.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-11.induction.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-12.induction2.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-14.induction3.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-15.base.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-16.induction2.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-18.base.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-19.base.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-21.induction.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-22.induction.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-22.induction3.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-23.induction3.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-25.base.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-25.induction3.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-27.base.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-27.induction2.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-28.base.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-28.induction3.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-29.induction2.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-29.induction3.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-30.induction.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-31.induction2.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-31.induction3.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-32.base.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-33.induction3.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-34.induction.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-34.induction3.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-35.base.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-36.induction2.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-37.base.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-37.induction3.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-38.induction.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-38.induction3.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-39.base.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-40.base.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-40.induction.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-40.induction3.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>sc/sc-6.induction3.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">0.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>spider_benchmarks/bad_echos_ascend.induction.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>spider_benchmarks/fs_not_sc_seen.base.smt</td>
+<td align="center">unsat</td>
+<td align="center">0.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>spider_benchmarks/synched.induction.smt</td>
+<td align="center">unsat</td>
+<td align="center">17.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>tta_startup/simple_startup_10nodes.abstract.induct.smt</td>
+<td align="center">unknown</td>
+<td align="center">688.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>tta_startup/simple_startup_11nodes.bug.induct.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.1</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>tta_startup/simple_startup_12nodes.abstract.induct.smt</td>
+<td align="center">unknown</td>
+<td align="center">1075.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>tta_startup/simple_startup_12nodes.bug.induct.smt</td>
+<td align="center">unknown</td>
+<td align="center">1061.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>tta_startup/simple_startup_14nodes.abstract.induct.smt</td>
+<td align="center">unknown</td>
+<td align="center">894.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>tta_startup/simple_startup_14nodes.bug.induct.smt</td>
+<td align="center">unknown</td>
+<td align="center">890.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>tta_startup/simple_startup_14nodes.synchro.base.smt</td>
+<td align="center">unsat</td>
+<td align="center">36.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>tta_startup/simple_startup_15nodes.bug.induct.smt</td>
+<td align="center">sat</td>
+<td align="center">531.7</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>tta_startup/simple_startup_4nodes.bug.induct.smt</td>
+<td align="center">sat</td>
+<td align="center">171.3</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>tta_startup/simple_startup_5nodes.abstract.base.smt</td>
+<td align="center">unsat</td>
+<td align="center">3.4</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>tta_startup/simple_startup_5nodes.bug.induct.smt</td>
+<td align="center">sat</td>
+<td align="center">20.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>tta_startup/simple_startup_7nodes.bug.induct.smt</td>
+<td align="center">sat</td>
+<td align="center">32.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>tta_startup/simple_startup_7nodes.missing.induct.smt</td>
+<td align="center">sat</td>
+<td align="center">54.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>tta_startup/simple_startup_8nodes.bug.induct.smt</td>
+<td align="center">sat</td>
+<td align="center">25.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>tta_startup/simple_startup_9nodes.bug.induct.smt</td>
+<td align="center">unknown</td>
+<td align="center">358.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uart/uart-14.base.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">967.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uart/uart-14.induction.cvc.smt</td>
+<td align="center">sat</td>
+<td align="center">221.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uart/uart-16.induction.cvc.smt</td>
+<td align="center">sat</td>
+<td align="center">419.5</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uart/uart-18.base.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">1057.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uart/uart-27.base.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">1087.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uart/uart-28.base.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1207.8</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uart/uart-29.induction.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">1103.9</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uart/uart-33.base.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.2</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uart/uart-34.base.cvc.smt</td>
+<td align="center">unknown</td>
+<td align="center">810.6</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uart/uart-37.base.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uart/uart-39.base.cvc.smt</td>
+<td align="center">timeout</td>
+<td align="center">1208.0</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>uart/uart-8.induction.cvc.smt</td>
+<td align="center">sat</td>
+<td align="center">19.7</td>
+<td align="center">yes</td>
+</tr>
+</table></center>
+
+
+
+<table class="centered-small">
+  <tr>
+    <th> <a href="index.shtml">Home</a> </th>
+    <th> &bull; </th>
+    <th> <a href="introduction.shtml">Intro</a> </th>
+    <th> &bull; </th>
+    <th> <a href="rules.shtml">Rules</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="tools.shtml">Tools</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="benchmarks.shtml">Bench</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="participants.shtml">Participants</a> </th>
+    <th> &bull; </th> 
+    <th> <a href="results.shtml">Results</a> </th>
+    <th> &bull; </th>
+    <th> <a href="organizers.shtml">Org</a> </th>
+    <th> &bull; </th>
+    <th> <a href="http://goedel.cs.uiowa.edu/smtlib/">SMT-LIB</a> </th>
+  </tr>
+</table>
+
+
+
+
+
+
+<p class="bottom">
+<i>
+Last modified: Tue 17 Feb 2015 15:01 UTC<br />
+</i>
+</p>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-271237-2";
+urchinTracker();
+</script>
+
+</body>
+</html>
+
