@@ -7,4 +7,9 @@ pre {
     background-color: white;
     max-height: 40ex;
     overflow-x: hidden;
+    z-index: 1;
+}
+
+.clear-search-input {
+    padding-left: 0.5ex;
 }

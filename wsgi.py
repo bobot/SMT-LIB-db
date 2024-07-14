@@ -80,7 +80,7 @@ def search_logic():
            ORDER BY logic ASC
            LIMIT 101
            """,
-            (logic,benchmarkSet,benchmark),
+            (logic, benchmarkSet, benchmark),
         )
     elif benchmarkSet:
         ret = cur.execute(
@@ -92,7 +92,7 @@ def search_logic():
            ORDER BY logic ASC
            LIMIT 101
            """,
-            (logic,benchmarkSet),
+            (logic, benchmarkSet),
         )
     elif benchmark:
         ret = cur.execute(
@@ -103,7 +103,7 @@ def search_logic():
            ORDER BY logic ASC
            LIMIT 101
            """,
-            (logic,benchmark),
+            (logic, benchmark),
         )
     else:
         ret = cur.execute(
@@ -150,7 +150,8 @@ def search_set():
     benchmark = request.form.get("benchmark-id", None)
     cur = get_db().cursor()
     if benchmark:
-        ret = cur.execute("""
+        ret = cur.execute(
+            """
              SELECT s.id,s.date,s.name FROM Sets as s
              INNER JOIN Benchmarks AS b ON b.benchmarkSet = s.id 
              WHERE s.name LIKE '%'||?||'%' AND b.id=?
@@ -158,10 +159,11 @@ def search_set():
                       s.name ASC
              LIMIT 101
              """,
-            (benchmarkSet,benchmark),
+            (benchmarkSet, benchmark),
         )
     elif logic:
-        ret = cur.execute("""
+        ret = cur.execute(
+            """
              SELECT id,date,name FROM Sets AS s
              WHERE s.name LIKE '%'||?||'%'
              AND EXISTS (SELECT 1 FROM Benchmarks WHERE benchmarkSet = s.id
@@ -170,10 +172,11 @@ def search_set():
                       name ASC
              LIMIT 101
            """,
-            (benchmarkSet,logic),
+            (benchmarkSet, logic),
         )
     else:
-        ret = cur.execute("""
+        ret = cur.execute(
+            """
             SELECT id,date,name FROM Sets WHERE name LIKE '%'||?||'%'
             ORDER BY date ASC,
                      name ASC
@@ -226,7 +229,7 @@ def search_benchmark():
            ORDER BY filename ASC
            LIMIT 101
            """,
-            (benchmark, logic,benchmarkSet),
+            (benchmark, logic, benchmarkSet),
         )
     elif logic:
         ret = cur.execute(
@@ -248,7 +251,7 @@ def search_benchmark():
            ORDER BY filename ASC
            LIMIT 101
            """,
-            (benchmark,benchmarkSet),
+            (benchmark, benchmarkSet),
         )
     else:
         ret = cur.execute(
@@ -281,9 +284,47 @@ def pick_benchmark(benchmark_id):
             (row["benchmarkSet"],),
         ):
             return render_template(
-                "search_bar.html", logicData=logicData, setData=setRow, benchmarkData=row
+                "search_bar.html",
+                logicData=logicData,
+                setData=setRow,
+                benchmarkData=row,
             )
     abort(404)
+
+
+@app.post("/clear_input/<string:input>")
+def clear_input(input):
+    if not input in ["logic", "set", "benchmark"]:
+        abort(404)
+    logic = request.form.get("logic-id", None)
+    logicValue = request.form.get("search-logic", None)
+    if input != "logic" and logic:
+        logicData = {"id": logic, "logic": logicValue}
+    else:
+        logicData = None
+    benchmarkSet = request.form.get("set-id", None)
+    benchmarkSetDate = request.form.get("date-store", None)
+    benchmarkSetValue = request.form.get("search-logic", None)
+    if input != "set" and benchmarkSet:
+        benchmarkSetData = {
+            "id": benchmarkSet,
+            "name": benchmarkSetValue,
+            "date": benchmarkSetDate,
+        }
+    else:
+        benchmarkSetData = None
+    benchmark = request.form.get("benchmark-id", None)
+    benchmarkValue = request.form.get("search-benchmark", None)
+    if input != "benchmark" and benchmark:
+        benchmarkData = {"id": benchmark, "filename": benchmarkValue}
+    else:
+        benchmarkData = None
+    return render_template(
+        "search_bar.html",
+        logicData=logicData,
+        setData=benchmarkSetData,
+        benchmarkData=benchmarkData,
+    )
 
 
 @app.teardown_appcontext
