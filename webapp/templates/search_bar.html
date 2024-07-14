@@ -1,0 +1,81 @@
+
+<form class="pure-form pure-form-stacked" id="search-bar">
+    <fieldset>
+        <div class="pure-g">
+          <div class="pure-u-1-8">
+            <label for="input-logic">Logic</label>
+            <input type="search" name="search-logic" class="pure-input-1" id="input-logic"
+                   {% if logicData %}
+                   value="{{ logicData.logic }}"
+                   disabled=""
+                   {% else %}
+                   hx-post="/search_logic"
+                   hx-trigger="input changed delay:250ms, search, click"
+                   hx-target="#logic-search-results"
+                   onblur="clearDiv('logic-search-results')"
+                   {% endif %}
+                   />
+            {% if logicData %}
+            <input type="hidden" id="logic-id" name="logic-id" value="{{ logicData.id }}">
+            {% endif %}
+            <div id="logic-search-results"
+               class="pure-menu pure-menu-scrollable search-suggestions">
+            </div>
+          </div>
+
+          <div class="pure-u-3-8" id="pick-set">
+            <div class="pure-g">
+              <div class="pure-u-1-4">
+                <label for="data-store">Date</label>
+                <input type="text" disabled="" name="date-store" class="pure-input-1" id="date-store"
+                  {% if setData %}
+                  value="{{ setData.date or ""}}"
+                  {% endif %}
+                />
+              </div>
+              <div class="pure-u-3-4">
+                <label for="input-set">Set</label>
+                <input type="search" name="search-set" class="pure-input-1" id="input-set"
+                       {% if setData %}
+                       value="{{ setData.name }}"
+                       disabled=""
+                       {% else %}
+                       hx-post="/search_set"
+                       hx-trigger="input changed delay:250ms, search, click"
+                       hx-target="#set-search-results"
+                       onblur="clearDiv('set-search-results')"
+                       {% endif %}
+                />
+                {% if setData %}
+                <input type="hidden" id="set-id" name="set-id" value="{{ setData.id }}">
+                {% endif %}
+              </div>
+            </div>
+            <div id="set-search-results"
+             class="pure-menu pure-menu-scrollable search-suggestions"></div>
+          </div>
+
+          <div class="pure-u-1-2">
+            <label for="input-benchmark">Benchmark</label>
+            <input type="search" name="search-benchmark" class="pure-input-1" id="input-benchmark"
+                   {% if benchmarkData %}
+                   value="{{ benchmarkData.filename }}"
+                   disabled=""
+                   {% else %}
+                   hx-post="/search_benchmark"
+                   hx-trigger="input changed delay:250ms, search, click"
+                   hx-target="#benchmark-search-results"
+                   {# onblur="clearDiv('benchmark-search-results')" #}
+                   {% endif %}
+            />
+            {% if benchmarkData %}
+            <input type="hidden" id="benchmark-id" name="benchmark-id" value="{{ benchmarkData.id }}">
+            <div hx-trigger="load" hx-target="#benchmark-body" hx-get="benchmark/{{ benchmarkData.id }}">
+            {% endif %}
+            <div id="benchmark-search-results"
+             class="pure-menu pure-menu-scrollable search-suggestions"></div>
+          </div>
+
+        </div>
+    </fieldset>
+</form>

@@ -1,0 +1,10 @@
+pre {
+    white-space: pre-wrap;
+}
+
+.search-suggestions {
+    position: relative;
+    background-color: white;
+    max-height: 40ex;
+    overflow-x: hidden;
+}
