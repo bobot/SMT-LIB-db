@@ -24,6 +24,7 @@ pkgs.stdenv.mkDerivation {
       parallel
       csvkit
       python312Packages.beautifulsoup4
+      python312Packages.flask
   ];
 
 }
