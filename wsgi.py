@@ -20,8 +20,8 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/benchmark/<int:benchmark_id>")
-def show_benchmark(benchmark_id):
+@app.route("/benchmark/dynamic/<int:benchmark_id>")
+def dynamic_benchmark(benchmark_id):
     cur = get_db().cursor()
     for row in cur.execute(
         """
@@ -35,6 +35,39 @@ def show_benchmark(benchmark_id):
         (benchmark_id,),
     ):
         return render_template("benchmark.html", benchmark=row)
+    abort(404)
+
+
+@app.route("/benchmark/<int:benchmark_id>")
+def show_benchmark(benchmark_id):
+    cur = get_db().cursor()
+    for row in cur.execute(
+        """
+        SELECT b.id, filename, logic, s.folderName, s.date, isIncremental, size,
+               compressedSize, l.name, l.link, l.spdxIdentifier, generatedOn,
+               generatedBy, generator, application, description, category,
+               subbenchmarkCount, benchmarkSet, s.name AS setName FROM Benchmarks AS b
+                  INNER JOIN Sets AS s ON s.Id = b.benchmarkSet
+                  INNER JOIN Licenses AS l ON l.Id = b.license
+        WHERE b.id=?""",
+        (benchmark_id,),
+    ):
+        logicData = {"id": row["id"], "logic": row["logic"]}
+        benchmarkSetData = {
+            "id": row["benchmarkSet"],
+            "name": row["setName"],
+            "date": row["date"],
+        }
+        benchmarkData = {"id": row["id"], "filename": row["filename"]}
+
+        return render_template(
+            "index.html",
+            include="benchmark",
+            benchmark=row,
+            logicData=logicData,
+            setData=benchmarkSetData,
+            benchmarkData=benchmarkData,
+        )
     abort(404)
 
 
@@ -304,7 +337,7 @@ def clear_input(input):
         logicData = None
     benchmarkSet = request.form.get("set-id", None)
     benchmarkSetDate = request.form.get("date-store", None)
-    benchmarkSetValue = request.form.get("search-logic", None)
+    benchmarkSetValue = request.form.get("search-set", None)
     if input != "set" and benchmarkSet:
         benchmarkSetData = {
             "id": benchmarkSet,

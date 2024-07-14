@@ -90,7 +90,11 @@
             />
             {% if benchmarkData %}
             <input type="hidden" id="benchmark-id" name="benchmark-id" value="{{ benchmarkData.id }}">
-            <div hx-trigger="load" hx-target="#benchmark-body" hx-get="benchmark/{{ benchmarkData.id }}">
+            <div hx-trigger="load"
+                 hx-target="#benchmark-body"
+                 hx-get="/benchmark/dynamic/{{ benchmarkData.id }}"
+                 hx-push-url="/benchmark/{{ benchmarkData.id }}"
+            >
             {% endif %}
             <div id="benchmark-search-results"
              class="pure-menu pure-menu-scrollable search-suggestions"></div>

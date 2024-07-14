@@ -1,10 +1,5 @@
 <h2>
-{{ benchmark.logic }} /
-{% if benchmark.data %}
-{{ benchmark.date }} -
-{% endif %}
-{{ benchmark.folderName }} /
-{{ benchmark.filename }}
+{% if benchmark.isIncremental %}incremental{% else %}non-incremental{% endif %}/{{ benchmark.logic }}/{{ benchmark.folderName }}/{{ benchmark.filename }}
 </h2>
 
 <pre>

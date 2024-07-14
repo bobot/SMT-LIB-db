@@ -21,10 +21,13 @@ function clearDiv(elementID)
 <div class="pure-g">
     <div class="pure-u-1-8"></div>
     <div class="pure-u-3-4">
-
     {% include 'search_bar.html' %}
-    <div id="benchmark-body"></div>
 
+      <div id="benchmark-body">
+        {% if include %}
+        {% include include + '.html' %}
+        {% endif %}
+      </div>
     </div>
     <div class="pure-u-1-8"></div>
 </div>
