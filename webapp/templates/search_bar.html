@@ -1,7 +1,7 @@
 <form class="pure-form pure-form-stacked" id="search-bar">
     <fieldset>
         <div class="pure-g">
-          <div class="pure-u-1-8">
+          <div class="pure-u-1-8" style="position:relative">
             <label for="input-logic">Logic
             {% if logicData %}
             <span class="clear-search-input"
@@ -29,7 +29,7 @@
             </div>
           </div>
 
-          <div class="pure-u-3-8" id="pick-set">
+          <div class="pure-u-3-8" id="pick-set" style="position:relative">
             <div class="pure-g">
               <div class="pure-u-1-4">
                 <label for="data-store">Date</label>
@@ -68,7 +68,7 @@
              class="pure-menu pure-menu-scrollable search-suggestions"></div>
           </div>
 
-          <div class="pure-u-1-2">
+          <div class="pure-u-1-2" style="position:relative">
             <label for="input-benchmark">Benchmark
             {% if benchmarkData %}
                 <span class="clear-search-input"
@@ -97,7 +97,7 @@
             >
             {% endif %}
             <div id="benchmark-search-results"
-             class="pure-menu pure-menu-scrollable search-suggestions"></div>
+             class="pure-u-1-2 pure-menu pure-menu-scrollable search-suggestions"></div>
           </div>
 
         </div>
