@@ -6,7 +6,10 @@
 {{ benchmark.description or "Benchmark without description."}}
 </pre>
 
-<table class="pure-table pure-table-bordered">
+<table class="pure-table pure-table-bordered benchmark-table">
+  <thead>
+    <tr><th colspan="2">Benchmark</th></tr>
+  </thead>
   <tbody>
 <tr><td>Size</td><td>{{ benchmark.size }}</td></tr>
 <tr><td>Compressed Size</td><td>{{ benchmark.compressedSize }}</td> </tr>
@@ -30,3 +33,20 @@
 <tr><td><tt>check-sat</tt> calls</td><td>{{ benchmark.subbenchmarkCount }}</td></tr>
 </tbody>
 </table>
+
+{% set subbenchmark = firstSubbenchmark %}
+{% include 'subbenchmark.html' %}
+{% for subbenchmark in subbenchmarks[1:] %}
+<table class="pure-table pure-table-bordered subbenchmark-table"
+       id="subbenchmark-{{ subbenchmark["number"] }}"
+>
+  <thead
+    hx-trigger="click"
+    hx-get="/subbenchmark/dynamic/{{ subbenchmark["id"] }}"
+    hx-target="#subbenchmark-{{ subbenchmark["number"] }}"
+    hx-swap="outerHTML"
+  >
+    <tr><th colspan=2>Subbenchmark {{ subbenchmark["number"] }}</th></tr>
+  </thead>
+</table>
+{% endfor %}

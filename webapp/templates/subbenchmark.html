@@ -1,0 +1,20 @@
+<table class="pure-table pure-table-bordered subbenchmark-table">
+  <thead>
+    <tr><th colspan=2>Subbenchmark {{ subbenchmark.number }}</th></tr>
+  </thead>
+  <tbody>
+<tr><td>Status         </td><td>{{ subbenchmark.status }}        </td</tr>
+<tr><td>Size           </td><td>{{ subbenchmark.normalizedSize }}</td></tr>
+<tr><td>Compressed Size</td><td>{{ subbenchmark.compressedSize }}</td></tr>
+<tr><td>Max. Term Depth</td><td>{{ subbenchmark.maxTermDepth }}  </td</tr>
+<tr><td>Asserts        </td><td>{{ subbenchmark.assertsCount }}  </td></tr>
+<tr><td>Declared Functions</td><td>{{ subbenchmark.declareFunCount }}</td></tr>
+<tr><td>Declared Constants</td><td>{{ subbenchmark.declareConstCount }}</td</tr>
+<tr><td>Declared Sorts    </td><td>{{ subbenchmark.declareSortCount }} </td</tr>
+<tr><td>Defined Functions</td><td>{{ subbenchmark.defineFunCount }}    </td</tr>
+<tr><td>Defined Recursive Functions </td><td>{{ subbenchmark.defineFunRecCount }}</td</tr>
+<tr><td>Defined Sorts</td><td>{{ subbenchmark.defineSortCount }}      </td</tr>
+<tr><td>Constants</td><td>{{ subbenchmark.constantFunCount }}         </td</tr>
+<tr><td>Declared Datatypes</td><td>{{ subbenchmark.declareDatatypeCount }}</td</tr>
+</tbody>
+</table>

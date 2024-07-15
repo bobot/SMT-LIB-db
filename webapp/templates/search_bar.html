@@ -85,7 +85,7 @@
                    hx-post="/search_benchmark"
                    hx-trigger="input changed delay:250ms, search, click"
                    hx-target="#benchmark-search-results"
-                   {# onblur="clearDiv('benchmark-search-results')" #}
+                   onblur="clearDiv('benchmark-search-results')"
                    {% endif %}
             />
             {% if benchmarkData %}

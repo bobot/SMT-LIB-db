@@ -13,3 +13,23 @@ pre {
 .clear-search-input {
     padding-left: 0.5ex;
 }
+
+.benchmark-table {
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+.benchmark-table tr td:first-child {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.subbenchmark-table {
+  width: 100%;
+}
+
+.subbenchmark-table tr td:first-child {
+  width: 1%;
+  white-space: nowrap;
+}
+

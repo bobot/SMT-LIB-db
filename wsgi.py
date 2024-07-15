@@ -20,50 +20,99 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/benchmark/dynamic/<int:benchmark_id>")
-def dynamic_benchmark(benchmark_id):
-    cur = get_db().cursor()
-    for row in cur.execute(
+def get_benchmark(cursor, benchmark_id):
+    for row in cursor.execute(
         """
-        SELECT filename, logic, s.folderName, s.date, isIncremental, size,
-               compressedSize, l.name, l.link, l.spdxIdentifier, generatedOn,
+        SELECT b.id, filename, logic, s.folderName, s.date, isIncremental, size,
+               b.compressedSize, l.name, l.link, l.spdxIdentifier, generatedOn,
                generatedBy, generator, application, description, category,
-               subbenchmarkCount FROM Benchmarks AS b
+               subbenchmarkCount, benchmarkSet,
+               s.name AS setName
+               FROM Benchmarks AS b
                   INNER JOIN Sets AS s ON s.Id = b.benchmarkSet
                   INNER JOIN Licenses AS l ON l.Id = b.license
         WHERE b.id=?""",
         (benchmark_id,),
     ):
-        return render_template("benchmark.html", benchmark=row)
+        return row
+    return None
+
+
+def get_subbenchmarks(cursor, benchmark_id):
+    res = cursor.execute(
+        """
+           SELECT id,number FROM Subbenchmarks WHERE benchmark=? 
+           ORDER BY number ASC
+           """,
+        (benchmark_id,),
+    )
+    return res.fetchall()
+
+
+def get_subbenchmark(cursor, subbenchmark_id):
+    for row in cursor.execute(
+        """
+        SELECT * FROM Subbenchmarks AS u
+        WHERE u.id=?""",
+        (subbenchmark_id,),
+    ):
+        return row
+    return None
+
+
+# Returns the benchmark data, a list of subbenchmarks, and the data
+#         for the first subbenchmark.
+def get_canonical_benchmark_data(cursor, benchmark_id):
+    benchmark = get_benchmark(cursor, benchmark_id)
+    if benchmark:
+        subbenchmarks = get_subbenchmarks(cursor, benchmark_id)
+        firstSubbenchmark = get_subbenchmark(cursor, subbenchmarks[0]["id"])
+        return (benchmark, subbenchmarks, firstSubbenchmark)
+    return (None, None, None)
+
+
+@app.route("/benchmark/dynamic/<int:benchmark_id>")
+def dynamic_benchmark(benchmark_id):
+    cur = get_db().cursor()
+    (benchmark, subbenchmarks, first) = get_canonical_benchmark_data(cur, benchmark_id)
+    if benchmark:
+        return render_template(
+            "benchmark.html",
+            subbenchmarks=subbenchmarks,
+            firstSubbenchmark=first,
+            benchmark=benchmark,
+        )
+    abort(404)
+
+
+@app.route("/subbenchmark/dynamic/<int:subbenchmark_id>")
+def dynamic_subbenchmark(subbenchmark_id):
+    cur = get_db().cursor()
+    sb = get_subbenchmark(cur, subbenchmark_id)
+    if sb:
+        return render_template("subbenchmark.html", subbenchmark=sb)
     abort(404)
 
 
 @app.route("/benchmark/<int:benchmark_id>")
 def show_benchmark(benchmark_id):
     cur = get_db().cursor()
-    for row in cur.execute(
-        """
-        SELECT b.id, filename, logic, s.folderName, s.date, isIncremental, size,
-               compressedSize, l.name, l.link, l.spdxIdentifier, generatedOn,
-               generatedBy, generator, application, description, category,
-               subbenchmarkCount, benchmarkSet, s.name AS setName FROM Benchmarks AS b
-                  INNER JOIN Sets AS s ON s.Id = b.benchmarkSet
-                  INNER JOIN Licenses AS l ON l.Id = b.license
-        WHERE b.id=?""",
-        (benchmark_id,),
-    ):
-        logicData = {"id": row["id"], "logic": row["logic"]}
+    (benchmark, subbenchmarks, first) = get_canonical_benchmark_data(cur, benchmark_id)
+    if benchmark:
+        logicData = {"id": benchmark["id"], "logic": benchmark["logic"]}
         benchmarkSetData = {
-            "id": row["benchmarkSet"],
-            "name": row["setName"],
-            "date": row["date"],
+            "id": benchmark["benchmarkSet"],
+            "name": benchmark["setName"],
+            "date": benchmark["date"],
         }
-        benchmarkData = {"id": row["id"], "filename": row["filename"]}
+        benchmarkData = {"id": benchmark["id"], "filename": benchmark["filename"]}
 
         return render_template(
             "index.html",
             include="benchmark",
-            benchmark=row,
+            benchmark=benchmark,
+            subbenchmarks=subbenchmarks,
+            firstSubbenchmark=first,
             logicData=logicData,
             setData=benchmarkSetData,
             benchmarkData=benchmarkData,
