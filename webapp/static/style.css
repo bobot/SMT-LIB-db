@@ -33,3 +33,41 @@ pre {
   white-space: nowrap;
 }
 
+a.subbenchmark-header,
+a.subbenchmark-header
+{
+  padding: .5em 1em;
+  border-left: 1px solid #cbcbcb;
+  border-top: 1px solid #cbcbcb;
+  border-right: 1px solid #cbcbcb;
+  color: #000;
+  background-color: #e0e0e0;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.subbenchmark-preview {
+  display: block;
+  border-bottom: 1px solid #cbcbcb;
+}
+
+.subbenchmark-short
+{
+  border-bottom: 1px solid #cbcbcb;
+}
+
+.subbenchmark-short,
+.subbenchmark-full:target,
+.subbenchmark-full:target + a + .subbenchmark-table
+{
+  display: none;
+}
+/* The + a + is a hack to skip one siblbling (the subbenchmark-short) */
+
+.subbenchmark-full,
+.subbenchmark-full:target + .subbenchmark-short,
+.subbenchmark-short:target + .subbenchmark-table
+{
+  display: block;
+}
+

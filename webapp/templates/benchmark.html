@@ -37,16 +37,11 @@
 {% set subbenchmark = firstSubbenchmark %}
 {% include 'subbenchmark.html' %}
 {% for subbenchmark in subbenchmarks[1:] %}
-<table class="pure-table pure-table-bordered subbenchmark-table"
-       id="subbenchmark-{{ subbenchmark["number"] }}"
->
-  <thead
-    hx-trigger="click"
-    hx-get="/subbenchmark/dynamic/{{ subbenchmark["id"] }}"
-    hx-target="#subbenchmark-{{ subbenchmark["number"] }}"
-    hx-swap="outerHTML"
-  >
-    <tr><th colspan=2>Subbenchmark {{ subbenchmark["number"] }}</th></tr>
-  </thead>
-</table>
+<a id="subbenchmark-{{ subbenchmark["number"] }}"
+   class="subbenchmark-header subbenchmark-preview"
+   hx-trigger="click"
+   hx-get="/subbenchmark/dynamic/{{ subbenchmark["id"] }}"
+   hx-target="#subbenchmark-{{ subbenchmark["number"] }}"
+   hx-swap="outerHTML">
+   ▸ Subbenchmark {{ subbenchmark["number"] }}</a>
 {% endfor %}
