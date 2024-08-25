@@ -18,7 +18,7 @@ The SMT-LIB folder structure follows the scheme `[LOGIC]/[DATE]-[BENCHMARKSET]/[
 CREATE TABLE Benchmarks(
         id INTEGER PRIMARY KEY,
         filename TEXT NOT NULL,
-        benchmarkSet INT,
+        family INT,
         logic NVARCHAR(100) NOT NULL,
         isIncremental BOOL,
         size INT,
@@ -31,7 +31,7 @@ CREATE TABLE Benchmarks(
         description TEXT,
         category TEXT,
         subbenchmarkCount INT NOT NULL,
-        FOREIGN KEY(benchmarkSet) REFERENCES Sets(id)
+        FOREIGN KEY(family) REFERENCES Families(id)
         FOREIGN KEY(license) REFERENCES Licenses(id)
     );
 -- One per (check-sat) call.
@@ -47,7 +47,7 @@ CREATE TABLE Subbenchmarks(
         FOREIGN KEY(benchmark) REFERENCES Benchmarks(id)
     );
 -- Benchmark sets
-CREATE TABLE Sets(
+CREATE TABLE Families(
         id INTEGER PRIMARY KEY,
         name NVARCHAR(100) NOT NULL,
         folderName TEXT NOT NULL,

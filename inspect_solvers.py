@@ -11,15 +11,15 @@ import sys
 smtdir = sys.argv[1]
 
 idToName = dict()
-with open(f"{smtdir}/registration/solvers_divisions_all.csv", newline='') as csvfile:
-    solvers = csv.DictReader(csvfile, delimiter=',')
+with open(f"{smtdir}/registration/solvers_divisions_all.csv", newline="") as csvfile:
+    solvers = csv.DictReader(csvfile, delimiter=",")
     for row in solvers:
         solverID = row["Config ID Single Query"]
         idToName[solverID] = row["Solver Name"]
 
 idToStarexec = dict()
-with open(f"{smtdir}/results/raw-results-sq.csv", newline='') as csvfile:
-    reader = csv.DictReader(csvfile, delimiter=',')
+with open(f"{smtdir}/results/raw-results-sq.csv", newline="") as csvfile:
+    reader = csv.DictReader(csvfile, delimiter=",")
     for row in reader:
         idToStarexec[row["configuration id"]] = row["solver"]
 

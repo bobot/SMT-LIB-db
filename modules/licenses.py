@@ -54,7 +54,7 @@ static_data = [
         "",
         "GPL",
     ),
-    # For the following, the full license text is incldude in the benchmarks.  This affects some of the benchmark in this set.
+    # For the following, the full license text is incldude in the benchmarks.  This affects some of the benchmark in this family.
     (
         "CMU SoSy Lab",
         "https://clc-gitlab.cs.uiowa.edu:2443/SMT-LIB-benchmarks-inc/QF_ABVFP/-/blob/master/20190307-CPAchecker_kInduction-SoSy_Lab/rekcba_aso.1.M1-1_smt-query.0.smt2",

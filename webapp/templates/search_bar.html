@@ -29,42 +29,42 @@
             </div>
           </div>
 
-          <div class="pure-u-3-8" id="pick-set" style="position:relative">
+          <div class="pure-u-3-8" id="pick-family" style="position:relative">
             <div class="pure-g">
               <div class="pure-u-1-4">
                 <label for="data-store">Date</label>
                 <input type="text" readonly="readonly" name="date-store" class="pure-input-1" id="date-store"
-                  {% if setData %}
-                  value="{{ setData.date or ""}}"
+                  {% if familyData %}
+                  value="{{ familyData.date or ""}}"
                   {% endif %}
                 />
               </div>
               <div class="pure-u-3-4">
-                <label for="input-set">Set
-                {% if setData %}
+                <label for="input-family">Family
+                {% if familyData %}
                 <span class="clear-search-input"
-                      hx-post="/clear_input/set"
+                      hx-post="/clear_input/family"
                       hx-trigger="click"
                       hx-target="#search-bar">❌️</span>
                 {% endif %}
                 </label>
-                <input type="search" name="search-set" class="pure-input-1" id="input-set"
-                       {% if setData %}
-                       value="{{ setData.name }}"
+                <input type="search" name="search-family" class="pure-input-1" id="input-family"
+                       {% if familyData %}
+                       value="{{ familyData.name }}"
                        readonly="readonly"
                        {% else %}
-                       hx-post="/search_set"
+                       hx-post="/search_family"
                        hx-trigger="input changed delay:250ms, search, click"
-                       hx-target="#set-search-results"
-                       onblur="clearDiv('set-search-results')"
+                       hx-target="#family-search-results"
+                       onblur="clearDiv('family-search-results')"
                        {% endif %}
                 />
-                {% if setData %}
-                <input type="hidden" id="set-id" name="set-id" value="{{ setData.id }}">
+                {% if familyData %}
+                <input type="hidden" id="family-id" name="family-id" value="{{ familyData.id }}">
                 {% endif %}
               </div>
             </div>
-            <div id="set-search-results"
+            <div id="family-search-results"
              class="pure-menu pure-menu-scrollable search-suggestions"></div>
           </div>
 

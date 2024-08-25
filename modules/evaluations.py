@@ -373,11 +373,11 @@ def add_smt_comp_generic(connection, folder, year, date):
                 solver = result["solver"]
 
                 fileField = result["file"]
-                setField = fileField["family"][0]
+                familyField = fileField["family"][0]
                 fullbench = "/".join(fileField["family"][1:] + [fileField["name"]])
 
                 subbenchmarkId = benchmarks.guess_subbenchmark_id(
-                    connection, fileField["logic"], setField, fullbench
+                    connection, fileField["logic"], familyField, fullbench
                 )
                 if not subbenchmarkId:
                     print(

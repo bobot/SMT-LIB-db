@@ -26,10 +26,10 @@ def get_benchmark(cursor, benchmark_id):
         SELECT b.id, filename, logic, s.folderName, s.date, isIncremental, size,
                b.compressedSize, l.name, l.link, l.spdxIdentifier, generatedOn,
                generatedBy, generator, application, description, category,
-               subbenchmarkCount, benchmarkSet,
-               s.name AS setName
+               subbenchmarkCount, family,
+               s.name AS familyName
                FROM Benchmarks AS b
-                  INNER JOIN Sets AS s ON s.Id = b.benchmarkSet
+                  INNER JOIN Families AS s ON s.Id = b.family
                   INNER JOIN Licenses AS l ON l.Id = b.license
         WHERE b.id=?""",
         (benchmark_id,),
@@ -100,9 +100,9 @@ def show_benchmark(benchmark_id):
     (benchmark, subbenchmarks, first) = get_canonical_benchmark_data(cur, benchmark_id)
     if benchmark:
         logicData = {"id": benchmark["id"], "logic": benchmark["logic"]}
-        benchmarkSetData = {
-            "id": benchmark["benchmarkSet"],
-            "name": benchmark["setName"],
+        familyData = {
+            "id": benchmark["family"],
+            "name": benchmark["familyName"],
             "date": benchmark["date"],
         }
         benchmarkData = {"id": benchmark["id"], "filename": benchmark["filename"]}
@@ -114,7 +114,7 @@ def show_benchmark(benchmark_id):
             subbenchmarks=subbenchmarks,
             firstSubbenchmark=first,
             logicData=logicData,
-            setData=benchmarkSetData,
+            familyData=familyData,
             benchmarkData=benchmarkData,
         )
     abort(404)
@@ -122,7 +122,7 @@ def show_benchmark(benchmark_id):
 
 def retrieve_picked_data(cur, request):
     logicData = None
-    setData = None
+    familyData = None
     benchmarkData = None
     if "logic-id" in request.form:
         for row in cur.execute(
@@ -130,12 +130,12 @@ def retrieve_picked_data(cur, request):
             (request.form["logic-id"],),
         ):
             logicData = row
-    if "set-id" in request.form:
+    if "family-id" in request.form:
         for row in cur.execute(
-            "SELECT id,date,name FROM Sets WHERE id=?",
-            (request.form["set-id"],),
+            "SELECT id,date,name FROM Families WHERE id=?",
+            (request.form["family-id"],),
         ):
-            setData = row
+            familyData = row
     if "benchmark-id" in request.form:
         for row in cur.execute(
             "SELECT id,filename FROM Benchmarks WHERE id=?",
@@ -143,38 +143,38 @@ def retrieve_picked_data(cur, request):
         ):
             benchmarkData = row
 
-    return logicData, setData, benchmarkData
+    return logicData, familyData, benchmarkData
 
 
 @app.post("/search_logic")
 def search_logic():
     logic = request.form.get("search-logic", None)
-    benchmarkSet = request.form.get("set-id", None)
+    family = request.form.get("family-id", None)
     benchmark = request.form.get("benchmark-id", None)
     cur = get_db().cursor()
-    if benchmarkSet and benchmark:
+    if family and benchmark:
         ret = cur.execute(
             """
            SELECT id,logic FROM Benchmarks
            WHERE logic LIKE '%'||?||'%'
-           AND benchmarkSet=? AND id=?
+           AND family=? AND id=?
            GROUP BY logic
            ORDER BY logic ASC
            LIMIT 101
            """,
-            (logic, benchmarkSet, benchmark),
+            (logic, family, benchmark),
         )
-    elif benchmarkSet:
+    elif family:
         ret = cur.execute(
             """
            SELECT id,logic FROM Benchmarks
            WHERE logic LIKE '%'||?||'%'
-           AND benchmarkSet=?
+           AND family=?
            GROUP BY logic
            ORDER BY logic ASC
            LIMIT 101
            """,
-            (logic, benchmarkSet),
+            (logic, family),
         )
     elif benchmark:
         ret = cur.execute(
@@ -215,56 +215,56 @@ def pick_logic(logic_id):
         "SELECT id,logic FROM Benchmarks WHERE id=?",
         (logic_id,),
     ):
-        logicData, setData, benchmarkData = retrieve_picked_data(cur, request)
+        logicData, familyData, benchmarkData = retrieve_picked_data(cur, request)
         return render_template(
             "search_bar.html",
             logicData=row,
-            setData=setData,
+            familyData=familyData,
             benchmarkData=benchmarkData,
         )
     abort(404)
 
 
-@app.post("/search_set")
-def search_set():
+@app.post("/search_family")
+def search_family():
     logic = request.form.get("logic-id", None)
-    benchmarkSet = request.form.get("search-set", None)
+    family = request.form.get("search-family", None)
     benchmark = request.form.get("benchmark-id", None)
     cur = get_db().cursor()
     if benchmark:
         ret = cur.execute(
             """
-             SELECT s.id,s.date,s.name FROM Sets as s
-             INNER JOIN Benchmarks AS b ON b.benchmarkSet = s.id 
+             SELECT s.id,s.date,s.name FROM Families as s
+             INNER JOIN Benchmarks AS b ON b.family = s.id 
              WHERE s.name LIKE '%'||?||'%' AND b.id=?
              ORDER BY s.date ASC,
                       s.name ASC
              LIMIT 101
              """,
-            (benchmarkSet, benchmark),
+            (family, benchmark),
         )
     elif logic:
         ret = cur.execute(
             """
-             SELECT id,date,name FROM Sets AS s
+             SELECT id,date,name FROM Families AS s
              WHERE s.name LIKE '%'||?||'%'
-             AND EXISTS (SELECT 1 FROM Benchmarks WHERE benchmarkSet = s.id
+             AND EXISTS (SELECT 1 FROM Benchmarks WHERE family = s.id
                 AND id = ?)
              ORDER BY date ASC,
                       name ASC
              LIMIT 101
            """,
-            (benchmarkSet, logic),
+            (family, logic),
         )
     else:
         ret = cur.execute(
             """
-            SELECT id,date,name FROM Sets WHERE name LIKE '%'||?||'%'
+            SELECT id,date,name FROM Families WHERE name LIKE '%'||?||'%'
             ORDER BY date ASC,
                      name ASC
             LIMIT 101
             """,
-            (benchmarkSet,),
+            (family,),
         )
     entries = ret.fetchall()
     ret.close()
@@ -275,21 +275,21 @@ def search_set():
         else:
             value = row["name"]
         data.append({"id": row["id"], "value": value})
-    return render_template("search_suggestions.html", data=data, update="set")
+    return render_template("search_suggestions.html", data=data, update="family")
 
 
-@app.post("/pick_set/<int:set_id>")
-def pick_set(set_id):
+@app.post("/pick_family/<int:family_id>")
+def pick_family(family_id):
     cur = get_db().cursor()
     for row in cur.execute(
-        "SELECT id,date,name FROM Sets WHERE id=?",
-        (set_id,),
+        "SELECT id,date,name FROM Families WHERE id=?",
+        (family_id,),
     ):
-        logicData, setData, benchmarkData = retrieve_picked_data(cur, request)
+        logicData, familyData, benchmarkData = retrieve_picked_data(cur, request)
         return render_template(
             "search_bar.html",
             logicData=logicData,
-            setData=row,
+            familyData=row,
             benchmarkData=benchmarkData,
         )
     abort(404)
@@ -298,20 +298,20 @@ def pick_set(set_id):
 @app.post("/search_benchmark")
 def search_benchmark():
     logic = request.form.get("logic-id", None)
-    benchmarkSet = request.form.get("set-id", None)
+    family = request.form.get("family-id", None)
     benchmark = request.form.get("search-benchmark", None)
     cur = get_db().cursor()
-    if logic and benchmarkSet:
+    if logic and family:
         ret = cur.execute(
             """
            SELECT id,filename FROM Benchmarks
            WHERE filename LIKE '%'||?||'%'
            AND logic=(SELECT logic FROM Benchmarks WHERE id=?)
-           AND benchmarkSet=?
+           AND family=?
            ORDER BY filename ASC
            LIMIT 101
            """,
-            (benchmark, logic, benchmarkSet),
+            (benchmark, logic, family),
         )
     elif logic:
         ret = cur.execute(
@@ -324,16 +324,16 @@ def search_benchmark():
            """,
             (benchmark, logic),
         )
-    elif benchmarkSet:
+    elif family:
         ret = cur.execute(
             """
            SELECT id,filename FROM Benchmarks
            WHERE filename LIKE '%'||?||'%'
-           AND benchmarkSet=?
+           AND family=?
            ORDER BY filename ASC
            LIMIT 101
            """,
-            (benchmark, benchmarkSet),
+            (benchmark, family),
         )
     else:
         ret = cur.execute(
@@ -357,18 +357,18 @@ def pick_benchmark(benchmark_id):
     # has that benchmark.
     cur = get_db().cursor()
     for row in cur.execute(
-        "SELECT id,filename,logic,benchmarkSet FROM Benchmarks WHERE id=?",
+        "SELECT id,filename,logic,family FROM Benchmarks WHERE id=?",
         (benchmark_id,),
     ):
         logicData = {"id": row["id"], "logic": row["logic"]}
-        for setRow in cur.execute(
-            "SELECT id,date,name FROM Sets WHERE id=?",
-            (row["benchmarkSet"],),
+        for familyRow in cur.execute(
+            "SELECT id,date,name FROM Families WHERE id=?",
+            (row["family"],),
         ):
             return render_template(
                 "search_bar.html",
                 logicData=logicData,
-                setData=setRow,
+                familyData=familyRow,
                 benchmarkData=row,
             )
     abort(404)
@@ -376,7 +376,7 @@ def pick_benchmark(benchmark_id):
 
 @app.post("/clear_input/<string:input>")
 def clear_input(input):
-    if not input in ["logic", "set", "benchmark"]:
+    if not input in ["logic", "family", "benchmark"]:
         abort(404)
     logic = request.form.get("logic-id", None)
     logicValue = request.form.get("search-logic", None)
@@ -384,17 +384,17 @@ def clear_input(input):
         logicData = {"id": logic, "logic": logicValue}
     else:
         logicData = None
-    benchmarkSet = request.form.get("set-id", None)
-    benchmarkSetDate = request.form.get("date-store", None)
-    benchmarkSetValue = request.form.get("search-set", None)
-    if input != "set" and benchmarkSet:
-        benchmarkSetData = {
-            "id": benchmarkSet,
-            "name": benchmarkSetValue,
-            "date": benchmarkSetDate,
+    family = request.form.get("family-id", None)
+    familyDate = request.form.get("date-store", None)
+    familyValue = request.form.get("search-family", None)
+    if input != "family" and family:
+        familyData = {
+            "id": family,
+            "name": familyValue,
+            "date": familyDate,
         }
     else:
-        benchmarkSetData = None
+        familyData = None
     benchmark = request.form.get("benchmark-id", None)
     benchmarkValue = request.form.get("search-benchmark", None)
     if input != "benchmark" and benchmark:
@@ -404,7 +404,7 @@ def clear_input(input):
     return render_template(
         "search_bar.html",
         logicData=logicData,
-        setData=benchmarkSetData,
+        family=familyData,
         benchmarkData=benchmarkData,
     )
 

@@ -12,7 +12,7 @@ def setup_benchmarks(connection):
         """CREATE TABLE Benchmarks(
         id INTEGER PRIMARY KEY,
         filename TEXT NOT NULL,
-        benchmarkSet INT,
+        family INT,
         logic NVARCHAR(100) NOT NULL,
         isIncremental BOOL,
         size INT,
@@ -25,7 +25,7 @@ def setup_benchmarks(connection):
         description TEXT,
         category TEXT,
         subbenchmarkCount INT NOT NULL,
-        FOREIGN KEY(benchmarkSet) REFERENCES Sets(id)
+        FOREIGN KEY(family) REFERENCES Families(id)
         FOREIGN KEY(license) REFERENCES Licenses(id)
     );"""
     )
@@ -54,7 +54,7 @@ def setup_benchmarks(connection):
     )
 
     connection.execute(
-        """CREATE TABLE Sets(
+        """CREATE TABLE Families(
         id INTEGER PRIMARY KEY,
         name NVARCHAR(100) NOT NULL,
         folderName TEXT NOT NULL,
@@ -110,9 +110,9 @@ def setup_benchmarks(connection):
         connection.commit()
 
 
-def parse_set(name):
+def parse_family(name):
     """
-    Parses the filename component that reperesents a set and a date.
+    Parses the filename component that reperesents a family and a date.
     Possible cases are:
         yyyymmdd-NAME
         yyyy-NAME
@@ -132,10 +132,10 @@ def parse_set(name):
 
 def calculate_benchmark_count(connection):
     """
-    Calculates the number of benchmarks in each set.
+    Calculates the number of benchmarks in each family.
     """
     connection.execute(
-        "UPDATE Sets SET benchmarkCount = (SELECT COUNT(id) FROM Benchmarks WHERE Benchmarks.benchmarkSet=Sets.id);"
+        "UPDATE Families SET benchmarkCount = (SELECT COUNT(id) FROM Benchmarks WHERE Benchmarks.family=Families.id);"
     )
     connection.commit()
 
@@ -177,25 +177,27 @@ def add_benchmark(connection, benchmark):
         isIncremental = False
 
     logic = parts[1]
-    setFolder = parts[2]
-    date, setName = parse_set(setFolder)
+    familyFolder = parts[2]
+    date, familyName = parse_family(familyFolder)
     fileName = "/".join(parts[3:])
 
     cursor = connection.cursor()
-    setId = None
+    familyId = None
     # short circuit
-    for row in cursor.execute("SELECT id FROM Sets WHERE folderName=?", (setFolder,)):
-        setId = row[0]
+    for row in cursor.execute(
+        "SELECT id FROM Families WHERE folderName=?", (familyFolder,)
+    ):
+        familyId = row[0]
 
-    if not setId:
+    if not familyId:
         cursor.execute(
             """
-            INSERT OR IGNORE INTO Sets(name, foldername, date, benchmarkCount)
+            INSERT OR IGNORE INTO Families(name, foldername, date, benchmarkCount)
             VALUES(?,?,?,?);
             """,
-            (setName, setFolder, date, 0),
+            (familyName, familyFolder, date, 0),
         )
-        setId = cursor.lastrowid
+        familyId = cursor.lastrowid
 
     klhm = subprocess.run(
         f"./klhm/zig-out/bin/klhm {benchmark}",
@@ -220,7 +222,7 @@ def add_benchmark(connection, benchmark):
     cursor.execute(
         """
         INSERT INTO Benchmarks(filename,
-                               benchmarkSet,
+                               family,
                                logic,
                                isIncremental,
                                size,
@@ -237,7 +239,7 @@ def add_benchmark(connection, benchmark):
         """,
         (
             fileName,
-            setId,
+            familyId,
             benchmarkObj["logic"],
             benchmarkObj["isIncremental"],
             benchmarkObj["size"],
@@ -337,13 +339,15 @@ def add_benchmark(connection, benchmark):
     connection.commit()
 
 
-def guess_benchmark_id(connection, isIncremental, logic, setFoldername, fullFilename):
+def guess_benchmark_id(
+    connection, isIncremental, logic, familyFoldername, fullFilename
+):
     """
     Guess the id of a benchmark.  The guessing is necessary, because
     benchmarks might have moved paths between competitions.  The function
     first tests whether there one unique benchmark with a subset of the
     parameters.  First, it uses only `fullFilename`, then additionally
-    `setFoldername`, then additionally `isIncremental`
+    `familyFoldername`, then additionally `isIncremental`
     then `logic`.
     The `isIncremental` field is always enforced.
     If any of these thests returns one unique benchmark, its id is
@@ -355,7 +359,7 @@ def guess_benchmark_id(connection, isIncremental, logic, setFoldername, fullFile
     missclassified.
     """
 
-    _, benchmarkSet = parse_set(setFoldername)
+    _, benchmarkFamily = parse_family(familyFoldername)
 
     r = connection.execute(
         """
@@ -370,10 +374,10 @@ def guess_benchmark_id(connection, isIncremental, logic, setFoldername, fullFile
         return l[0][0]
     r = connection.execute(
         """
-        SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Sets ON Sets.Id = Benchmarks.benchmarkSet
-            WHERE filename=? AND Sets.folderName=?
+        SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Families ON Families.Id = Benchmarks.family
+            WHERE filename=? AND Families.folderName=?
         """,
-        (fullFilename, setFoldername),
+        (fullFilename, familyFoldername),
     )
     if len(l) == 0:
         return None
@@ -382,10 +386,10 @@ def guess_benchmark_id(connection, isIncremental, logic, setFoldername, fullFile
 
     r = connection.execute(
         """
-        SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Sets ON Sets.Id = Benchmarks.benchmarkSet
-            WHERE filename=? AND isIncremental=? AND Sets.folderName=?
+        SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Families ON Families.Id = Benchmarks.family
+            WHERE filename=? AND isIncremental=? AND Families.folderName=?
         """,
-        (fullFilename, isIncremental, setFoldername),
+        (fullFilename, isIncremental, familyFoldername),
     )
     if len(l) == 0:
         return None
@@ -393,10 +397,10 @@ def guess_benchmark_id(connection, isIncremental, logic, setFoldername, fullFile
         return l[0][0]
     r = connection.execute(
         """
-        SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Sets ON Sets.Id = Benchmarks.benchmarkSet
-            WHERE filename=? AND logic=? AND isIncremental=? AND Sets.folderName=?
+        SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Families ON Families.Id = Benchmarks.family
+            WHERE filename=? AND logic=? AND isIncremental=? AND Families.folderName=?
         """,
-        (fullFilename, isIncremental, logic, setFoldername),
+        (fullFilename, isIncremental, logic, familyFoldername),
     )
     if len(l) == 0:
         return None
@@ -405,13 +409,13 @@ def guess_benchmark_id(connection, isIncremental, logic, setFoldername, fullFile
     return None
 
 
-def guess_subbenchmark_id(connection, logic, setFoldername, fullFilename):
+def guess_subbenchmark_id(connection, logic, familyFoldername, fullFilename):
     """
     Same as guess_benchmark_id, but returns the id of the sole subbenchmark
     of a non-incremental benchmark.
     """
     benchmarkId = guess_benchmark_id(
-        connection, False, logic, setFoldername, fullFilename
+        connection, False, logic, familyFoldername, fullFilename
     )
     if not benchmarkId:
         return None
