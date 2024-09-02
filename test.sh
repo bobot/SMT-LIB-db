@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 DB=smtlib.sqlite
+DOLMEN_BIN=~/Programs/dolmen/_build/install/default/bin/dolmen
 
 rm -f $DB
 
@@ -10,7 +11,7 @@ echo "Prepopulate"
 
 echo "Add benchmarks"
 
-find ~/Work/SMT-LIB-db/SMT-LIB-ss/ -name '*smt2' | parallel -j 4 ./addbenchmark.py $DB
+find ~/Work/SMT-LIB-db/SMT-LIB-ss/ -name '*smt2' | parallel -j 4 ./addbenchmark.py $DB $DOLMEN_BIN
 
 echo "Postpopulate"
 

@@ -26,6 +26,7 @@ def get_benchmark(cursor, benchmark_id):
         SELECT b.id, filename, logic, s.folderName, s.date, isIncremental, size,
                b.compressedSize, l.name, l.link, l.spdxIdentifier, generatedOn,
                generatedBy, generator, application, description, category,
+               passesDolmen, passesDolmenStrict,
                subbenchmarkCount, family,
                s.name AS familyName
                FROM Benchmarks AS b

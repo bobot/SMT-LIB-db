@@ -3,6 +3,7 @@ import datetime
 import subprocess
 import mmap
 import json
+import sqlite3
 
 import modules.solvers
 
@@ -24,6 +25,8 @@ def setup_benchmarks(connection):
         application TEXT,
         description TEXT,
         category TEXT,
+        passesDolmen BOOL,
+        passesDolmenStrict BOOL,
         subbenchmarkCount INT NOT NULL,
         FOREIGN KEY(family) REFERENCES Families(id)
         FOREIGN KEY(license) REFERENCES Licenses(id)
@@ -153,7 +156,7 @@ def get_license_id(connection, license):
     raise Exception("Could not determine license.")
 
 
-def add_benchmark(connection, benchmark):
+def add_benchmark(dbFile, benchmark, dolmenPath):
     """
     Populates the database with the filenames of the benchmarks.
     Does not populate metadata fields or anything else.
@@ -181,6 +184,61 @@ def add_benchmark(connection, benchmark):
     date, familyName = parse_family(familyFolder)
     fileName = "/".join(parts[3:])
 
+    klhm = subprocess.run(
+        f"./klhm/zig-out/bin/klhm {benchmark}",
+        shell=True,
+        check=True,
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+
+    klhmData = json.loads(klhm.stdout)
+    subbenchmarkObjs = klhmData[0:-1]
+    benchmarkObj = klhmData[-1]
+
+    generatedOn = None
+    try:
+        generatedOn = datetime.datetime.fromisoformat(benchmarkObj["generatedOn"])
+    except (ValueError, TypeError):
+        pass
+
+    dolmen = subprocess.call(
+        f"{dolmenPath} --check-flow=true --strict=false {benchmark}",
+        shell=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    if dolmen == 2 or dolmen == 125:
+        dolmen = None
+    elif dolmen == 0:
+        dolmen = True
+    else:
+        dolmen = False
+
+    dolmenStrict = subprocess.call(
+        f"{dolmenPath} --check-flow=true --strict=true {benchmark}",
+        shell=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    if dolmenStrict == 2 or dolmenStrict == 125:
+        dolmenStrict = None
+    elif dolmenStrict == 0:
+        dolmenStrict = True
+    else:
+        dolmenStrict = False
+
+    if dolmenStrict == None or dolmen == None:
+        print("Have none!")
+
+    connection = sqlite3.connect(dbFile, timeout=30.0)
+    # This should not be necessary, because WAL mode is persistent, but we
+    # add it here to be sure.
+    connection.execute("PRAGMA journal_mode=wal")
+    # Disable to-disc syncing, might corrupt database on system crash, but since
+    # this script is used to build the database upfront, this is mostly harmless.
+    connection.execute("PRAGMA synchronous = OFF")
+
     cursor = connection.cursor()
     familyId = None
     # short circuit
@@ -199,25 +257,7 @@ def add_benchmark(connection, benchmark):
         )
         familyId = cursor.lastrowid
 
-    klhm = subprocess.run(
-        f"./klhm/zig-out/bin/klhm {benchmark}",
-        shell=True,
-        check=True,
-        stdout=subprocess.PIPE,
-        text=True,
-    )
-
-    klhmData = json.loads(klhm.stdout)
-    subbenchmarkObjs = klhmData[0:-1]
-    benchmarkObj = klhmData[-1]
-
     licenseId = get_license_id(connection, benchmarkObj["license"])
-
-    generatedOn = None
-    try:
-        generatedOn = datetime.datetime.fromisoformat(benchmarkObj["generatedOn"])
-    except (ValueError, TypeError):
-        pass
 
     cursor.execute(
         """
@@ -234,8 +274,10 @@ def add_benchmark(connection, benchmark):
                                application,
                                description,
                                category,
+                               passesDolmen,
+                               passesDolmenStrict,
                                subbenchmarkCount)
-        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
         """,
         (
             fileName,
@@ -251,6 +293,8 @@ def add_benchmark(connection, benchmark):
             benchmarkObj["application"],
             benchmarkObj["description"],
             benchmarkObj["category"],
+            dolmen,
+            dolmenStrict,
             benchmarkObj["subbenchmarkCount"],
         ),
     )
@@ -337,6 +381,7 @@ def add_benchmark(connection, benchmark):
                     (symbolIdx + 1, subbenchmarkId, symbolCounts[symbolIdx]),
                 )
     connection.commit()
+    connection.close()
 
 
 def guess_benchmark_id(
