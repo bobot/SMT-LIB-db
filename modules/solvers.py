@@ -131,6 +131,7 @@ solver_table = []
 global_solver_variants = {
     "Barcelogic": ["barcelogic"],
     "Bitwuzla": ["Bitwuzla-wrapped", "bitwuzla", "Bitwuzla (with SymFPU)"],
+    "Boolector": ["boolector"],
     "CryptoMiniSat": ["CryptoMinisat"],
     "CVC4": ["CVC4 (with SymFPU)", "cvc4"],
     "cvc5": ["CVC5"],
@@ -141,7 +142,7 @@ global_solver_variants = {
     "Z3": ["z3", "z3;"],
     "Z3string": ["Z3str2", "Z3-str2", "Z3str3", "Z3-str3", "Z3str4", "Z3str3RE"],
     "Woorpje": ["WOORPJE"],
-    "Yices": ["YICES"],
+    "Yices": ["YICES", "yices"],
 }
 
 evaluation_solver_variants = {
