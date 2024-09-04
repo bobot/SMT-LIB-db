@@ -136,7 +136,7 @@ test "get zstd version" {
 }
 
 test "create a compression context" {
-    var cstream = c.ZSTD_createCStream();
+    const cstream = c.ZSTD_createCStream();
     try std.testing.expect(c.ZSTD_sizeof_CCtx(cstream) > 0);
 
     const result = c.ZSTD_freeCStream(cstream);
@@ -144,7 +144,7 @@ test "create a compression context" {
 }
 
 test "compress a fixed buffer" {
-    var cstream = c.ZSTD_createCStream();
+    const cstream = c.ZSTD_createCStream();
     defer _ = c.ZSTD_freeCStream(cstream);
 
     const input = "compress this text please please please please!";

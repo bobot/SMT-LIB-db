@@ -42,7 +42,7 @@ pub const TokenIterator = struct {
             if (!in_comment and !(char == 9 or char == 10 or char == 13 or char == 32)) {
                 break self.pos;
             }
-        };
+        } else self.pos;
 
         if (self.pos == self.data.len)
             return null;

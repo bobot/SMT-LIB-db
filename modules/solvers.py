@@ -132,7 +132,7 @@ global_solver_variants = {
     "Barcelogic": ["barcelogic"],
     "Bitwuzla": ["Bitwuzla-wrapped", "bitwuzla", "Bitwuzla (with SymFPU)"],
     "CryptoMiniSat": ["CryptoMinisat"],
-    "CVC4": ["CVC4 (with SymFPU)"],
+    "CVC4": ["CVC4 (with SymFPU)", "cvc4"],
     "cvc5": ["CVC5"],
     "MathSAT": ["Mathsat5", "MathSAT5", "Mathsat"],
     "OSTRICH": ["Ostrich"],

@@ -210,15 +210,15 @@ pub fn main() !u8 {
     defer file.close();
 
     const md = try file.metadata();
-    const ptr = try std.os.mmap(
+    const ptr = try std.posix.mmap(
         null,
         md.size(),
-        std.os.PROT.READ | std.os.PROT.WRITE,
-        std.os.MAP.PRIVATE,
+        std.posix.PROT.READ | std.posix.PROT.WRITE,
+        .{ .TYPE = .PRIVATE },
         file.handle,
         0,
     );
-    defer std.os.munmap(ptr);
+    defer std.posix.munmap(ptr);
 
     var tokenIt = tokens.TokenIterator{ .data = ptr };
 
