@@ -18,6 +18,7 @@ pkgs.stdenv.mkDerivation {
   buildInputs = with pkgs; [
       python3
       sqlitebrowser
+      sqlite
       zig
       zstd
       black

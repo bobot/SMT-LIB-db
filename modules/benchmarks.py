@@ -404,8 +404,6 @@ def guess_benchmark_id(
     missclassified.
     """
 
-    _, benchmarkFamily = parse_family(familyFoldername)
-
     r = connection.execute(
         """
         SELECT Benchmarks.Id FROM Benchmarks WHERE filename=?
@@ -424,6 +422,7 @@ def guess_benchmark_id(
         """,
         (fullFilename, familyFoldername),
     )
+    l = r.fetchall()
     if len(l) == 0:
         return None
     if len(l) == 1:
@@ -436,6 +435,7 @@ def guess_benchmark_id(
         """,
         (fullFilename, isIncremental, familyFoldername),
     )
+    l = r.fetchall()
     if len(l) == 0:
         return None
     if len(l) == 1:
@@ -445,8 +445,9 @@ def guess_benchmark_id(
         SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Families ON Families.Id = Benchmarks.family
             WHERE filename=? AND logic=? AND isIncremental=? AND Families.folderName=?
         """,
-        (fullFilename, isIncremental, logic, familyFoldername),
+        (fullFilename, logic, isIncremental, familyFoldername),
     )
+    l = r.fetchall()
     if len(l) == 0:
         return None
     if len(l) == 1:

@@ -1,7 +1,7 @@
 import sqlite3
 from flask import Flask, g, abort, render_template, request
 
-DATABASE = "smtlib_post.sqlite"
+DATABASE = "smtlib-20240903.sqlite"
 
 
 def get_db():
@@ -405,7 +405,7 @@ def clear_input(input):
     return render_template(
         "search_bar.html",
         logicData=logicData,
-        family=familyData,
+        familyData=familyData,
         benchmarkData=benchmarkData,
     )
 

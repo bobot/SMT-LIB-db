@@ -65,7 +65,6 @@ def write_result(
         # We do not care about the results from solvers that are not on the list.
         # Note that some solvers are omitted on purpose, for example
         # if there is a fixed version.
-        print(f"nf: {solver}")
         return
     connection.execute(
         """
@@ -138,9 +137,9 @@ def add_smt_comp_early(connection, year, date):
                 connection, logic, benchmarkSet, benchmarkName
             )
             if not subbenchmarkId:
-                # print(
-                #     f"WARNING: Benchmark {benchmarkName} of SMT-COMP {year} not found"
-                # )
+                print(
+                    f"WARNING: Benchmark {benchmarkName} of SMT-COMP {year} not found ({logic}, {benchmarkSet})"
+                )
                 subbenchmarkId = 1
                 # continue
 
@@ -332,7 +331,7 @@ def add_smt_comp_oldstyle(connection, compressedCsvFilename, year, date):
                 )
                 if not subbenchmarkId:
                     print(
-                        f"WARNING: Benchmark {benchmarkName} of SMT-COMP {year} not found"
+                        f"WARNING: Benchmark {benchmarkName} of SMT-COMP {year} not found ({logic}, {benchmarkSet})"
                     )
                     continue
                 write_result(
@@ -381,7 +380,7 @@ def add_smt_comp_generic(connection, folder, year, date):
                 )
                 if not subbenchmarkId:
                     print(
-                        f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found"
+                        f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found ({fileField['logic']}, {familyField})"
                     )
                     continue
                 cpuTime = result["cpu_time"]
