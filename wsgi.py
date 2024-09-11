@@ -2,7 +2,8 @@ import sqlite3
 import os
 from flask import Flask, g, abort, render_template, request
 
-DATABASE = os.environ['SMTLIB_DB']
+DATABASE = os.environ["SMTLIB_DB"]
+
 
 def get_db():
     db = getattr(g, "_database", None)
@@ -44,6 +45,7 @@ def get_subbenchmarks(cursor, benchmark_id):
         """
            SELECT id,number FROM Subbenchmarks WHERE benchmark=? 
            ORDER BY number ASC
+           LIMIT 151
            """,
         (benchmark_id,),
     )
@@ -91,7 +93,15 @@ def dynamic_subbenchmark(subbenchmark_id):
     cur = get_db().cursor()
     sb = get_subbenchmark(cur, subbenchmark_id)
     if sb:
-        return render_template("subbenchmark.html", subbenchmark=sb)
+        res = cur.execute(
+            """
+            SELECT s.name,sc.count FROM SymbolsCounts AS sc
+            INNER JOIN Symbols AS s ON s.id = sc.symbol
+            WHERE sc.subbenchmark=?""",
+            (subbenchmark_id,),
+        )
+        symbols = res.fetchall()
+        return render_template("subbenchmark.html", subbenchmark=sb, symbols=symbols)
     abort(404)
 
 

@@ -5,9 +5,10 @@
    href="#subbenchmark-short-{{ subbenchmark.number }}" class="subbenchmark-header subbenchmark-short">
    ▸ Subbenchmark {{ subbenchmark.number }}</a>
 
+<div class="subbenchmark-box">
 <table class="pure-table pure-table-bordered subbenchmark-table">
 <tbody>
-<tr><td>Status         </td><td>{{ subbenchmark.status }}        </td</tr>
+<tr><td>Status         </td><td>{{ subbenchmark.status }}        </td></tr>
 <tr><td>Size           </td><td>{{ subbenchmark.normalizedSize }}</td></tr>
 <tr><td>Compressed Size</td><td>{{ subbenchmark.compressedSize }}</td></tr>
 <tr><td>Max. Term Depth</td><td>{{ subbenchmark.maxTermDepth }}  </td</tr>
@@ -23,3 +24,24 @@
 </tbody>
 </table>
 
+
+<table class="pure-table pure-table-bordered syntax-table">
+<tbody>
+{% for count in symbols %}
+  {% if loop.index0 is divisibleby 3 %}
+  	<tr>
+  {% endif %}
+    <td><code>{{ count.name }}</code></td><td>{{ count.count }}</td>
+  {% if loop.index is divisibleby 3 %}
+  	</tr>
+  {% endif %}
+{% endfor %}
+{% if (symbols|length % 3) == 1 %}
+<td></td><td></td><td></td><td></td></tr>
+{% endif %}
+{% if (symbols|length % 3) == 2 %}
+<td></td><td></td></tr>
+{% endif %}
+</tbody>
+</table>
+</div>

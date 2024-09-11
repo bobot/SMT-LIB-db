@@ -37,7 +37,7 @@
 
 {% set subbenchmark = firstSubbenchmark %}
 {% include 'subbenchmark.html' %}
-{% for subbenchmark in subbenchmarks[1:] %}
+{% for subbenchmark in subbenchmarks[1:150] %}
 <a id="subbenchmark-{{ subbenchmark["number"] }}"
    class="subbenchmark-header subbenchmark-preview"
    hx-trigger="click"
@@ -46,3 +46,6 @@
    hx-swap="outerHTML">
    ▸ Subbenchmark {{ subbenchmark["number"] }}</a>
 {% endfor %}
+{% if subbenchmarks|length > 150 %}
+<a class="subbenchmark-header subbenchmark-preview">and many more.</a>
+{% endif %}
