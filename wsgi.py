@@ -1,8 +1,8 @@
 import sqlite3
+import os
 from flask import Flask, g, abort, render_template, request
 
-DATABASE = "smtlib-20240903.sqlite"
-
+DATABASE = os.environ['SMTLIB_DB']
 
 def get_db():
     db = getattr(g, "_database", None)
@@ -228,7 +228,7 @@ def pick_logic(logic_id):
 
 @app.post("/search_family")
 def search_family():
-    logic = request.form.get("logic-id", None)
+    logic = request.form.get("search-logic", None)
     family = request.form.get("search-family", None)
     benchmark = request.form.get("benchmark-id", None)
     cur = get_db().cursor()
@@ -247,12 +247,12 @@ def search_family():
     elif logic:
         ret = cur.execute(
             """
-             SELECT id,date,name FROM Families AS s
-             WHERE s.name LIKE '%'||?||'%'
-             AND EXISTS (SELECT 1 FROM Benchmarks WHERE family = s.id
-                AND id = ?)
-             ORDER BY date ASC,
-                      name ASC
+             SELECT s.id,s.date,s.name,s.folderName FROM Families AS s
+             INNER JOIN Benchmarks AS b ON b.family = s.id
+             WHERE s.name LIKE '%'||?||'%' AND b.logic=?
+             GROUP BY s.folderName
+             ORDER BY s.date ASC,
+                      s.name ASC
              LIMIT 101
            """,
             (family, logic),

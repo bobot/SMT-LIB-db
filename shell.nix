@@ -26,6 +26,7 @@ pkgs.stdenv.mkDerivation {
       csvkit
       python312Packages.beautifulsoup4
       python312Packages.flask
+      python312Packages.gunicorn
   ];
 
 }
