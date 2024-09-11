@@ -24,27 +24,6 @@ pre {
   white-space: nowrap;
 }
 
-.subbenchmark-table {
-  width: 100%;
-}
-
-.subbenchmark-table tr td:first-child {
-  width: 1%;
-  white-space: nowrap;
-}
-
-.syntax-table {
-  width: 100%;
-}
-
-.syntax-table tr td:nth-of-type(even) {
-  text-align: right;
-  background-color: #f2f2f2;
-}
-.syntax-table tr td {
-  width: 15%;
-}
-
 a.subbenchmark-header,
 a.subbenchmark-header
 {
@@ -83,3 +62,48 @@ a.subbenchmark-header
   display: block;
 }
 
+.subbenchmark-table {
+  width: 100%;
+}
+
+.subbenchmark-table tr td:first-child {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.syntax-table {
+  width: 100%;
+}
+
+.syntax-table tr td:nth-of-type(even) {
+  text-align: right;
+  background-color: #f2f2f2;
+}
+.syntax-table tr td {
+  width: 12.5%;
+}
+
+.evaluation-table {
+  width: 100%;
+}
+
+.evaluation-table tr td:nth-of-type(1) {
+  text-align: center;
+  border-bottom: none;
+}
+
+.evaluation-table tr td:nth-of-type(2) {
+  border-bottom: none;
+}
+
+.evaluation-table tr td:nth-of-type(4) {
+  text-align: right;
+}
+
+.evaluation-table tr td:nth-of-type(5) {
+  text-align: right;
+}
+
+.evaluation-table tr td:nth-of-type(6) {
+  text-align: right;
+}

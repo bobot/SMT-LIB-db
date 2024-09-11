@@ -24,24 +24,86 @@
 </tbody>
 </table>
 
-
+<h3> Symbols </h3>
 <table class="pure-table pure-table-bordered syntax-table">
 <tbody>
 {% for count in symbols %}
-  {% if loop.index0 is divisibleby 3 %}
+  {% if loop.index0 is divisibleby 4 %}
   	<tr>
   {% endif %}
     <td><code>{{ count.name }}</code></td><td>{{ count.count }}</td>
-  {% if loop.index is divisibleby 3 %}
+  {% if loop.index is divisibleby 4 %}
   	</tr>
   {% endif %}
 {% endfor %}
-{% if (symbols|length % 3) == 1 %}
-<td></td><td></td><td></td><td></td></tr>
+{% if (symbols|length % 4) == 1 %}
+<td></td><td></td> <td></td><td></td> <td></td><td></td> </tr>
 {% endif %}
-{% if (symbols|length % 3) == 2 %}
-<td></td><td></td></tr>
+{% if (symbols|length % 4) == 2 %}
+<td></td><td></td> <td></td><td></td> </tr>
+{% endif %}
+{% if (symbols|length % 4) == 3 %}
+<td></td> <td></td> </tr>
 {% endif %}
 </tbody>
 </table>
+
+{% if evaluation %}
+<h3> Evaluations </h3>
+<table class="pure-table pure-table-bordered evaluation-table">
+<thead>
+  <tr>
+      <th>Evaluation</th>
+      <th>Solver</th>
+      <th>Variant</th>
+      <th>Result</th>
+      <th>Wallclock</th>
+      <th>CPU Time</th>
+  </tr>
+</thead>
+<tbody>
+{% set ns = namespace(high=false) %}
+{% for result in evaluation %}
+
+{% if loop.changed(result.name) %}
+  {% set ns.high = not ns.high %}
+  {% if ns.high == true %}
+    <tr class="pure-table-odd">
+  {% else %}
+    <tr>
+  {% endif %}
+  <td style="border-top: 1px solid #cbcbcb"><a href="{{ result.link }}">{{ result.name }}<a></td>
+{% else %}
+{% if ns.high == true %}
+    <tr class="pure-table-odd">
+  {% else %}
+    <tr>
+  {% endif %}
+  <td></td>
+{% endif %}
+
+{% if loop.previtem %}
+  {% if loop.previtem.solvername != result.solverName %}
+    <td style="border-top: 1px solid #cbcbcb">{{ result.solverName }}</td>
+  {% else %}
+   	<td></td>
+  {% endif %}
+{% else %}
+    <td>{{ result.solverName }}</td>
+{% endif %}
+<td>{{ result.fullName }}</td>
+<td>
+	{% if result.status == "unknown" %}
+    ❌
+  {% else %}
+    {{ result.status }} ✅
+  {% endif %}
+</td>
+<td>{{ '%.05f' % result.wallclockTime }}</td>
+<td>{{ '%.05f' % result.cpuTime }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% endif %}
 </div>

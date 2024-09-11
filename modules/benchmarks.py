@@ -455,15 +455,23 @@ def guess_benchmark_id(
     return None
 
 
-def guess_subbenchmark_id(connection, logic, familyFoldername, fullFilename):
+def guess_subbenchmark_id(
+    connection, logic, familyFoldername, fullFilename, stats=None
+):
     """
     Same as guess_benchmark_id, but returns the id of the sole subbenchmark
     of a non-incremental benchmark.
     """
+    if stats:
+        stats["lookups"] = stats["lookups"] + 1
+        stats["benchmarks"].add((logic, familyFoldername, fullFilename))
     benchmarkId = guess_benchmark_id(
         connection, False, logic, familyFoldername, fullFilename
     )
     if not benchmarkId:
+        if stats:
+            stats["lookupFailures"] = stats["lookupFailures"] + 1
+            stats["unkownBenchmarks"].add((logic, familyFoldername, fullFilename))
         return None
     for r in connection.execute(
         """

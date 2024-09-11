@@ -82,11 +82,32 @@ def write_result(
     )
 
 
+def make_stats_dict(name):
+    return {
+        "name": name,
+        "lookups": 0,
+        "lookupFailures": 0,
+        "benchmarks": set(),
+        "unkownBenchmarks": set(),
+    }
+
+
+def print_stats_dict(stats):
+    lookupPercentage = stats["lookupFailures"] / stats["lookups"] * 100.0
+    benchmarkPercentage = (
+        len(stats["unkownBenchmarks"]) / len(stats["benchmarks"]) * 100.0
+    )
+    print(
+        f"{name}\t\tMissing entries: {stats['lookupFailures']} {lookupPercentage:.2f}% Unknown Benchmark: {stats['lookupFailures']} {lookupPercentage:.2f}%"
+    )
+
+
 old_header_regex = r"^Detailed results for (.+) at ([A-Z0-9_]+)$"
 
 
 def add_smt_comp_early(connection, year, date):
     name = f"SMT-COMP {year}"
+    stats = make_stats_dict(name)
     # Date is the day the PDPAR (pre. SMT) workshop happened.
     cursor = connection.execute(
         """
@@ -134,7 +155,7 @@ def add_smt_comp_early(connection, year, date):
             benchmarkName = "/".join(benchmarkFields[1:]) + "2"
 
             subbenchmarkId = benchmarks.guess_subbenchmark_id(
-                connection, logic, benchmarkSet, benchmarkName
+                connection, logic, benchmarkSet, benchmarkName, stats
             )
             if not subbenchmarkId:
                 print(
@@ -152,11 +173,13 @@ def add_smt_comp_early(connection, year, date):
                 None,
                 time,
             )
+    return stats
 
 
 # CSV format used for smt eval 2013
 def add_smt_eval_2013(connection, csvDataFile):
     name = f"SMT Evaluation 2013"
+    stats = make_stats_dict(name)
     cursor = connection.execute(
         """
         INSERT INTO Evaluations(name, date, link)
@@ -206,7 +229,7 @@ def add_smt_eval_2013(connection, csvDataFile):
                 benchmarkName = "/".join(benchmarkField[3:])
 
                 subbenchmarkId = benchmarks.guess_subbenchmark_id(
-                    connection, logic, benchmarkSet, benchmarkName
+                    connection, logic, benchmarkSet, benchmarkName, stats
                 )
                 if not subbenchmarkId:
                     print(
@@ -225,11 +248,13 @@ def add_smt_eval_2013(connection, csvDataFile):
                 time,
             )
     connection.commit()
+    return stats
 
 
 # CSV format used 2014
 def add_smt_comp_2014(connection, compressedCsvFilename):
     name = f"SMT-COMP 2014"
+    stats = make_stats_dict(name)
     cursor = connection.execute(
         """
         INSERT INTO Evaluations(name, date, link)
@@ -266,7 +291,7 @@ def add_smt_comp_2014(connection, compressedCsvFilename):
                 benchmarkSet = benchmarkField[1]
                 benchmarkName = "/".join(benchmarkField[2:])
                 subbenchmarkId = benchmarks.guess_subbenchmark_id(
-                    connection, logic, benchmarkSet, benchmarkName
+                    connection, logic, benchmarkSet, benchmarkName, stats
                 )
                 if not subbenchmarkId:
                     print(
@@ -283,11 +308,13 @@ def add_smt_comp_2014(connection, compressedCsvFilename):
                     wallclockTime,
                 )
     connection.commit()
+    return stats
 
 
 # CSV format used 2015-2017
 def add_smt_comp_oldstyle(connection, compressedCsvFilename, year, date):
     name = f"SMT-COMP {year}"
+    stats = make_stats_dict(name)
     cursor = connection.execute(
         """
         INSERT INTO Evaluations(name, date, link)
@@ -327,7 +354,7 @@ def add_smt_comp_oldstyle(connection, compressedCsvFilename, year, date):
                 benchmarkSet = benchmarkField[1]
                 benchmarkName = "/".join(benchmarkField[2:])
                 subbenchmarkId = benchmarks.guess_subbenchmark_id(
-                    connection, logic, benchmarkSet, benchmarkName
+                    connection, logic, benchmarkSet, benchmarkName, stats
                 )
                 if not subbenchmarkId:
                     print(
@@ -344,10 +371,12 @@ def add_smt_comp_oldstyle(connection, compressedCsvFilename, year, date):
                     wallclockTime,
                 )
     connection.commit()
+    return stats
 
 
 def add_smt_comp_generic(connection, folder, year, date):
     name = f"SMT-COMP {year}"
+    stats = make_stats_dict(name)
     cursor = connection.execute(
         """
         INSERT INTO Evaluations(name, date, link)
@@ -376,7 +405,7 @@ def add_smt_comp_generic(connection, folder, year, date):
                 fullbench = "/".join(fileField["family"][1:] + [fileField["name"]])
 
                 subbenchmarkId = benchmarks.guess_subbenchmark_id(
-                    connection, fileField["logic"], familyField, fullbench
+                    connection, fileField["logic"], familyField, fullbench, stats
                 )
                 if not subbenchmarkId:
                     print(
@@ -400,23 +429,39 @@ def add_smt_comp_generic(connection, folder, year, date):
 
 
 def add_smt_comps(connection, smtcompwwwfolder, smtcompfolder, smtevalcsv):
-    add_smt_comp_early(connection, "2005", "2005-07-12")
-    add_smt_comp_early(connection, "2006", "2006-08-21")
-    add_smt_eval_2013(connection, smtevalcsv)
+    stats = []
+    s = add_smt_comp_early(connection, "2005", "2005-07-12")
+    stats.append(s)
+    s = add_smt_comp_early(connection, "2006", "2006-08-21")
+    stats.append(s)
+    s = add_smt_eval_2013(connection, smtevalcsv)
+    stats.append(s)
     path2014 = smtcompfolder / "2014/csv/combined.tar.xz"
-    add_smt_comp_2014(connection, path2014)
+    s = add_smt_comp_2014(connection, path2014)
+    stats.append(s)
     path2015 = smtcompfolder / "2015/csv/Main_Track.tar.xz"
-    add_smt_comp_oldstyle(connection, path2015, "2015", "2015-07-02")
+    s = add_smt_comp_oldstyle(connection, path2015, "2015", "2015-07-02")
+    stats.append(s)
     path2016 = smtcompfolder / "2016/csv/Main_Track.tar.xz"
-    add_smt_comp_oldstyle(connection, path2016, "2016", "2016-07-02")
+    s = add_smt_comp_oldstyle(connection, path2016, "2016", "2016-07-02")
+    stats.append(s)
     path2017 = smtcompfolder / "2017/csv/Main_Track.tar.xz"
-    add_smt_comp_oldstyle(connection, path2017, "2017", "2017-07-23")
-    add_smt_comp_generic(connection, smtcompwwwfolder, "2018", "2018-07-14")
-    add_smt_comp_generic(connection, smtcompwwwfolder, "2019", "2019-07-07")
-    add_smt_comp_generic(connection, smtcompwwwfolder, "2020", "2020-07-06")
-    add_smt_comp_generic(connection, smtcompwwwfolder, "2021", "2021-07-18")
-    add_smt_comp_generic(connection, smtcompwwwfolder, "2022", "2022-08-10")
-    add_smt_comp_generic(connection, smtcompwwwfolder, "2023", "2023-07-06")
+    s = add_smt_comp_oldstyle(connection, path2017, "2017", "2017-07-23")
+    stats.append(s)
+    s = add_smt_comp_generic(connection, smtcompwwwfolder, "2018", "2018-07-14")
+    stats.append(s)
+    s = add_smt_comp_generic(connection, smtcompwwwfolder, "2019", "2019-07-07")
+    stats.append(s)
+    s = add_smt_comp_generic(connection, smtcompwwwfolder, "2020", "2020-07-06")
+    stats.append(s)
+    s = add_smt_comp_generic(connection, smtcompwwwfolder, "2021", "2021-07-18")
+    stats.append(s)
+    s = add_smt_comp_generic(connection, smtcompwwwfolder, "2022", "2022-08-10")
+    stats.append(s)
+    s = add_smt_comp_generic(connection, smtcompwwwfolder, "2023", "2023-07-06")
+    stats.append(s)
+    for stat in stats:
+        print_stats_dict(stat)
 
 
 def add_ratings_for(connection, competition):
@@ -481,6 +526,7 @@ def add_ratings_for(connection, competition):
                 (benchmark, evaluationId, rating, logicSolvers, benchmarkSolvers),
             )
     connection.commit()
+    return stats
 
 
 def add_ratings(connection):
