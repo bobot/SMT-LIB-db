@@ -98,8 +98,20 @@ def print_stats_dict(stats):
         len(stats["unkownBenchmarks"]) / len(stats["benchmarks"]) * 100.0
     )
     print(
-        f"{name}\t\tMissing entries: {stats['lookupFailures']} {lookupPercentage:.2f}% Unknown Benchmark: {stats['lookupFailures']} {lookupPercentage:.2f}%"
+        f"{stats['name']}\t\tMissing entries: {stats['lookupFailures']} {lookupPercentage:.2f}% Unknown Benchmark: {stats['lookupFailures']} {lookupPercentage:.2f}%"
     )
+
+
+def benchmark_status(solved_status, expected="unkown"):
+    if solved_status in ["-", "starexec-unknown"]:
+        solved_status = "unknown"
+    if (
+        expected in ["sat", "unsat"]
+        and solved_status in ["sat", "unsat"]
+        and not expected == solved_status
+    ):
+        return "unknown"
+    return solved_status
 
 
 old_header_regex = r"^Detailed results for (.+) at ([A-Z0-9_]+)$"
@@ -211,9 +223,7 @@ def add_smt_eval_2013(connection, csvDataFile):
                 time = float(time)
 
             status = row["result"]
-            # Discard disagreements
-            if status == "-":
-                status = "unknown"
+            status = benchmark_status(status)
             benchmarkField = row[" benchmark"].split("/")
             if row["benchmark id"] in benchmarkIdMapping:
                 subbenchmarkId = benchmarkIdMapping[row["benchmark id"]]
@@ -280,12 +290,7 @@ def add_smt_comp_2014(connection, compressedCsvFilename):
                 cpuTime = row[8]
                 wallclockTime = row[9]
                 status = row[10]
-                # Discard disagreements
-                if status == "starexec-unknown":
-                    status = "unknown"
-                else:
-                    if row[11] != "starexec-unknown" and status != "starexec-unknown":
-                        status = "unknown"
+                status = benchmark_status(status, row[11])
                 benchmarkField = row[1].split("/")
                 logic = benchmarkField[0]
                 benchmarkSet = benchmarkField[1]
@@ -340,15 +345,7 @@ def add_smt_comp_oldstyle(connection, compressedCsvFilename, year, date):
                 cpuTime = row["cpu time"]
                 wallclockTime = row["wallclock time"]
                 status = row["result"]
-                # Discard disagreements
-                if status == "starexec-unknown":
-                    status = "unknown"
-                else:
-                    if (
-                        row["expected"] != "starexec-unknown"
-                        and status != "starexec-unknown"
-                    ):
-                        status = "unknown"
+                status = benchmark_status(status, row["expected"])
                 benchmarkField = row["benchmark"].split("/")
                 logic = benchmarkField[0]
                 benchmarkSet = benchmarkField[1]
