@@ -94,13 +94,25 @@
 <td>{{ result.fullName }}</td>
 <td>
 	{% if result.status == "unknown" %}
-    ❌
+    unkown ❌
   {% else %}
     {{ result.status }} ✅
   {% endif %}
 </td>
-<td>{{ '%.05f' % result.wallclockTime }}</td>
-<td>{{ '%.05f' % result.cpuTime }}</td>
+<td>
+{% if result.wallclockTime %}
+  {{ '%.05f' % result.wallclockTime }}
+{% else %}
+—
+{% endif %}
+</td>
+<td>
+{% if result.cpuTime %}
+  {{ '%.05f' % result.cpuTime }}
+{% else %}
+—
+{% endif %}
+</td>
 </tr>
 {% endfor %}
 </tbody>
