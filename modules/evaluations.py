@@ -98,18 +98,16 @@ def print_stats_dict(stats):
         len(stats["unkownBenchmarks"]) / len(stats["benchmarks"]) * 100.0
     )
     print(
-        f"{stats['name']}\t\tMissing entries: {stats['lookupFailures']} {lookupPercentage:.2f}% Unknown Benchmark: {stats['lookupFailures']} {lookupPercentage:.2f}%"
+        f"{stats['name']}\t\tMissing entries: {stats['lookupFailures']} {lookupPercentage:.2f}% Unknown Benchmark: {len(stats['unkownBenchmarks'])} {benchmarkPercentage:.2f}%"
     )
 
 
 def benchmark_status(solved_status, expected="unkown"):
     if solved_status in ["-", "starexec-unknown"]:
-        solved_status = "unknown"
-    if (
-        expected in ["sat", "unsat"]
-        and solved_status in ["sat", "unsat"]
-        and not expected == solved_status
-    ):
+        return "unknown"
+    if not solved_status in ["sat", "unsat"]:
+        return "unknown"
+    if expected in ["sat", "unsat"] and not expected == solved_status:
         return "unknown"
     return solved_status
 
@@ -411,7 +409,7 @@ def add_smt_comp_generic(connection, folder, year, date):
                     continue
                 cpuTime = result["cpu_time"]
                 wallclockTime = result["wallclock_time"]
-                status = result["result"]
+                status = benchmark_status(result["result"])
                 write_result(
                     connection,
                     evaluationId,
@@ -423,6 +421,7 @@ def add_smt_comp_generic(connection, folder, year, date):
                 )
 
     connection.commit()
+    return stats
 
 
 def add_smt_comps(connection, smtcompwwwfolder, smtcompfolder, smtevalcsv):
@@ -456,6 +455,8 @@ def add_smt_comps(connection, smtcompwwwfolder, smtcompfolder, smtevalcsv):
     s = add_smt_comp_generic(connection, smtcompwwwfolder, "2022", "2022-08-10")
     stats.append(s)
     s = add_smt_comp_generic(connection, smtcompwwwfolder, "2023", "2023-07-06")
+    stats.append(s)
+    s = add_smt_comp_generic(connection, smtcompwwwfolder, "2024", "2024-07-22")
     stats.append(s)
     for stat in stats:
         print_stats_dict(stat)

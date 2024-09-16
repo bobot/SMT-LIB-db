@@ -30,7 +30,9 @@ known_solvers = [
     ("4Simp", ""),
     ("ABC", "https://dl.acm.org/doi/10.1007/978-3-642-14295-6_5"),
     ("Abziz", "https://mabdula.github.io/"),
+    ("Algaroba", "https://github.com/uclid-org/algaroba"),
     ("Alt-Ergo", "https://alt-ergo.ocamlpro.com/"),
+    ("Amaya", "https://github.com/MichalHe/amaya"),
     ("AProVE", "https://aprove.informatik.rwth-aachen.de/"),
     ("ARIO", "http://smtcomp.cs.uiowa.edu/2005/descriptions/ARIOintro.pdf"),
     ("Barcelogic", "https://www.cs.upc.edu/~oliveras/bclt-main.html"),
@@ -68,6 +70,7 @@ known_solvers = [
     ("OpenSMT", "https://verify.inf.usi.ch/opensmt"),
     ("OSTRICH", "https://github.com/uuverifiers/ostrich"),
     ("Par4", "https://github.com/tjark/Par"),
+    ("plat-smt", "https://github.com/dewert99/plat-smt"),
     ("ProB", "https://prob.hhu.de/w/index.php?title=Main_Page/"),
     ("Q3B", "https://github.com/martinjonas/Q3B/"),
     ("Q3B-pBNN", "https://www.fi.muni.cz/~xpavlik5/Q3B-pBDD/"),
@@ -739,6 +742,24 @@ evaluation_solver_variants = {
         ("Z3-Owl", ["z3-Owl-Final_default"]),
         ("Z3++", ["z3++0715_default", "Z3++_sq_0526_default"]),
         ("Z3", ["z3-4.8.17_default", "z3-4.8.11_default"]),
+    ],
+    "SMT-COMP 2024": [
+        ("Algaroba", ["Algaroba"]),  #
+        ("Amaya", ["Amaya"]),  #
+        ("Bitwuzla", ["Bitwuzla"]),
+        ("COLIBRI", ["COLIBRI"]),
+        ("cvc5", ["cvc5"]),
+        ("iProver", ["iProver v3.9"]),
+        ("OpenSMT", ["OpenSMT"]),
+        ("OSTRICH", ["OSTRICH"]),
+        ("plat-smt", ["plat-smt"]),  #
+        ("SMTInterpol", ["SMTInterpol"]),
+        ("SMT-RAT", ["SMT-RAT"]),
+        ("STP", ["STP"]),
+        ("Yices2", ["Yices2"]),
+        ("YicesQS", ["YicesQS"]),
+        ("Z3alpha", ["Z3-alpha"]),
+        ("Z3-Noodler", ["Z3-Noodler"]),
     ],
 }
 
