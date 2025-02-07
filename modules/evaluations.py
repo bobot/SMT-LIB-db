@@ -103,12 +103,10 @@ def print_stats_dict(stats):
     )
 
 
-def benchmark_status(solved_status, expected="unkown"):
+def benchmark_status(solved_status):
     if solved_status in ["-", "starexec-unknown"]:
         return "unknown"
     if not solved_status in ["sat", "unsat"]:
-        return "unknown"
-    if expected in ["sat", "unsat"] and not expected == solved_status:
         return "unknown"
     return solved_status
 
@@ -221,9 +219,7 @@ def add_smtexec(connection, smtexecConnection, year, date, jobId):
         if benchmarkName[-1] != "2":
             benchmarkName = benchmarkName + "2"
         time = float(r[3])
-        outcome = r[4]
-        if outcome == "timeout":
-            outcome == "unknown"
+        outcome = benchmark_status(r[4])
         subbenchmarkId = benchmarks.guess_subbenchmark_id(
             connection, logic, benchmarkSet, benchmarkName, stats
         )
@@ -345,7 +341,7 @@ def add_smt_comp_2014(connection, compressedCsvFilename):
                 cpuTime = row[8]
                 wallclockTime = row[9]
                 status = row[10]
-                status = benchmark_status(status, row[11])
+                status = benchmark_status(status)
                 benchmarkField = row[1].split("/")
                 logic = benchmarkField[0]
                 benchmarkSet = benchmarkField[1]
@@ -400,7 +396,7 @@ def add_smt_comp_oldstyle(connection, compressedCsvFilename, year, date):
                 cpuTime = row["cpu time"]
                 wallclockTime = row["wallclock time"]
                 status = row["result"]
-                status = benchmark_status(status, row["expected"])
+                status = benchmark_status(status)
                 benchmarkField = row["benchmark"].split("/")
                 logic = benchmarkField[0]
                 benchmarkSet = benchmarkField[1]
