@@ -149,6 +149,8 @@ solvers that solved the benchmark.  The rating is $1 - m/n$.
 ## TODO
 
 * Support for incremental benchmarks.
-* Parse metadata header.
-* Support more SMT-COMPs.
-* Refined difficulty rating. 
+* Refined difficulty rating.
+* Detect timeouts and include them as a status:
+	* SMT-exec years have it as a possible status
+	* STAR-exec raw results have a "status" field that stores it
+	* However, the json files don't maintain this info
