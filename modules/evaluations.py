@@ -351,7 +351,7 @@ def add_smt_comp_2014(connection, compressedCsvFilename):
                 )
                 if not subbenchmarkId:
                     print(
-                        f"WARNING: Benchmark {benchmarkName} of SMT-COMP 2014 not found"
+                        f"WARNING: Benchmark {benchmarkName} of SMT-COMP 2014 not found ({logic}, {benchmarkSet})"
                     )
                     continue
                 write_result(
@@ -397,7 +397,9 @@ def add_smt_comp_oldstyle(connection, compressedCsvFilename, year, date):
                 wallclockTime = row["wallclock time"]
                 status = row["result"]
                 status = benchmark_status(status)
-                benchmarkField = row["benchmark"].split("/")
+                benchmarkField = row["benchmark"].replace("Other Divisions/", "")
+                benchmarkField = benchmarkField.replace("Datatype Divisions/", "")
+                benchmarkField = benchmarkField.split("/")
                 logic = benchmarkField[0]
                 benchmarkSet = benchmarkField[1]
                 benchmarkName = "/".join(benchmarkField[2:])

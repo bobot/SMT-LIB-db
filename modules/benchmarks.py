@@ -415,6 +415,7 @@ def guess_benchmark_id(
         return None
     if len(l) == 1:
         return l[0][0]
+
     r = connection.execute(
         """
         SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Families ON Families.Id = Benchmarks.family
