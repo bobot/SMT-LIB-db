@@ -10,6 +10,7 @@ from modules import benchmarks
 from bs4 import BeautifulSoup
 
 import modules.solvers
+from modules.fixup import *
 
 
 def setup_evaluations(connection):
@@ -163,6 +164,9 @@ def add_smt_comp_early(connection, year, date):
             benchmarkSet = benchmarkFields[0]
             benchmarkName = "/".join(benchmarkFields[1:]) + "2"
 
+            (logic, benchmarkSet, benchmarkName) = fix_smt_comp_early(
+                logic, benchmarkSet, benchmarkName
+            )
             subbenchmarkId = benchmarks.guess_subbenchmark_id(
                 connection, logic, benchmarkSet, benchmarkName, stats
             )
