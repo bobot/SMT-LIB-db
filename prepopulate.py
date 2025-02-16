@@ -3,7 +3,7 @@
 import sqlite3
 import argparse
 from pathlib import Path
-from modules import licenses, benchmarks, evaluations, solvers
+from modules import licenses, benchmarks, evaluations, solvers, logics
 
 parser = argparse.ArgumentParser(
     prog="prepopulate.py", description="Prepopulates the benchmark database."
@@ -22,4 +22,6 @@ licenses.setup_licenses(connection)
 evaluations.setup_evaluations(connection)
 solvers.setup_solvers(connection)
 benchmarks.setup_benchmarks(connection)
+logics.setup_logics(connection)
+logics.write_all_logics(connection)
 connection.close()
