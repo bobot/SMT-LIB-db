@@ -28,6 +28,7 @@ def setup_benchmarks(connection):
         passesDolmen BOOL,
         passesDolmenStrict BOOL,
         subbenchmarkCount INT NOT NULL,
+        firstOccurrence DATE,
         FOREIGN KEY(family) REFERENCES Families(id)
         FOREIGN KEY(license) REFERENCES Licenses(id)
     );"""
@@ -51,7 +52,7 @@ def setup_benchmarks(connection):
         declareDatatypeCount INT,
         maxTermDepth INT,
         status TEXT,
-
+        inferredStatus Text,
         FOREIGN KEY(benchmark) REFERENCES Benchmarks(id)
     );"""
     )

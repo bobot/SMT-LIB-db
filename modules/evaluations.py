@@ -557,21 +557,16 @@ def add_smt_comps(connection, smtcompwwwfolder, smtcompfolder, smtevalcsv, smtex
         print_stats_dict(stat)
 
 
-def add_ratings_for(connection, competition):
+def add_eval_ratings(connection, evaluationId):
     """
     - for each logic
-        - calculate n = |solvers that solve at least one benchmark|
+        - calculate n = |solvers that attempted at least one benchmark|
         - for each benchmark
                 - calculate m = |solvers that solve that benchmark|
                 - rating = 1 - m/n
+
+    - TODO: I should check solvers not solver variants
     """
-    for r in connection.execute(
-        """
-        SELECT Id FROM Evaluations WHERE name=?
-        """,
-        (competition,),
-    ):
-        evaluationId = r[0]
 
     for logicRow in connection.execute(
         """
@@ -581,11 +576,11 @@ def add_ratings_for(connection, competition):
         logic = logicRow[0]
         for logicSolversRow in connection.execute(
             """
-            SELECT COUNT(DISTINCT sv.id) FROM SolverVariants AS sv 
+            SELECT COUNT(DISTINCT s.id) FROM Solvers AS s
+                INNER JOIN SolverVariants AS sv ON sv.solver = s.id
                 INNER JOIN Results AS r ON sv.Id = r.solverVariant
                 INNER JOIN Benchmarks AS b ON b.id = r.subbenchmark
-            WHERE (r.status = 'unsat' OR r.status = 'sat')
-                AND b.logic=? AND r.evaluation=?
+            WHERE b.logic=? AND r.evaluation=?
             """,
             (logic, evaluationId),
         ):
@@ -601,7 +596,8 @@ def add_ratings_for(connection, competition):
             benchmark = benchmarkRow[0]
             for benchmarkSolversRow in connection.execute(
                 """
-                SELECT COUNT(DISTINCT sv.id) FROM SolverVariants AS sv 
+                SELECT COUNT(DISTINCT s.id) FROM Solvers AS s
+                    INNER JOIN SolverVariants AS sv ON sv.solver = s.id
                     INNER JOIN Results AS r ON sv.Id = r.solverVariant
                     INNER JOIN Benchmarks AS b ON b.id = r.subbenchmark
                 WHERE (r.status = 'unsat' OR r.status = 'sat')
@@ -622,17 +618,12 @@ def add_ratings_for(connection, competition):
     return stats
 
 
-def add_ratings(connection):
-    return
-    print("Adding ratings for SMT-COMP 2018")
-    add_ratings_for(connection, "SMT-COMP 2018")
-    print("Adding ratings for SMT-COMP 2019")
-    add_ratings_for(connection, "SMT-COMP 2019")
-    print("Adding ratings for SMT-COMP 2020")
-    add_ratings_for(connection, "SMT-COMP 2020")
-    print("Adding ratings for SMT-COMP 2021")
-    add_ratings_for(connection, "SMT-COMP 2021")
-    print("Adding ratings for SMT-COMP 2022")
-    add_ratings_for(connection, "SMT-COMP 2022")
-    print("Adding ratings for SMT-COMP 2023")
-    add_ratings_for(connection, "SMT-COMP 2023")
+def add_eval_summaries(connection):
+    for r in connection.execute(
+        """
+        SELECT id, name FROM Evaluations
+        """
+    ):
+        print(f"Adding summaries for {r[1]}")
+        evaluationId = r[0]
+        add_eval_ratings(connection, evaluationId)
