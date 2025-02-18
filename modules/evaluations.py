@@ -89,6 +89,7 @@ def make_stats_dict(name):
         "name": name,
         "lookups": 0,
         "lookupFailures": 0,
+        "withCandidates": set(),
         "benchmarks": set(),
         "unkownBenchmarks": set(),
     }
@@ -102,6 +103,8 @@ def print_stats_dict(stats):
     print(
         f"{stats['name']}\t\tMissing entries: {stats['lookupFailures']} {lookupPercentage:.2f}% Unknown Benchmark: {len(stats['unkownBenchmarks'])} {benchmarkPercentage:.2f}%"
     )
+    for c in stats["withCandidates"]:
+        print(c)
 
 
 def benchmark_status(solved_status):
@@ -174,8 +177,7 @@ def add_smt_comp_early(connection, year, date):
                 print(
                     f"WARNING: Benchmark {benchmarkName} of SMT-COMP {year} not found ({logic}, {benchmarkSet})"
                 )
-                subbenchmarkId = 1
-                # continue
+                continue
 
             write_result(
                 connection,
@@ -618,6 +620,73 @@ def add_eval_ratings(connection, evaluationId):
     return stats
 
 
+"""
+Adds information derived from evaluations.
+"""
+
+
+def add_first_occurence(connection):
+    connection.execute(
+        """
+        UPDATE Families AS fam SET firstOccurrence = (
+            SELECT ev.date FROM Evaluations as ev
+              INNER JOIN Results AS res ON res.evaluation = ev.id
+              INNER JOIN Subbenchmarks AS sb ON res.subbenchmark = sb.id
+              INNER JOIN Benchmarks AS bench ON bench.id = sb.benchmark
+              WHERE bench.family = fam.id
+            ORDER BY ev.date ASC
+            LIMIT 1)
+        """
+    )
+
+
+def add_inferred_status(connection):
+    print(f"Add inferred sat status.")
+    connection.execute(
+        """
+        UPDATE Subbenchmarks AS ss SET inferredStatus = "sat"
+        WHERE ss.id IN (
+            SELECT res1.subbenchmark FROM Results AS res1
+              INNER JOIN SolverVariants AS var ON var.id = res1.solverVariant
+              INNER JOIN Subbenchmarks AS sub ON sub.id == res1.subbenchmark
+              WHERE res1.status == "sat"
+                AND sub.status == "unknown"
+                AND NOT EXISTS (
+                        SELECT NULL
+                        FROM Results AS res2
+                        WHERE res1.subbenchmark == res2.subbenchmark
+                          AND res2.status == "unsat"
+                    )
+            GROUP BY res1.subbenchmark
+            HAVING COUNT(DISTINCT var.solver) > 1
+        )
+        """
+    )
+    connection.commit()
+    print(f"Add inferred unsat status.")
+    connection.execute(
+        """
+        UPDATE Subbenchmarks AS ss SET inferredStatus = "unsat"
+        WHERE ss.id IN (
+            SELECT res1.subbenchmark FROM Results AS res1
+              INNER JOIN SolverVariants AS var ON var.id = res1.solverVariant
+              INNER JOIN Subbenchmarks AS sub ON sub.id == res1.subbenchmark
+              WHERE res1.status == "unsat"
+                AND sub.status == "unknown"
+                AND NOT EXISTS (
+                        SELECT NULL
+                        FROM Results AS res2
+                        WHERE res1.subbenchmark == res2.subbenchmark
+                          AND res2.status == "sat"
+                    )
+            GROUP BY res1.subbenchmark
+            HAVING COUNT(DISTINCT var.solver) > 1
+        )
+        """
+    )
+    connection.commit()
+
+
 def add_eval_summaries(connection):
     for r in connection.execute(
         """
@@ -627,3 +696,7 @@ def add_eval_summaries(connection):
         print(f"Adding summaries for {r[1]}")
         evaluationId = r[0]
         add_eval_ratings(connection, evaluationId)
+        connection.commit()
+    print(f"Adding frist occurences of benchmark families (this will take a while)")
+    add_first_occurence(connection)
+    connection.commit()

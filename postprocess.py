@@ -27,6 +27,6 @@ evaluations.add_smt_comps(
     args.SMTEVAL_CSV,
     args.SMTEXEC_DB,
 )
-evaluations.add_ratings(connection)
+evaluations.add_eval_summaries(connection)
 
 connection.close()

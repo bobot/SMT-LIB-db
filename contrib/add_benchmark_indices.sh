@@ -10,7 +10,7 @@ echo "Add index for Subbenchmarks table"
 sqlite3 "$1" "create index benchIdx2 on Subbenchmarks(benchmark);"
 
 echo "Add index for Families table"
-sqlite3 "$1" "create index benchIdx3 on Families(name, folderName);"
+sqlite3 "$1" "create index benchIdx3 on Families(name, folderName, firstOccurrence);"
 
 echo "Call SQLite analyze."
 sqlite3 "$1" "analyze;"

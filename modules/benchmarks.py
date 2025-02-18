@@ -28,7 +28,6 @@ def setup_benchmarks(connection):
         passesDolmen BOOL,
         passesDolmenStrict BOOL,
         subbenchmarkCount INT NOT NULL,
-        firstOccurrence DATE,
         FOREIGN KEY(family) REFERENCES Families(id)
         FOREIGN KEY(license) REFERENCES Licenses(id)
     );"""
@@ -63,6 +62,7 @@ def setup_benchmarks(connection):
         name NVARCHAR(100) NOT NULL,
         folderName TEXT NOT NULL,
         date DATE,
+        firstOccurrence DATE,
         benchmarkCount INT NOT NULL,
         UNIQUE(folderName)
     );"""
@@ -474,6 +474,16 @@ def guess_subbenchmark_id(
         if stats:
             stats["lookupFailures"] = stats["lookupFailures"] + 1
             stats["unkownBenchmarks"].add((logic, familyFoldername, fullFilename))
+            # name = fullFilename.split("/")[-1][:-5]
+            # r = connection.execute(
+            #     """
+            #     SELECT Benchmarks.Id FROM Benchmarks WHERE filename LIKE '%'||?||'%'
+            #     """,
+            #     (fullFilename,),
+            # )
+            # l = r.fetchall()
+            # if len(l) == 1:
+            #     stats["withCandidates"].add(name)
         return None
     for r in connection.execute(
         """
