@@ -27,6 +27,18 @@ evaluations.add_smt_comps(
     args.SMTEVAL_CSV,
     args.SMTEXEC_DB,
 )
+
+connection.execute("create index evalIdx4 on SolverVariants(solver);")
+connection.execute(
+    "create index evalIdx5 on Results(subbenchmark, solverVariant, status, evaluation);"
+)
+connection.execute("create index evalIdx6 on Evaluations(date);")
+
 evaluations.add_eval_summaries(connection)
+
+# Drop the indices such that we get a compact version.
+connection.execute("drop index evalIdx4;")
+connection.execute("drop index evalIdx5;")
+connection.execute("drop index evalIdx6;")
 
 connection.close()

@@ -13,7 +13,7 @@ echo "Add index for SolverVariants table"
 sqlite3 "$1" "create index evalIdx4 on SolverVariants(solver);"
 
 echo "Add index for Results table"
-sqlite3 "$1" "create index evalIdx5 on Results(subbenchmark, solverVariant);"
+sqlite3 "$1" "create index evalIdx5 on Results(subbenchmark, solverVariant, status, evaluation);"
 
 echo "Add index for Evaluations table"
 sqlite3 "$1" "create index evalIdx6 on Evaluations(date);"

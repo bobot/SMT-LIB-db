@@ -566,10 +566,8 @@ def add_eval_ratings(connection, evaluationId):
         - for each benchmark
                 - calculate m = |solvers that solve that benchmark|
                 - rating = 1 - m/n
-
-    - TODO: I should check solvers not solver variants
     """
-
+    count = 0
     for logicRow in connection.execute(
         """
         SELECT DISTINCT logic FROM Benchmarks
@@ -616,8 +614,10 @@ def add_eval_ratings(connection, evaluationId):
                 """,
                 (benchmark, evaluationId, rating, logicSolvers, benchmarkSolvers),
             )
+            count = count + 1
+            if count % 1000 == 0:
+                print(f"Inserted {count} ratings.")
     connection.commit()
-    return stats
 
 
 """
@@ -642,12 +642,14 @@ def add_first_occurence(connection):
 
 def add_inferred_status(connection):
     print(f"Add inferred sat status.")
+    # A benchmark gets a status if there is an evaluation where two different
+    # solvers gave the same answer and there was no disagreement.
     connection.execute(
         """
         UPDATE Subbenchmarks AS ss SET inferredStatus = "sat"
         WHERE ss.id IN (
             SELECT res1.subbenchmark FROM Results AS res1
-              INNER JOIN SolverVariants AS var ON var.id = res1.solverVariant
+              INNER JOIN SolverVariants AS var1 ON var1.id = res1.solverVariant
               INNER JOIN Subbenchmarks AS sub ON sub.id == res1.subbenchmark
               WHERE res1.status == "sat"
                 AND sub.status == "unknown"
@@ -655,10 +657,19 @@ def add_inferred_status(connection):
                         SELECT NULL
                         FROM Results AS res2
                         WHERE res1.subbenchmark == res2.subbenchmark
+                          AND res1.evaluation == res2.evaluation
                           AND res2.status == "unsat"
                     )
+                AND EXISTS (
+                        SELECT NULL
+                        FROM Results AS res2
+                        INNER JOIN SolverVariants AS var2 ON var2.id = res2.solverVariant
+                        WHERE res1.subbenchmark == res2.subbenchmark
+                          AND var1.solver <> var2.solver
+                          AND res1.evaluation == res2.evaluation
+                          AND res2.status == "sat"
+                    )
             GROUP BY res1.subbenchmark
-            HAVING COUNT(DISTINCT var.solver) > 1
         )
         """
     )
@@ -669,7 +680,7 @@ def add_inferred_status(connection):
         UPDATE Subbenchmarks AS ss SET inferredStatus = "unsat"
         WHERE ss.id IN (
             SELECT res1.subbenchmark FROM Results AS res1
-              INNER JOIN SolverVariants AS var ON var.id = res1.solverVariant
+              INNER JOIN SolverVariants AS var1 ON var1.id = res1.solverVariant
               INNER JOIN Subbenchmarks AS sub ON sub.id == res1.subbenchmark
               WHERE res1.status == "unsat"
                 AND sub.status == "unknown"
@@ -677,10 +688,19 @@ def add_inferred_status(connection):
                         SELECT NULL
                         FROM Results AS res2
                         WHERE res1.subbenchmark == res2.subbenchmark
+                          AND res1.evaluation == res2.evaluation
                           AND res2.status == "sat"
                     )
+                AND EXISTS (
+                        SELECT NULL
+                        FROM Results AS res2
+                        INNER JOIN SolverVariants AS var2 ON var2.id = res2.solverVariant
+                        WHERE res1.subbenchmark == res2.subbenchmark
+                          AND var1.solver <> var2.solver
+                          AND res1.evaluation == res2.evaluation
+                          AND res2.status == "unsat"
+                    )
             GROUP BY res1.subbenchmark
-            HAVING COUNT(DISTINCT var.solver) > 1
         )
         """
     )
