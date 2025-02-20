@@ -7,13 +7,13 @@ echo "Add index for Symbols table"
 sqlite3 "$1" "create index evalIdx1 on Symbols(name);"
 
 echo "Add index for SymbolsCounts table"
-sqlite3 "$1" "create index evalIdx2 on SymbolsCounts(symbol, subbenchmark, count);"
+sqlite3 "$1" "create index evalIdx2 on SymbolsCounts(symbol, query, count);"
 
 echo "Add index for SolverVariants table"
 sqlite3 "$1" "create index evalIdx4 on SolverVariants(solver);"
 
 echo "Add index for Results table"
-sqlite3 "$1" "create index evalIdx5 on Results(subbenchmark, solverVariant, status, evaluation);"
+sqlite3 "$1" "create index evalIdx5 on Results(query, solverVariant, status, evaluation);"
 
 echo "Add index for Evaluations table"
 sqlite3 "$1" "create index evalIdx6 on Evaluations(date);"

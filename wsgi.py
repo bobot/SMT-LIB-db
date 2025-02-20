@@ -28,7 +28,7 @@ def get_benchmark(cursor, benchmark_id):
                b.compressedSize, l.name, l.link, l.spdxIdentifier, generatedOn,
                generatedBy, generator, application, description, category,
                passesDolmen, passesDolmenStrict,
-               subbenchmarkCount, family,
+               queryCount, family,
                s.name AS familyName
                FROM Benchmarks AS b
                   INNER JOIN Families AS s ON s.Id = b.family
@@ -40,10 +40,10 @@ def get_benchmark(cursor, benchmark_id):
     return None
 
 
-def get_subbenchmarks(cursor, benchmark_id):
+def get_queries(cursor, benchmark_id):
     res = cursor.execute(
         """
-           SELECT id,number FROM Subbenchmarks WHERE benchmark=? 
+           SELECT id,number FROM Queries WHERE benchmark=? 
            ORDER BY number ASC
            LIMIT 151
            """,
@@ -52,25 +52,25 @@ def get_subbenchmarks(cursor, benchmark_id):
     return res.fetchall()
 
 
-def get_subbenchmark(cursor, subbenchmark_id):
+def get_query(cursor, query_id):
     for row in cursor.execute(
         """
-        SELECT * FROM Subbenchmarks AS u
+        SELECT * FROM Queries AS u
         WHERE u.id=?""",
-        (subbenchmark_id,),
+        (query_id,),
     ):
         return row
     return None
 
 
-# Returns the benchmark data, a list of subbenchmarks, and the data
-#         for the first subbenchmark.
+# Returns the benchmark data, a list of queries, and the data
+#         for the first query.
 def get_canonical_benchmark_data(cursor, benchmark_id):
     benchmark = get_benchmark(cursor, benchmark_id)
     if benchmark:
-        subbenchmarks = get_subbenchmarks(cursor, benchmark_id)
-        firstId = subbenchmarks[0]["id"]
-        firstSubbenchmark = get_subbenchmark(cursor, firstId)
+        queries = get_queries(cursor, benchmark_id)
+        firstId = queries[0]["id"]
+        firstQuery = get_query(cursor, firstId)
         res = cursor.execute(
             """
             SELECT ev.name, ev.date, ev.link, sol.name AS solverName,
@@ -79,20 +79,20 @@ def get_canonical_benchmark_data(cursor, benchmark_id):
             INNER JOIN Evaluations AS ev ON res.evaluation = ev.id
             INNER JOIN SolverVariants AS sovar ON res.solverVariant = sovar.id
             INNER JOIN Solvers AS sol ON sovar.solver = sol.id
-            WHERE res.subbenchmark = ?
+            WHERE res.query = ?
             ORDER BY ev.date, sol.id, sovar.id
                """,
             (firstId,),
         )
         evaluation = res.fetchall()
-        return (benchmark, subbenchmarks, firstSubbenchmark, evaluation)
+        return (benchmark, queries, firstQuery, evaluation)
     return (None, None, None, None)
 
 
 @app.route("/benchmark/dynamic/<int:benchmark_id>")
 def dynamic_benchmark(benchmark_id):
     cur = get_db().cursor()
-    (benchmark, subbenchmarks, first, evaluation) = get_canonical_benchmark_data(
+    (benchmark, queries, first, evaluation) = get_canonical_benchmark_data(
         cur, benchmark_id
     )
     if benchmark:
@@ -100,7 +100,7 @@ def dynamic_benchmark(benchmark_id):
             """
             SELECT s.name,sc.count FROM SymbolsCounts AS sc
             INNER JOIN Symbols AS s ON s.id = sc.symbol
-            WHERE sc.subbenchmark=?
+            WHERE sc.query=?
             ORDER BY s.id
             """,
             (first["id"],),
@@ -108,8 +108,8 @@ def dynamic_benchmark(benchmark_id):
         symbols = res.fetchall()
         return render_template(
             "benchmark.html",
-            subbenchmarks=subbenchmarks,
-            firstSubbenchmark=first,
+            queries=queries,
+            firstQuery=first,
             benchmark=benchmark,
             evaluation=evaluation,
             symbols=symbols,
@@ -117,29 +117,29 @@ def dynamic_benchmark(benchmark_id):
     abort(404)
 
 
-@app.route("/subbenchmark/dynamic/<int:subbenchmark_id>")
-def dynamic_subbenchmark(subbenchmark_id):
+@app.route("/query/dynamic/<int:query_id>")
+def dynamic_query(query_id):
     cur = get_db().cursor()
-    sb = get_subbenchmark(cur, subbenchmark_id)
+    sb = get_query(cur, query_id)
     if sb:
         res = cur.execute(
             """
             SELECT s.name,sc.count FROM SymbolsCounts AS sc
             INNER JOIN Symbols AS s ON s.id = sc.symbol
-            WHERE sc.subbenchmark=?
+            WHERE sc.query=?
             ORDER BY s.id
             """,
-            (subbenchmark_id,),
+            (query_id,),
         )
         symbols = res.fetchall()
-        return render_template("subbenchmark.html", subbenchmark=sb, symbols=symbols)
+        return render_template("query.html", query=sb, symbols=symbols)
     abort(404)
 
 
 @app.route("/benchmark/<int:benchmark_id>")
 def show_benchmark(benchmark_id):
     cur = get_db().cursor()
-    (benchmark, subbenchmarks, first, evaluation) = get_canonical_benchmark_data(
+    (benchmark, queries, first, evaluation) = get_canonical_benchmark_data(
         cur, benchmark_id
     )
     if benchmark:
@@ -154,7 +154,7 @@ def show_benchmark(benchmark_id):
             """
             SELECT s.name,sc.count FROM SymbolsCounts AS sc
             INNER JOIN Symbols AS s ON s.id = sc.symbol
-            WHERE sc.subbenchmark=?""",
+            WHERE sc.query=?""",
             (first["id"],),
         )
         symbols = res.fetchall()
@@ -163,8 +163,8 @@ def show_benchmark(benchmark_id):
             "index.html",
             include="benchmark",
             benchmark=benchmark,
-            subbenchmarks=subbenchmarks,
-            firstSubbenchmark=first,
+            queries=queries,
+            firstQuery=first,
             logicData=logicData,
             familyData=familyData,
             benchmarkData=benchmarkData,

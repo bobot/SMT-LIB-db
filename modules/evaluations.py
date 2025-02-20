@@ -27,13 +27,13 @@ def setup_evaluations(connection):
         """CREATE TABLE Results(
         id INTEGER PRIMARY KEY,
         evaluation INTEGER,
-        subbenchmark INT,
+        query INT,
         solverVariant INT,
         cpuTime REAL,
         wallclockTime REAL,
         status TEXT,
         FOREIGN KEY(evaluation) REFERENCES Evaluations(id)
-        FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
+        FOREIGN KEY(query) REFERENCES Queries(id)
         FOREIGN KEY(solverVariant) REFERENCES SolverVaraiants(id)
         );"""
     )
@@ -41,19 +41,19 @@ def setup_evaluations(connection):
     connection.execute(
         """CREATE TABLE Ratings(
         id INTEGER PRIMARY KEY,
-        subbenchmark INT,
+        query INT,
         evaluation INT,
         rating REAL,
         consideredSolvers INT,
         successfulSolvers INT,
-        FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
+        FOREIGN KEY(query) REFERENCES Queries(id)
         FOREIGN KEY(evaluation) REFERENCES Evaluations(id)
         );"""
     )
 
 
 def write_result(
-    connection, evaluationId, solver, subbenchmarkId, outcome, cpuTime, wallclockTime
+    connection, evaluationId, solver, queryId, outcome, cpuTime, wallclockTime
 ):
     solverVariantId = None
     for r in connection.execute(
@@ -70,12 +70,12 @@ def write_result(
         return
     connection.execute(
         """
-            INSERT INTO Results(evaluation, subbenchmark, solverVariant, cpuTime, wallclockTime, status)
+            INSERT INTO Results(evaluation, query, solverVariant, cpuTime, wallclockTime, status)
             VALUES(?,?,?,?,?,?);
             """,
         (
             evaluationId,
-            subbenchmarkId,
+            queryId,
             solverVariantId,
             cpuTime,
             wallclockTime,
@@ -164,18 +164,18 @@ def add_smt_comp_early(connection, year, date):
                 time = float("NaN")
 
             benchmarkFields = tds[0].text.split("/")
-            benchmarkSet = benchmarkFields[0]
+            benchmarkFamily = benchmarkFields[0]
             benchmarkName = "/".join(benchmarkFields[1:]) + "2"
 
-            (logic, benchmarkSet, benchmarkName) = fix_smt_comp_early(
-                logic, benchmarkSet, benchmarkName
+            (logic, benchmarkFamily, benchmarkName) = fix_smt_comp_early(
+                logic, benchmarkFamily, benchmarkName
             )
-            subbenchmarkId = benchmarks.guess_subbenchmark_id(
-                connection, logic, benchmarkSet, benchmarkName, stats
+            queryId = benchmarks.guess_query_id(
+                connection, logic, benchmarkFamily, benchmarkName, stats
             )
-            if not subbenchmarkId:
+            if not queryId:
                 print(
-                    f"WARNING: Benchmark {benchmarkName} of SMT-COMP {year} not found ({logic}, {benchmarkSet})"
+                    f"WARNING: Benchmark {benchmarkName} of SMT-COMP {year} not found ({logic}, {benchmarkFamily})"
                 )
                 continue
 
@@ -183,7 +183,7 @@ def add_smt_comp_early(connection, year, date):
                 connection,
                 evaluationId,
                 solver,
-                subbenchmarkId,
+                queryId,
                 answer,
                 None,
                 time,
@@ -219,24 +219,24 @@ def add_smtexec(connection, smtexecConnection, year, date, jobId):
         solver = r[0]
         logic = r[1]
         benchmarkField = r[2].split("/")
-        benchmarkSet = benchmarkField[0]
+        benchmarkFamily = benchmarkField[0]
         benchmarkName = "/".join(benchmarkField[1:])
         # Early competitions were using SMT-LIB 1
         if benchmarkName[-1] != "2":
             benchmarkName = benchmarkName + "2"
         time = float(r[3])
         outcome = benchmark_status(r[4])
-        subbenchmarkId = benchmarks.guess_subbenchmark_id(
-            connection, logic, benchmarkSet, benchmarkName, stats
+        queryId = benchmarks.guess_query_id(
+            connection, logic, benchmarkFamily, benchmarkName, stats
         )
-        if not subbenchmarkId:
+        if not queryId:
             print(f"WARNING: Benchmark {benchmarkName} of SMT-COMP {year} not found")
             continue
         write_result(
             connection,
             evaluationId,
             solver,
-            subbenchmarkId,
+            queryId,
             outcome,
             None,
             time,
@@ -283,7 +283,7 @@ def add_smt_eval_2013(connection, csvDataFile):
             status = benchmark_status(status)
             benchmarkField = row[" benchmark"].split("/")
             if row["benchmark id"] in benchmarkIdMapping:
-                subbenchmarkId = benchmarkIdMapping[row["benchmark id"]]
+                queryId = benchmarkIdMapping[row["benchmark id"]]
             else:
                 if benchmarkField[0] == "FillInRun":
                     print(
@@ -292,24 +292,24 @@ def add_smt_eval_2013(connection, csvDataFile):
                     continue
 
                 logic = benchmarkField[1]
-                benchmarkSet = benchmarkField[2]
+                benchmarkFamily = benchmarkField[2]
                 benchmarkName = "/".join(benchmarkField[3:])
 
-                subbenchmarkId = benchmarks.guess_subbenchmark_id(
-                    connection, logic, benchmarkSet, benchmarkName, stats
+                queryId = benchmarks.guess_query_id(
+                    connection, logic, benchmarkFamily, benchmarkName, stats
                 )
-                if not subbenchmarkId:
+                if not queryId:
                     print(
                         f"WARNING: Benchmark {benchmarkName} of SMT Evaluation 2013 not found"
                     )
                     continue
-                benchmarkIdMapping[row["benchmark id"]] = subbenchmarkId
+                benchmarkIdMapping[row["benchmark id"]] = queryId
 
             write_result(
                 connection,
                 evaluationId,
                 solver,
-                subbenchmarkId,
+                queryId,
                 status,
                 None,
                 time,
@@ -350,21 +350,21 @@ def add_smt_comp_2014(connection, compressedCsvFilename):
                 status = benchmark_status(status)
                 benchmarkField = row[1].split("/")
                 logic = benchmarkField[0]
-                benchmarkSet = benchmarkField[1]
+                benchmarkFamily = benchmarkField[1]
                 benchmarkName = "/".join(benchmarkField[2:])
-                subbenchmarkId = benchmarks.guess_subbenchmark_id(
-                    connection, logic, benchmarkSet, benchmarkName, stats
+                queryId = benchmarks.guess_query_id(
+                    connection, logic, benchmarkFamily, benchmarkName, stats
                 )
-                if not subbenchmarkId:
+                if not queryId:
                     print(
-                        f"WARNING: Benchmark {benchmarkName} of SMT-COMP 2014 not found ({logic}, {benchmarkSet})"
+                        f"WARNING: Benchmark {benchmarkName} of SMT-COMP 2014 not found ({logic}, {benchmarkFamily})"
                     )
                     continue
                 write_result(
                     connection,
                     evaluationId,
                     solver,
-                    subbenchmarkId,
+                    queryId,
                     status,
                     cpuTime,
                     wallclockTime,
@@ -407,21 +407,21 @@ def add_smt_comp_oldstyle(connection, compressedCsvFilename, year, date):
                 benchmarkField = benchmarkField.replace("Datatype Divisions/", "")
                 benchmarkField = benchmarkField.split("/")
                 logic = benchmarkField[0]
-                benchmarkSet = benchmarkField[1]
+                benchmarkFamily = benchmarkField[1]
                 benchmarkName = "/".join(benchmarkField[2:])
-                subbenchmarkId = benchmarks.guess_subbenchmark_id(
-                    connection, logic, benchmarkSet, benchmarkName, stats
+                queryId = benchmarks.guess_query_id(
+                    connection, logic, benchmarkFamily, benchmarkName, stats
                 )
-                if not subbenchmarkId:
+                if not queryId:
                     print(
-                        f"WARNING: Benchmark {benchmarkName} of SMT-COMP {year} not found ({logic}, {benchmarkSet})"
+                        f"WARNING: Benchmark {benchmarkName} of SMT-COMP {year} not found ({logic}, {benchmarkFamily})"
                     )
                     continue
                 write_result(
                     connection,
                     evaluationId,
                     solver,
-                    subbenchmarkId,
+                    queryId,
                     status,
                     cpuTime,
                     wallclockTime,
@@ -460,10 +460,10 @@ def add_smt_comp_generic(connection, folder, year, date):
                 familyField = fileField["family"][0]
                 fullbench = "/".join(fileField["family"][1:] + [fileField["name"]])
 
-                subbenchmarkId = benchmarks.guess_subbenchmark_id(
+                queryId = benchmarks.guess_query_id(
                     connection, fileField["logic"], familyField, fullbench, stats
                 )
-                if not subbenchmarkId:
+                if not queryId:
                     print(
                         f"WARNING: Benchmark {fullbench} of SMT-COMP {year} not found ({fileField['logic']}, {familyField})"
                     )
@@ -475,7 +475,7 @@ def add_smt_comp_generic(connection, folder, year, date):
                     connection,
                     evaluationId,
                     solver,
-                    subbenchmarkId,
+                    queryId,
                     status,
                     cpuTime,
                     wallclockTime,
@@ -487,73 +487,73 @@ def add_smt_comp_generic(connection, folder, year, date):
 
 def add_smt_comps(connection, smtcompwwwfolder, smtcompfolder, smtevalcsv, smtexecdb):
     stats = []
-    s = add_smt_comp_early(connection, "2005", "2005-07-12")
-    stats.append(s)
+    # s = add_smt_comp_early(connection, "2005", "2005-07-12")
+    # stats.append(s)
 
-    s = add_smt_comp_early(connection, "2006", "2006-08-21")
-    stats.append(s)
+    # s = add_smt_comp_early(connection, "2006", "2006-08-21")
+    # stats.append(s)
 
-    smtexecConnection = sqlite3.connect(smtexecdb)
+    # smtexecConnection = sqlite3.connect(smtexecdb)
 
-    s = add_smtexec(connection, smtexecConnection, "2007", "2007-07-03", 20)
-    stats.append(s)
+    # s = add_smtexec(connection, smtexecConnection, "2007", "2007-07-03", 20)
+    # stats.append(s)
 
-    s = add_smtexec(connection, smtexecConnection, "2008", "2008-07-07", 311)
-    stats.append(s)
+    # s = add_smtexec(connection, smtexecConnection, "2008", "2008-07-07", 311)
+    # stats.append(s)
 
-    s = add_smtexec(connection, smtexecConnection, "2009", "2009-08-02", 529)
-    stats.append(s)
+    # s = add_smtexec(connection, smtexecConnection, "2009", "2009-08-02", 529)
+    # stats.append(s)
 
-    s = add_smtexec(connection, smtexecConnection, "2010", "2010-07-15", 684)
-    stats.append(s)
+    # s = add_smtexec(connection, smtexecConnection, "2010", "2010-07-15", 684)
+    # stats.append(s)
 
-    s = add_smtexec(connection, smtexecConnection, "2011", "2011-07-14", 856)
-    stats.append(s)
+    # s = add_smtexec(connection, smtexecConnection, "2011", "2011-07-14", 856)
+    # stats.append(s)
 
-    s = add_smtexec(connection, smtexecConnection, "2012", "2011-06-30", 1004)
-    stats.append(s)
+    # s = add_smtexec(connection, smtexecConnection, "2012", "2011-06-30", 1004)
+    # stats.append(s)
 
-    smtexecConnection.close()
+    # smtexecConnection.close()
 
-    s = add_smt_eval_2013(connection, smtevalcsv)
-    stats.append(s)
+    # s = add_smt_eval_2013(connection, smtevalcsv)
+    # stats.append(s)
 
-    path2014 = smtcompfolder / "2014/csv/combined.tar.xz"
-    s = add_smt_comp_2014(connection, path2014)
-    stats.append(s)
+    # path2014 = smtcompfolder / "2014/csv/combined.tar.xz"
+    # s = add_smt_comp_2014(connection, path2014)
+    # stats.append(s)
 
-    path2015 = smtcompfolder / "2015/csv/Main_Track.tar.xz"
-    s = add_smt_comp_oldstyle(connection, path2015, "2015", "2015-07-02")
-    stats.append(s)
+    # path2015 = smtcompfolder / "2015/csv/Main_Track.tar.xz"
+    # s = add_smt_comp_oldstyle(connection, path2015, "2015", "2015-07-02")
+    # stats.append(s)
 
     path2016 = smtcompfolder / "2016/csv/Main_Track.tar.xz"
     s = add_smt_comp_oldstyle(connection, path2016, "2016", "2016-07-02")
     stats.append(s)
 
-    path2017 = smtcompfolder / "2017/csv/Main_Track.tar.xz"
-    s = add_smt_comp_oldstyle(connection, path2017, "2017", "2017-07-23")
-    stats.append(s)
+    # path2017 = smtcompfolder / "2017/csv/Main_Track.tar.xz"
+    # s = add_smt_comp_oldstyle(connection, path2017, "2017", "2017-07-23")
+    # stats.append(s)
 
-    s = add_smt_comp_generic(connection, smtcompwwwfolder, "2018", "2018-07-14")
-    stats.append(s)
+    # s = add_smt_comp_generic(connection, smtcompwwwfolder, "2018", "2018-07-14")
+    # stats.append(s)
 
-    s = add_smt_comp_generic(connection, smtcompwwwfolder, "2019", "2019-07-07")
-    stats.append(s)
+    # s = add_smt_comp_generic(connection, smtcompwwwfolder, "2019", "2019-07-07")
+    # stats.append(s)
 
-    s = add_smt_comp_generic(connection, smtcompwwwfolder, "2020", "2020-07-06")
-    stats.append(s)
+    # s = add_smt_comp_generic(connection, smtcompwwwfolder, "2020", "2020-07-06")
+    # stats.append(s)
 
-    s = add_smt_comp_generic(connection, smtcompwwwfolder, "2021", "2021-07-18")
-    stats.append(s)
+    # s = add_smt_comp_generic(connection, smtcompwwwfolder, "2021", "2021-07-18")
+    # stats.append(s)
 
-    s = add_smt_comp_generic(connection, smtcompwwwfolder, "2022", "2022-08-10")
-    stats.append(s)
+    # s = add_smt_comp_generic(connection, smtcompwwwfolder, "2022", "2022-08-10")
+    # stats.append(s)
 
-    s = add_smt_comp_generic(connection, smtcompwwwfolder, "2023", "2023-07-06")
-    stats.append(s)
+    # s = add_smt_comp_generic(connection, smtcompwwwfolder, "2023", "2023-07-06")
+    # stats.append(s)
 
-    s = add_smt_comp_generic(connection, smtcompwwwfolder, "2024", "2024-07-22")
-    stats.append(s)
+    # s = add_smt_comp_generic(connection, smtcompwwwfolder, "2024", "2024-07-22")
+    # stats.append(s)
 
     for stat in stats:
         print_stats_dict(stat)
@@ -579,7 +579,7 @@ def add_eval_ratings(connection, evaluationId):
             SELECT COUNT(DISTINCT s.id) FROM Solvers AS s
                 INNER JOIN SolverVariants AS sv ON sv.solver = s.id
                 INNER JOIN Results AS r ON sv.Id = r.solverVariant
-                INNER JOIN Benchmarks AS b ON b.id = r.subbenchmark
+                INNER JOIN Benchmarks AS b ON b.id = r.query
             WHERE b.logic=? AND r.evaluation=?
             """,
             (logic, evaluationId),
@@ -599,7 +599,7 @@ def add_eval_ratings(connection, evaluationId):
                 SELECT COUNT(DISTINCT s.id) FROM Solvers AS s
                     INNER JOIN SolverVariants AS sv ON sv.solver = s.id
                     INNER JOIN Results AS r ON sv.Id = r.solverVariant
-                    INNER JOIN Benchmarks AS b ON b.id = r.subbenchmark
+                    INNER JOIN Benchmarks AS b ON b.id = r.query
                 WHERE (r.status = 'unsat' OR r.status = 'sat')
                     AND b.id=? AND r.evaluation=?
                 """,
@@ -609,7 +609,7 @@ def add_eval_ratings(connection, evaluationId):
             rating = 1 - benchmarkSolvers / logicSolvers
             connection.execute(
                 """
-                INSERT INTO Ratings(subbenchmark, evaluation, rating, consideredSolvers, successfulSolvers)
+                INSERT INTO Ratings(query, evaluation, rating, consideredSolvers, successfulSolvers)
                 VALUES(?,?,?,?,?);
                 """,
                 (benchmark, evaluationId, rating, logicSolvers, benchmarkSolvers),
@@ -631,7 +631,7 @@ def add_first_occurence(connection):
         UPDATE Families AS fam SET firstOccurrence = (
             SELECT ev.date FROM Evaluations as ev
               INNER JOIN Results AS res ON res.evaluation = ev.id
-              INNER JOIN Subbenchmarks AS sb ON res.subbenchmark = sb.id
+              INNER JOIN Queries AS sb ON res.query = sb.id
               INNER JOIN Benchmarks AS bench ON bench.id = sb.benchmark
               WHERE bench.family = fam.id
             ORDER BY ev.date ASC
@@ -646,17 +646,17 @@ def add_inferred_status(connection):
     # solvers gave the same answer and there was no disagreement.
     connection.execute(
         """
-        UPDATE Subbenchmarks AS ss SET inferredStatus = "sat"
+        UPDATE Queries AS ss SET inferredStatus = "sat"
         WHERE ss.id IN (
-            SELECT res1.subbenchmark FROM Results AS res1
+            SELECT res1.query FROM Results AS res1
               INNER JOIN SolverVariants AS var1 ON var1.id = res1.solverVariant
-              INNER JOIN Subbenchmarks AS sub ON sub.id == res1.subbenchmark
+              INNER JOIN Queries AS sub ON sub.id == res1.query
               WHERE res1.status == "sat"
                 AND sub.status == "unknown"
                 AND NOT EXISTS (
                         SELECT NULL
                         FROM Results AS res2
-                        WHERE res1.subbenchmark == res2.subbenchmark
+                        WHERE res1.query == res2.query
                           AND res1.evaluation == res2.evaluation
                           AND res2.status == "unsat"
                     )
@@ -664,12 +664,12 @@ def add_inferred_status(connection):
                         SELECT NULL
                         FROM Results AS res2
                         INNER JOIN SolverVariants AS var2 ON var2.id = res2.solverVariant
-                        WHERE res1.subbenchmark == res2.subbenchmark
+                        WHERE res1.query == res2.query
                           AND var1.solver <> var2.solver
                           AND res1.evaluation == res2.evaluation
                           AND res2.status == "sat"
                     )
-            GROUP BY res1.subbenchmark
+            GROUP BY res1.query
         )
         """
     )
@@ -677,17 +677,17 @@ def add_inferred_status(connection):
     print(f"Add inferred unsat status.")
     connection.execute(
         """
-        UPDATE Subbenchmarks AS ss SET inferredStatus = "unsat"
+        UPDATE Queries AS ss SET inferredStatus = "unsat"
         WHERE ss.id IN (
-            SELECT res1.subbenchmark FROM Results AS res1
+            SELECT res1.query FROM Results AS res1
               INNER JOIN SolverVariants AS var1 ON var1.id = res1.solverVariant
-              INNER JOIN Subbenchmarks AS sub ON sub.id == res1.subbenchmark
+              INNER JOIN Queries AS sub ON sub.id == res1.query
               WHERE res1.status == "unsat"
                 AND sub.status == "unknown"
                 AND NOT EXISTS (
                         SELECT NULL
                         FROM Results AS res2
-                        WHERE res1.subbenchmark == res2.subbenchmark
+                        WHERE res1.query == res2.query
                           AND res1.evaluation == res2.evaluation
                           AND res2.status == "sat"
                     )
@@ -695,12 +695,12 @@ def add_inferred_status(connection):
                         SELECT NULL
                         FROM Results AS res2
                         INNER JOIN SolverVariants AS var2 ON var2.id = res2.solverVariant
-                        WHERE res1.subbenchmark == res2.subbenchmark
+                        WHERE res1.query == res2.query
                           AND var1.solver <> var2.solver
                           AND res1.evaluation == res2.evaluation
                           AND res2.status == "unsat"
                     )
-            GROUP BY res1.subbenchmark
+            GROUP BY res1.query
         )
         """
     )

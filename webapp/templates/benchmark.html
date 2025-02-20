@@ -31,21 +31,21 @@
 <tr><td>Generator</td><td>{{ benchmark.generator or '—' }}</td></tr>
 <tr><td>Dolmen OK</td><td>{{ benchmark.passesDolmen or '—' }}</td></tr>
 <tr><td>strict Dolmen OK</td><td>{{ benchmark.passesDolmenStrict or '—' }}</td></tr>
-<tr><td><tt>check-sat</tt> calls</td><td>{{ benchmark.subbenchmarkCount }}</td></tr>
+<tr><td><tt>check-sat</tt> calls</td><td>{{ benchmark.queryCount }}</td></tr>
 </tbody>
 </table>
 
-{% set subbenchmark = firstSubbenchmark %}
-{% include 'subbenchmark.html' %}
-{% for subbenchmark in subbenchmarks[1:150] %}
-<a id="subbenchmark-{{ subbenchmark["number"] }}"
-   class="subbenchmark-header subbenchmark-preview"
+{% set query = firstQuery %}
+{% include 'query.html' %}
+{% for query in queries[1:150] %}
+<a id="query-{{ query["number"] }}"
+   class="query-header query-preview"
    hx-trigger="click"
-   hx-get="/subbenchmark/dynamic/{{ subbenchmark["id"] }}"
-   hx-target="#subbenchmark-{{ subbenchmark["number"] }}"
+   hx-get="/query/dynamic/{{ query["id"] }}"
+   hx-target="#query-{{ query["number"] }}"
    hx-swap="outerHTML">
-   ▸ Subbenchmark {{ subbenchmark["number"] }}</a>
+   ▸ Query {{ query["number"] }}</a>
 {% endfor %}
-{% if subbenchmarks|length > 150 %}
-<a class="subbenchmark-header subbenchmark-preview">and many more.</a>
+{% if queries|length > 150 %}
+<a class="query-header query-preview">and many more.</a>
 {% endif %}

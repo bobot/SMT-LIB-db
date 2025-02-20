@@ -30,7 +30,7 @@ evaluations.add_smt_comps(
 
 connection.execute("create index evalIdx4 on SolverVariants(solver);")
 connection.execute(
-    "create index evalIdx5 on Results(subbenchmark, solverVariant, status, evaluation);"
+    "create index evalIdx5 on Results(query, solverVariant, status, evaluation);"
 )
 connection.execute("create index evalIdx6 on Evaluations(date);")
 

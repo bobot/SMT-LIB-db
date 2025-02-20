@@ -121,7 +121,7 @@ fn skip_rest_of_term(
 // Reads an term (returns to the same level), and updates benchmark data
 fn read_term(
     tokenIt: *tokens.TokenIterator,
-    subBench: *data.SubBenchmarkData,
+    query: *data.QueryData,
 ) !usize {
     var level: usize = 0;
 
@@ -132,15 +132,15 @@ fn read_term(
                     level += 1;
                 },
                 tokens.TokenType.Closing => {
-                    if (level > subBench.maxTermDepth)
-                        subBench.maxTermDepth = level;
+                    if (level > query.maxTermDepth)
+                        query.maxTermDepth = level;
                     level -= 1;
                     if (level == 0)
                         return tokenIt.pos;
                 },
                 tokens.TokenType.Symbol => {
                     if (symbols.get(token.span)) |idx| {
-                        subBench.symbolFrequency[idx] += 1;
+                        query.symbolFrequency[idx] += 1;
                     }
                     if (level == 0)
                         return tokenIt.pos;
@@ -430,7 +430,7 @@ pub fn main() !u8 {
                         try top.intervals.append(level_start_idx);
                         idx = try skip_rest_of_term(&tokenIt);
 
-                        benchmarkData.subbenchmarkCount += 1;
+                        benchmarkData.queryCount += 1;
                         // With check-sat we have to use the idx after the command,
                         // because we want to take its size into account.
                         top.data.normalizedSize += (idx - old_idx);
@@ -466,7 +466,7 @@ pub fn main() !u8 {
         }
     }
 
-    benchmarkData.isIncremental = benchmarkData.subbenchmarkCount > 1;
+    benchmarkData.isIncremental = benchmarkData.queryCount > 1;
     benchmarkData.compressedSize = try zstd.compressedSizeSlice(ptr);
     try benchmarkData.print(stdout);
     _ = try stdout.write("\n]\n");

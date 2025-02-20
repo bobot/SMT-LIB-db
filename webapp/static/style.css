@@ -24,8 +24,8 @@ pre {
   white-space: nowrap;
 }
 
-a.subbenchmark-header,
-a.subbenchmark-header
+a.query-header,
+a.query-header
 {
   padding: .5em 1em;
   border-left: 1px solid #cbcbcb;
@@ -37,36 +37,36 @@ a.subbenchmark-header
 	text-decoration: none;
 }
 
-.subbenchmark-preview {
+.query-preview {
   display: block;
   border-bottom: 1px solid #cbcbcb;
 }
 
-.subbenchmark-short
+.query-short
 {
   border-bottom: 1px solid #cbcbcb;
 }
 
-.subbenchmark-short,
-.subbenchmark-full:target,
-.subbenchmark-full:target + a + .subbenchmark-box
+.query-short,
+.query-full:target,
+.query-full:target + a + .query-box
 {
   display: none;
 }
-/* The + a + is a hack to skip one siblbling (the subbenchmark-short) */
+/* The + a + is a hack to skip one siblbling (the query-short) */
 
-.subbenchmark-full,
-.subbenchmark-full:target + .subbenchmark-short,
-.subbenchmark-short:target + .subbenchmark-box
+.query-full,
+.query-full:target + .query-short,
+.query-short:target + .query-box
 {
   display: block;
 }
 
-.subbenchmark-table {
+.query-table {
   width: 100%;
 }
 
-.subbenchmark-table tr td:first-child {
+.query-table tr td:first-child {
   width: 1%;
   white-space: nowrap;
 }

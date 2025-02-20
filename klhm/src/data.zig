@@ -13,7 +13,7 @@ pub const BenchmarkData = struct {
     application: ?[]const u8 = null,
     description: ?[]const u8 = null,
     category: ?[]const u8 = null,
-    subbenchmarkCount: usize = 0,
+    queryCount: usize = 0,
     isIncremental: bool = false,
 
     pub fn print(self: BenchmarkData, out: anytype) !void {
@@ -98,7 +98,7 @@ pub const BenchmarkData = struct {
     }
 };
 
-pub const SubBenchmarkData = struct {
+pub const QueryData = struct {
     normalizedSize: usize = 0,
     compressedSize: usize = 0,
     assertsCount: usize = 0,
@@ -114,7 +114,7 @@ pub const SubBenchmarkData = struct {
     status: ?[]const u8 = null,
     symbolFrequency: [symbols.kvs.len]usize = [_]usize{0} ** symbols.kvs.len,
 
-    pub fn print(self: SubBenchmarkData, out: anytype) !void {
+    pub fn print(self: QueryData, out: anytype) !void {
         const options = std.json.StringifyOptions{ .whitespace = .minified };
         try std.json.stringify(self, options, out);
     }
@@ -122,5 +122,5 @@ pub const SubBenchmarkData = struct {
 
 pub const Scope = struct {
     intervals: std.ArrayList(usize),
-    data: SubBenchmarkData = .{},
+    data: QueryData = .{},
 };

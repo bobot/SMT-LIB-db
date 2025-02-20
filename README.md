@@ -30,12 +30,12 @@ CREATE TABLE Benchmarks(
         application TEXT,
         description TEXT,
         category TEXT,
-        subbenchmarkCount INT NOT NULL,
+        queryCount INT NOT NULL,
         FOREIGN KEY(family) REFERENCES Families(id)
         FOREIGN KEY(license) REFERENCES Licenses(id)
     );
 -- One per (check-sat) call.
-CREATE TABLE Subbenchmarks(
+CREATE TABLE Queries(
         id INTEGER PRIMARY KEY,
         benchmark INT,
         normalizedSize INT,
@@ -89,9 +89,9 @@ CREATE TABLE SolverVariants(
         );
 -- Maps solvers to benchmarks
 CREATE TABLE TargetSolvers(
-    subbenchmark INT,
+    query INT,
     solverVariant INT,
-    FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
+    FOREIGN KEY(query) REFERENCES Queries(id)
     FOREIGN KEY(solverVariant) REFERENCES SolverVaraiants(id)
     );
 
@@ -106,24 +106,24 @@ CREATE TABLE Evaluations(
 CREATE TABLE Results(
         id INTEGER PRIMARY KEY,
         evaluation INTEGER,
-        subbenchmark INT,
+        query INT,
         solverVariant INT,
         cpuTime REAL,
         wallclockTime REAL,
         status TEXT,
         FOREIGN KEY(evaluation) REFERENCES Evaluations(id)
-        FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
+        FOREIGN KEY(query) REFERENCES Queries(id)
         FOREIGN KEY(solverVariant) REFERENCES SolverVaraiants(id)
         );
 -- Dificulty ratings (see below)
 CREATE TABLE Ratings(
         id INTEGER PRIMARY KEY,
-        subbenchmark INT,
+        query INT,
         evaluation INT,
         rating REAL,
         consideredSolvers INT,
         successfulSolvers INT,
-        FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
+        FOREIGN KEY(query) REFERENCES Queries(id)
         FOREIGN KEY(evaluation) REFERENCES Evaluations(id)
         );
 ```

@@ -34,7 +34,7 @@ overall benchmark.
 
 ### Sub-benchmark Data
 
-* `normalizedSize` size in byte of the subbenchmark (taking `push` and `pop` into account)
+* `normalizedSize` size in byte of the query (taking `push` and `pop` into account)
 * `compressedSize` size in bytes when compressed using zstd (default options, streaming mode)
 * `assertsCount` number of `assert` commands in benchmark
 * `declareFunCount` number of proper functions declared
@@ -67,6 +67,6 @@ changed.
 * `application` the application info field
 * `description` any other content in the `:source` info field after the defined headers
 * `category` the category info field
-* `subbenchmarkCount` the number of sub-benchmarks
-* `isIncremental` boolean, true if `subbenchmarkCount` > 1
+* `queryCount` the number of sub-benchmarks
+* `isIncremental` boolean, true if `queryCount` > 1
 

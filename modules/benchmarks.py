@@ -27,14 +27,14 @@ def setup_benchmarks(connection):
         category TEXT,
         passesDolmen BOOL,
         passesDolmenStrict BOOL,
-        subbenchmarkCount INT NOT NULL,
+        queryCount INT NOT NULL,
         FOREIGN KEY(family) REFERENCES Families(id)
         FOREIGN KEY(license) REFERENCES Licenses(id)
     );"""
     )
 
     connection.execute(
-        """CREATE TABLE Subbenchmarks(
+        """CREATE TABLE Queries(
         id INTEGER PRIMARY KEY,
         benchmark INT,
         number INT,
@@ -88,10 +88,10 @@ def setup_benchmarks(connection):
     connection.execute(
         """CREATE TABLE SymbolsCounts(
         symbol INT,
-        subbenchmark INT,
+        query INT,
         count INT NOT NULL,
         FOREIGN KEY(symbol) REFERENCES Symbols(id)
-        FOREIGN KEY(subbenchmark) REFERENCES Subbenchmarks(id)
+        FOREIGN KEY(query) REFERENCES Queries (id)
     );"""
     )
 
@@ -194,7 +194,7 @@ def add_benchmark(dbFile, benchmark, dolmenPath):
     )
 
     klhmData = json.loads(klhm.stdout)
-    subbenchmarkObjs = klhmData[0:-1]
+    queryObjs = klhmData[0:-1]
     benchmarkObj = klhmData[-1]
 
     generatedOn = None
@@ -277,7 +277,7 @@ def add_benchmark(dbFile, benchmark, dolmenPath):
                                category,
                                passesDolmen,
                                passesDolmenStrict,
-                               subbenchmarkCount)
+                               queryCount)
         VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
         """,
         (
@@ -296,7 +296,7 @@ def add_benchmark(dbFile, benchmark, dolmenPath):
             benchmarkObj["category"],
             dolmen,
             dolmenStrict,
-            benchmarkObj["subbenchmarkCount"],
+            benchmarkObj["queryCount"],
         ),
     )
     benchmarkId = cursor.lastrowid
@@ -329,57 +329,57 @@ def add_benchmark(dbFile, benchmark, dolmenPath):
                 print(f"WARNING: Target solver '{targetSolver}' not known.")
         connection.commit()
 
-    for idx in range(len(subbenchmarkObjs)):
-        subbenchmarkObj = subbenchmarkObjs[idx]
+    for idx in range(len(queryObjs)):
+        queryObj = queryObjs[idx]
         cursor.execute(
             """
-            INSERT INTO Subbenchmarks(benchmark,
-                                      number,
-                                      normalizedSize,
-                                      compressedSize,
-                                      assertsCount,
-                                      declareFunCount,
-                                      declareConstCount,
-                                      declareSortCount,
-                                      defineFunCount,
-                                      defineFunRecCount,
-                                      constantFunCount,
-                                      defineSortCount,
-                                      declareDatatypeCount,
-                                      maxTermDepth,
-                                      status)
+            INSERT INTO Queries(benchmark,
+                                number,
+                                normalizedSize,
+                                compressedSize,
+                                assertsCount,
+                                declareFunCount,
+                                declareConstCount,
+                                declareSortCount,
+                                defineFunCount,
+                                defineFunRecCount,
+                                constantFunCount,
+                                defineSortCount,
+                                declareDatatypeCount,
+                                maxTermDepth,
+                                status)
             VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
             """,
             (
                 benchmarkId,
                 idx + 1,
-                subbenchmarkObj["normalizedSize"],
-                subbenchmarkObj["compressedSize"],
-                subbenchmarkObj["assertsCount"],
-                subbenchmarkObj["declareFunCount"],
-                subbenchmarkObj["declareConstCount"],
-                subbenchmarkObj["declareSortCount"],
-                subbenchmarkObj["defineFunCount"],
-                subbenchmarkObj["defineFunRecCount"],
-                subbenchmarkObj["constantFunCount"],
-                subbenchmarkObj["defineSortCount"],
-                subbenchmarkObj["declareDatatypeCount"],
-                subbenchmarkObj["maxTermDepth"],
-                subbenchmarkObj["status"],
+                queryObj["normalizedSize"],
+                queryObj["compressedSize"],
+                queryObj["assertsCount"],
+                queryObj["declareFunCount"],
+                queryObj["declareConstCount"],
+                queryObj["declareSortCount"],
+                queryObj["defineFunCount"],
+                queryObj["defineFunRecCount"],
+                queryObj["constantFunCount"],
+                queryObj["defineSortCount"],
+                queryObj["declareDatatypeCount"],
+                queryObj["maxTermDepth"],
+                queryObj["status"],
             ),
         )
-        subbenchmarkId = cursor.lastrowid
-        symbolCounts = subbenchmarkObj["symbolFrequency"]
+        queryId = cursor.lastrowid
+        symbolCounts = queryObj["symbolFrequency"]
         for symbolIdx in range(len(symbolCounts)):
             if symbolCounts[symbolIdx] > 0:
                 connection.execute(
                     """
                     INSERT INTO SymbolsCounts(symbol,
-                                              subbenchmark,
+                                              query,
                                               count)
                     VALUES(?,?,?);
                     """,
-                    (symbolIdx + 1, subbenchmarkId, symbolCounts[symbolIdx]),
+                    (symbolIdx + 1, queryId, symbolCounts[symbolIdx]),
                 )
     connection.commit()
     connection.close()
@@ -457,11 +457,9 @@ def guess_benchmark_id(
     return None
 
 
-def guess_subbenchmark_id(
-    connection, logic, familyFoldername, fullFilename, stats=None
-):
+def guess_query_id(connection, logic, familyFoldername, fullFilename, stats=None):
     """
-    Same as guess_benchmark_id, but returns the id of the sole subbenchmark
+    Same as guess_benchmark_id, but returns the id of the sole query
     of a non-incremental benchmark.
     """
     if stats:
@@ -487,7 +485,7 @@ def guess_subbenchmark_id(
         return None
     for r in connection.execute(
         """
-        SELECT Id FROM Subbenchmarks WHERE benchmark=?
+        SELECT Id FROM Queries WHERE benchmark=?
         """,
         (benchmarkId,),
     ):
