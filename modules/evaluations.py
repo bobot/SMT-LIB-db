@@ -34,7 +34,7 @@ def setup_evaluations(connection):
         status TEXT,
         FOREIGN KEY(evaluation) REFERENCES Evaluations(id)
         FOREIGN KEY(query) REFERENCES Queries(id)
-        FOREIGN KEY(solverVariant) REFERENCES SolverVaraiants(id)
+        FOREIGN KEY(solverVariant) REFERENCES SolverVariants(id)
         );"""
     )
 
