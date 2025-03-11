@@ -4,7 +4,7 @@ echo "Adding indices after adding benchmarks"
 echo "    on file" "$1"
 
 echo "Add index for Benchmarks table"
-sqlite3 "$1" "create index benchIdx1 on Benchmarks(filename, family, logic, isIncremental);"
+sqlite3 "$1" "create index benchIdx1 on Benchmarks(name, family, logic, isIncremental);"
 
 echo "Add index for Queries table"
 sqlite3 "$1" "create index benchIdx2 on Queries(benchmark);"

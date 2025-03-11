@@ -1,8 +1,7 @@
 def setup_logics(connection):
     connection.execute(
         """CREATE TABLE Logics(
-        id INTEGER PRIMARY KEY,
-        logic TEXT,
+        logic TEXT PRIMARY KEY,
         quantifierFree BOOL,
         arrays BOOL,
         uninterpretedFunctions BOOL,

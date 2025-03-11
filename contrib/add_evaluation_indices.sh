@@ -6,8 +6,8 @@ echo "    on file" "$1"
 echo "Add index for Symbols table"
 sqlite3 "$1" "create index evalIdx1 on Symbols(name);"
 
-echo "Add index for SymbolsCounts table"
-sqlite3 "$1" "create index evalIdx2 on SymbolsCounts(symbol, query, count);"
+echo "Add index for SymbolCounts table"
+sqlite3 "$1" "create index evalIdx2 on SymbolCounts(symbol, query, count);"
 
 echo "Add index for SolverVariants table"
 sqlite3 "$1" "create index evalIdx4 on SolverVariants(solver);"

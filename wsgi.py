@@ -24,7 +24,7 @@ def index():
 def get_benchmark(cursor, benchmark_id):
     for row in cursor.execute(
         """
-        SELECT b.id, filename, logic, s.folderName, s.date, isIncremental, size,
+        SELECT b.id, b.name, logic, s.folderName, s.date, isIncremental, size,
                b.compressedSize, l.name, l.link, l.spdxIdentifier, generatedOn,
                generatedBy, generator, application, description, category,
                passesDolmen, passesDolmenStrict,
@@ -98,7 +98,7 @@ def dynamic_benchmark(benchmark_id):
     if benchmark:
         res = cur.execute(
             """
-            SELECT s.name,sc.count FROM SymbolsCounts AS sc
+            SELECT s.name,sc.count FROM SymbolCounts AS sc
             INNER JOIN Symbols AS s ON s.id = sc.symbol
             WHERE sc.query=?
             ORDER BY s.id
@@ -124,7 +124,7 @@ def dynamic_query(query_id):
     if sb:
         res = cur.execute(
             """
-            SELECT s.name,sc.count FROM SymbolsCounts AS sc
+            SELECT s.name,sc.count FROM SymbolCounts AS sc
             INNER JOIN Symbols AS s ON s.id = sc.symbol
             WHERE sc.query=?
             ORDER BY s.id
@@ -149,10 +149,10 @@ def show_benchmark(benchmark_id):
             "name": benchmark["familyName"],
             "date": benchmark["date"],
         }
-        benchmarkData = {"id": benchmark["id"], "filename": benchmark["filename"]}
+        benchmarkData = {"id": benchmark["id"], "name": benchmark["name"]}
         res = cur.execute(
             """
-            SELECT s.name,sc.count FROM SymbolsCounts AS sc
+            SELECT s.name,sc.count FROM SymbolCounts AS sc
             INNER JOIN Symbols AS s ON s.id = sc.symbol
             WHERE sc.query=?""",
             (first["id"],),
@@ -192,7 +192,7 @@ def retrieve_picked_data(cur, request):
             familyData = row
     if "benchmark-id" in request.form:
         for row in cur.execute(
-            "SELECT id,filename FROM Benchmarks WHERE id=?",
+            "SELECT id,name FROM Benchmarks WHERE id=?",
             (request.form["benchmark-id"],),
         ):
             benchmarkData = row
@@ -358,11 +358,11 @@ def search_benchmark():
     if logic and family:
         ret = cur.execute(
             """
-           SELECT id,filename FROM Benchmarks
-           WHERE filename LIKE '%'||?||'%'
+           SELECT id,name FROM Benchmarks
+           WHERE name LIKE '%'||?||'%'
            AND logic=(SELECT logic FROM Benchmarks WHERE id=?)
            AND family=?
-           ORDER BY filename ASC
+           ORDER BY name ASC
            LIMIT 101
            """,
             (benchmark, logic, family),
@@ -370,10 +370,10 @@ def search_benchmark():
     elif logic:
         ret = cur.execute(
             """
-           SELECT id,filename FROM Benchmarks
-           WHERE filename LIKE '%'||?||'%'
+           SELECT id,name FROM Benchmarks
+           WHERE name LIKE '%'||?||'%'
            AND logic=(SELECT logic FROM Benchmarks WHERE id=?)
-           ORDER BY filename ASC
+           ORDER BY name ASC
            LIMIT 101
            """,
             (benchmark, logic),
@@ -381,10 +381,10 @@ def search_benchmark():
     elif family:
         ret = cur.execute(
             """
-           SELECT id,filename FROM Benchmarks
-           WHERE filename LIKE '%'||?||'%'
+           SELECT id,name FROM Benchmarks
+           WHERE name LIKE '%'||?||'%'
            AND family=?
-           ORDER BY filename ASC
+           ORDER BY name ASC
            LIMIT 101
            """,
             (benchmark, family),
@@ -392,16 +392,16 @@ def search_benchmark():
     else:
         ret = cur.execute(
             """
-           SELECT id,filename FROM Benchmarks
-           WHERE filename LIKE '%'||?||'%'
-           ORDER BY filename ASC
+           SELECT id,name FROM Benchmarks
+           WHERE name LIKE '%'||?||'%'
+           ORDER BY name ASC
            LIMIT 101
            """,
             (benchmark,),
         )
     entries = ret.fetchall()
     ret.close()
-    data = [{"id": row["id"], "value": row["filename"]} for row in entries]
+    data = [{"id": row["id"], "value": row["name"]} for row in entries]
     return render_template("search_suggestions.html", data=data, update="benchmark")
 
 
@@ -411,7 +411,7 @@ def pick_benchmark(benchmark_id):
     # has that benchmark.
     cur = get_db().cursor()
     for row in cur.execute(
-        "SELECT id,filename,logic,family FROM Benchmarks WHERE id=?",
+        "SELECT id,name,logic,family FROM Benchmarks WHERE id=?",
         (benchmark_id,),
     ):
         logicData = {"id": row["id"], "logic": row["logic"]}
@@ -452,7 +452,7 @@ def clear_input(input):
     benchmark = request.form.get("benchmark-id", None)
     benchmarkValue = request.form.get("search-benchmark", None)
     if input != "benchmark" and benchmark:
-        benchmarkData = {"id": benchmark, "filename": benchmarkValue}
+        benchmarkData = {"id": benchmark, "name": benchmarkValue}
     else:
         benchmarkData = None
     return render_template(

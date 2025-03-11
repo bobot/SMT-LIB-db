@@ -12,7 +12,7 @@ def setup_benchmarks(connection):
     connection.execute(
         """CREATE TABLE Benchmarks(
         id INTEGER PRIMARY KEY,
-        filename TEXT NOT NULL,
+        name TEXT NOT NULL,
         family INT,
         logic NVARCHAR(100) NOT NULL,
         isIncremental BOOL,
@@ -30,6 +30,7 @@ def setup_benchmarks(connection):
         queryCount INT NOT NULL,
         FOREIGN KEY(family) REFERENCES Families(id)
         FOREIGN KEY(license) REFERENCES Licenses(id)
+        FOREIGN KEY(logic) REFERENCES Logics(logic)
     );"""
     )
 
@@ -37,7 +38,7 @@ def setup_benchmarks(connection):
         """CREATE TABLE Queries(
         id INTEGER PRIMARY KEY,
         benchmark INT,
-        number INT,
+        index INT,
         normalizedSize INT,
         compressedSize INT,
         assertsCount INT,
@@ -51,7 +52,7 @@ def setup_benchmarks(connection):
         declareDatatypeCount INT,
         maxTermDepth INT,
         status TEXT,
-        inferredStatus Text,
+        inferredStatus TEXT,
         FOREIGN KEY(benchmark) REFERENCES Benchmarks(id)
     );"""
     )
@@ -72,7 +73,7 @@ def setup_benchmarks(connection):
         """CREATE TABLE TargetSolvers(
         id INTEGER PRIMARY KEY,
         benchmark INTEGER NOT NULL,
-        solverVariant TEXT NOT NULL,
+        solverVariant INT NOT NULL,
         FOREIGN KEY(benchmark) REFERENCES Benchmarks(id),
         FOREIGN KEY(solverVariant) REFERENCES SolverVariants(id)
     );"""
@@ -86,7 +87,7 @@ def setup_benchmarks(connection):
     )
 
     connection.execute(
-        """CREATE TABLE SymbolsCounts(
+        """CREATE TABLE SymbolCounts(
         symbol INT,
         query INT,
         count INT NOT NULL,
@@ -262,7 +263,7 @@ def add_benchmark(dbFile, benchmark, dolmenPath):
 
     cursor.execute(
         """
-        INSERT INTO Benchmarks(filename,
+        INSERT INTO Benchmarks(name,
                                family,
                                logic,
                                isIncremental,
@@ -334,7 +335,7 @@ def add_benchmark(dbFile, benchmark, dolmenPath):
         cursor.execute(
             """
             INSERT INTO Queries(benchmark,
-                                number,
+                                index,
                                 normalizedSize,
                                 compressedSize,
                                 assertsCount,
@@ -374,9 +375,9 @@ def add_benchmark(dbFile, benchmark, dolmenPath):
             if symbolCounts[symbolIdx] > 0:
                 connection.execute(
                     """
-                    INSERT INTO SymbolsCounts(symbol,
-                                              query,
-                                              count)
+                    INSERT INTO SymbolCounts(symbol,
+                                             query,
+                                             count)
                     VALUES(?,?,?);
                     """,
                     (symbolIdx + 1, queryId, symbolCounts[symbolIdx]),
@@ -407,7 +408,7 @@ def guess_benchmark_id(
 
     r = connection.execute(
         """
-        SELECT Benchmarks.Id FROM Benchmarks WHERE filename=?
+        SELECT Benchmarks.Id FROM Benchmarks WHERE name=?
         """,
         (fullFilename,),
     )
@@ -420,7 +421,7 @@ def guess_benchmark_id(
     r = connection.execute(
         """
         SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Families ON Families.Id = Benchmarks.family
-            WHERE filename=? AND Families.folderName=?
+            WHERE name=? AND Families.folderName=?
         """,
         (fullFilename, familyFoldername),
     )
@@ -433,7 +434,7 @@ def guess_benchmark_id(
     r = connection.execute(
         """
         SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Families ON Families.Id = Benchmarks.family
-            WHERE filename=? AND isIncremental=? AND Families.folderName=?
+            WHERE name=? AND isIncremental=? AND Families.folderName=?
         """,
         (fullFilename, isIncremental, familyFoldername),
     )
@@ -445,7 +446,7 @@ def guess_benchmark_id(
     r = connection.execute(
         """
         SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Families ON Families.Id = Benchmarks.family
-            WHERE filename=? AND logic=? AND isIncremental=? AND Families.folderName=?
+            WHERE name=? AND logic=? AND isIncremental=? AND Families.folderName=?
         """,
         (fullFilename, logic, isIncremental, familyFoldername),
     )
@@ -475,7 +476,7 @@ def guess_query_id(connection, logic, familyFoldername, fullFilename, stats=None
             # name = fullFilename.split("/")[-1][:-5]
             # r = connection.execute(
             #     """
-            #     SELECT Benchmarks.Id FROM Benchmarks WHERE filename LIKE '%'||?||'%'
+            #     SELECT Benchmarks.Id FROM Benchmarks WHERE name LIKE '%'||?||'%'
             #     """,
             #     (fullFilename,),
             # )

@@ -79,7 +79,7 @@
             </label>
             <input type="search" name="search-benchmark" class="pure-input-1" id="input-benchmark"
                    {% if benchmarkData %}
-                   value="{{ benchmarkData.filename }}"
+                   value="{{ benchmarkData.name }}"
                    readonly="readonly"
                    {% else %}
                    hx-post="/search_benchmark"
