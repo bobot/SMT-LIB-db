@@ -15,6 +15,7 @@ parser.add_argument("SMTCOMPWEB_FOLDER", type=Path)
 parser.add_argument("SMTCOMP_FOLDER", type=Path)
 parser.add_argument("SMTEVAL_CSV", type=Path)
 parser.add_argument("SMTEXEC_DB", type=Path)
+parser.add_argument("SMTCOMP_RAW", type=Path)
 args = parser.parse_args()
 
 connection = sqlite3.connect(args.DB_FILE)

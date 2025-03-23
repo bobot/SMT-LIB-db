@@ -1,3 +1,13 @@
+"""
+This is a simple webapp that lets users visualize the data stored for
+individual benchmarks.
+
+It is built on top of flask.  It expects the environment variable `SMTLIB_DB`
+to be set to the filepath of the database file to use.
+
+To run a local test server execute:
+    SMTLIB_DB=./smtlib-20240903-done.sqlite flask --app wsgi run
+"""
 import sqlite3
 import os
 from flask import Flask, g, abort, render_template, request
