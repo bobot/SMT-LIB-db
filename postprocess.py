@@ -27,6 +27,7 @@ evaluations.add_smt_comps(
     args.SMTCOMP_FOLDER,
     args.SMTEVAL_CSV,
     args.SMTEXEC_DB,
+    args.SMTCOMP_RAW,
 )
 
 connection.execute("create index evalIdx4 on SolverVariants(solver);")

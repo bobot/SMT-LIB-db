@@ -53,8 +53,8 @@ def get_benchmark(cursor, benchmark_id):
 def get_queries(cursor, benchmark_id):
     res = cursor.execute(
         """
-           SELECT id,number FROM Queries WHERE benchmark=? 
-           ORDER BY number ASC
+           SELECT id,idx FROM Queries WHERE benchmark=? 
+           ORDER BY idx ASC
            LIMIT 151
            """,
         (benchmark_id,),

@@ -38,7 +38,7 @@ def setup_benchmarks(connection):
         """CREATE TABLE Queries(
         id INTEGER PRIMARY KEY,
         benchmark INT,
-        index INT,
+        idx INT,
         normalizedSize INT,
         compressedSize INT,
         assertsCount INT,
@@ -335,7 +335,7 @@ def add_benchmark(dbFile, benchmark, dolmenPath):
         cursor.execute(
             """
             INSERT INTO Queries(benchmark,
-                                index,
+                                idx,
                                 normalizedSize,
                                 compressedSize,
                                 assertsCount,

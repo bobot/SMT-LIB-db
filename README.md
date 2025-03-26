@@ -53,7 +53,7 @@ CREATE TABLE Benchmarks(
 CREATE TABLE Queries(
         id INTEGER PRIMARY KEY,
         benchmark INT, -- Reference to the benchmark this query belongs to.
-        index INT, -- Index of the query in the benchmark.  Counted from 1.
+        idx INT, -- Index of the query in the benchmark.  Counted from 1.
         normalizedSize INT, -- Size in bytes of the query.
         compressedSize INT, -- Size in bytes of the query compressed with zstd.
         assertsCount INT, -- Number of asserts in the query.

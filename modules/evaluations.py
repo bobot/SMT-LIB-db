@@ -485,7 +485,49 @@ def add_smt_comp_generic(connection, folder, year, date):
     return stats
 
 
-def add_smt_comps(connection, smtcompwwwfolder, smtcompfolder, smtevalcsv, smtexecdb):
+def add_smt_comp_inc_2024(connection, rawfolder):
+    """
+    Specialized routine for the incremental results of 2024.
+    """
+    name = f"SMT-COMP 2024"
+    stats = make_stats_dict(name + "inc")
+    for r in connection.execute(
+        """
+        SELECT Id FROM Evaluations WHERE name=?
+        """,
+        (name,),
+    ):
+        evaluationId = cursor.lastrowid
+    print(f"Adding SMT-COMP 2024 incremental results")
+
+    path = Path(rawfolder) / "smtcomp_2024_data" / "incremental"
+    print(list(path.glob("**/*logfiles.zip")))
+
+    return stats
+    benchMap = {}
+    with open("incremental/2024-mapping.csv", newline="") as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=",")
+        for row in reader:
+            scrambledFile = row["scrambled_file"]
+            originalFile = row["original_file"]
+            benchmarkField = originalFile.split("/")
+            logic = benchmarkField[1]
+            benchmarkFamily = benchmarkField[2]
+            benchmarkName = "/".join(benchmarkField[3:])
+
+            queryId = benchmarks.guess_query_id(
+                connection, logic, benchmarkFamily, benchmarkName, stats
+            )
+            if not queryId:
+                print(
+                    f"WARNING: Benchmark {benchmarkName} of SMT Evaluation 2013 not found"
+                )
+                continue
+            benchMap[scrambledFile] = queryId
+    print(benchMap)
+    return stats
+
+def add_smt_comps(connection, smtcompwwwfolder, smtcompfolder, smtevalcsv, smtexecdb, smtcompraw):
     stats = []
     # s = add_smt_comp_early(connection, "2005", "2005-07-12")
     # stats.append(s)
@@ -526,9 +568,9 @@ def add_smt_comps(connection, smtcompwwwfolder, smtcompfolder, smtevalcsv, smtex
     # s = add_smt_comp_oldstyle(connection, path2015, "2015", "2015-07-02")
     # stats.append(s)
 
-    path2016 = smtcompfolder / "2016/csv/Main_Track.tar.xz"
-    s = add_smt_comp_oldstyle(connection, path2016, "2016", "2016-07-02")
-    stats.append(s)
+    # path2016 = smtcompfolder / "2016/csv/Main_Track.tar.xz"
+    # s = add_smt_comp_oldstyle(connection, path2016, "2016", "2016-07-02")
+    # stats.append(s)
 
     # path2017 = smtcompfolder / "2017/csv/Main_Track.tar.xz"
     # s = add_smt_comp_oldstyle(connection, path2017, "2017", "2017-07-23")
@@ -554,6 +596,9 @@ def add_smt_comps(connection, smtcompwwwfolder, smtcompfolder, smtevalcsv, smtex
 
     # s = add_smt_comp_generic(connection, smtcompwwwfolder, "2024", "2024-07-22")
     # stats.append(s)
+
+    s = add_smt_comp_inc_2024(connection, smtcompraw)
+    stats.append(s)
 
     for stat in stats:
         print_stats_dict(stat)
@@ -708,6 +753,7 @@ def add_inferred_status(connection):
 
 
 def add_eval_summaries(connection):
+    return
     for r in connection.execute(
         """
         SELECT id, name FROM Evaluations
@@ -717,6 +763,6 @@ def add_eval_summaries(connection):
         evaluationId = r[0]
         add_eval_ratings(connection, evaluationId)
         connection.commit()
-    print(f"Adding frist occurences of benchmark families (this will take a while)")
+    print(f"Adding first occurrences of benchmark families (this will take a while)")
     add_first_occurence(connection)
     connection.commit()
