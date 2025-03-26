@@ -23,7 +23,7 @@ const symbols = blk: {
 
 pub const symbol_map = blk: {
     @setEvalBranchQuota(10000);
-    break :blk std.ComptimeStringMap(usize, symbols);
+    break :blk std.StaticStringMap(usize).initComptime(symbols);
 };
 
 test "symbol_map" {

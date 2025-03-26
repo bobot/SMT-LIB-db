@@ -48,7 +48,7 @@ const Commands = enum {
     set_option,
 };
 
-const CmdMap = std.ComptimeStringMap(Commands, .{
+const CmdMap = std.StaticStringMap(Commands).initComptime(.{
     .{ "assert", .assert },
     .{ "check-sat", .check_sat },
     .{ "check-sat-assuming", .check_sat_assuming },
@@ -88,7 +88,7 @@ const Attribute = enum {
     source,
 };
 
-const AttrMap = std.ComptimeStringMap(Attribute, .{
+const AttrMap = std.StaticStringMap(Attribute).initComptime(.{
     .{ ":license", .license },
     .{ ":category", .category },
     .{ ":status", .status },
