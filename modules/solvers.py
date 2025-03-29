@@ -841,19 +841,19 @@ evaluation_solver_variants = {
         ("Z3", ["z3-4.8.17_default", "z3-4.8.11_default"]),
     ],
     "SMT-COMP 2024": [
-        ("Algaroba", ["Algaroba"]),  #
-        ("Amaya", ["Amaya"]),  #
-        ("Bitwuzla", ["Bitwuzla"]),
+        ("Algaroba", ["Algaroba"]),
+        ("Amaya", ["Amaya"]),
+        ("Bitwuzla", ["Bitwuzla", "bitwuzla"]),
         ("COLIBRI", ["COLIBRI"]),
         ("cvc5", ["cvc5"]),
         ("iProver", ["iProver v3.9"]),
-        ("OpenSMT", ["OpenSMT"]),
+        ("OpenSMT", ["OpenSMT", "opensmt"]),
         ("OSTRICH", ["OSTRICH"]),
-        ("plat-smt", ["plat-smt"]),  #
-        ("SMTInterpol", ["SMTInterpol"]),
+        ("plat-smt", ["plat-smt", "platsmt"]),
+        ("SMTInterpol", ["SMTInterpol", "smtinterpol"]),
         ("SMT-RAT", ["SMT-RAT"]),
-        ("STP", ["STP"]),
-        ("Yices2", ["Yices2"]),
+        ("STP", ["STP", "stp"]),
+        ("Yices2", ["Yices2", "yices2"]),
         ("YicesQS", ["YicesQS"]),
         ("Z3alpha", ["Z3-alpha"]),
         ("Z3-Noodler", ["Z3-Noodler"]),

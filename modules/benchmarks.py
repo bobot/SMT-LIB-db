@@ -421,7 +421,7 @@ def guess_benchmark_id(
     r = connection.execute(
         """
         SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Families ON Families.Id = Benchmarks.family
-            WHERE name=? AND Families.folderName=?
+            WHERE Benchmarks.name=? AND Families.folderName=?
         """,
         (fullFilename, familyFoldername),
     )
@@ -434,7 +434,7 @@ def guess_benchmark_id(
     r = connection.execute(
         """
         SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Families ON Families.Id = Benchmarks.family
-            WHERE name=? AND isIncremental=? AND Families.folderName=?
+            WHERE Benchmarks.name=? AND isIncremental=? AND Families.folderName=?
         """,
         (fullFilename, isIncremental, familyFoldername),
     )
@@ -446,7 +446,7 @@ def guess_benchmark_id(
     r = connection.execute(
         """
         SELECT Benchmarks.Id FROM Benchmarks INNER JOIN Families ON Families.Id = Benchmarks.family
-            WHERE name=? AND logic=? AND isIncremental=? AND Families.folderName=?
+            WHERE Benchmarks.name=? AND logic=? AND isIncremental=? AND Families.folderName=?
         """,
         (fullFilename, logic, isIncremental, familyFoldername),
     )
@@ -458,7 +458,9 @@ def guess_benchmark_id(
     return None
 
 
-def guess_query_id(connection, logic, familyFoldername, fullFilename, stats=None):
+def guess_query_id(
+    connection, logic, familyFoldername, fullFilename, stats=None, isIncremental=False
+):
     """
     Same as guess_benchmark_id, but returns the id of the sole query
     of a non-incremental benchmark.
@@ -467,7 +469,7 @@ def guess_query_id(connection, logic, familyFoldername, fullFilename, stats=None
         stats["lookups"] = stats["lookups"] + 1
         stats["benchmarks"].add((logic, familyFoldername, fullFilename))
     benchmarkId = guess_benchmark_id(
-        connection, False, logic, familyFoldername, fullFilename
+        connection, isIncremental, logic, familyFoldername, fullFilename
     )
     if not benchmarkId:
         if stats:

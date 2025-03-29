@@ -490,44 +490,113 @@ def add_smt_comp_inc_2024(connection, rawfolder):
     Specialized routine for the incremental results of 2024.
     """
     name = f"SMT-COMP 2024"
+    # TODO select SMT-COMP evaluation in full run.
     stats = make_stats_dict(name + "inc")
-    for r in connection.execute(
+    # for r in connection.execute(
+    #     """
+    #     SELECT Id FROM Evaluations WHERE name=?
+    #     """,
+    #     (name,),
+    # ):
+    #     evaluationId = cursor.lastrowid
+    #  Insert a test evaluation
+    cursor = connection.execute(
         """
-        SELECT Id FROM Evaluations WHERE name=?
+        INSERT INTO Evaluations(name, date, link)
+        VALUES(?,?,?);
         """,
-        (name,),
-    ):
-        evaluationId = cursor.lastrowid
+        (name, 2025, f"https://smt-comp.github.io/"),
+    )
+    evaluationId = cursor.lastrowid
+    modules.solvers.populate_evaluation_solvers(connection, name, evaluationId)
+
     print(f"Adding SMT-COMP 2024 incremental results")
 
-    path = Path(rawfolder) / "smtcomp_2024_data" / "incremental"
-    print(list(path.glob("**/*logfiles.zip")))
-
-    return stats
+    # Build mapping from scrambled file names to benchmark ids
     benchMap = {}
     with open("incremental/2024-mapping.csv", newline="") as csvfile:
         reader = csv.DictReader(csvfile, delimiter=",")
         for row in reader:
-            scrambledFile = row["scrambled_file"]
+            scrambledFile = row["scrambled_file"].split(".")[0]
             originalFile = row["original_file"]
             benchmarkField = originalFile.split("/")
             logic = benchmarkField[1]
             benchmarkFamily = benchmarkField[2]
             benchmarkName = "/".join(benchmarkField[3:])
 
-            queryId = benchmarks.guess_query_id(
-                connection, logic, benchmarkFamily, benchmarkName, stats
+            benchId = benchmarks.guess_benchmark_id(
+                connection, True, logic, benchmarkFamily, benchmarkName
             )
-            if not queryId:
+            if not benchId:
                 print(
-                    f"WARNING: Benchmark {benchmarkName} of SMT Evaluation 2013 not found"
+                    f"WARNING: Benchmark {logic} {benchmarkFamily} {benchmarkName} of SMT-COMP 2024 inc. not found"
                 )
                 continue
-            benchMap[scrambledFile] = queryId
-    print(benchMap)
+            benchMap[scrambledFile] = benchId
+
+    path = Path(rawfolder) / "smtcomp_2024_data" / "incremental"
+    for p in path.glob("*/*/*.logfiles.zip"):
+        solver = p.parts[-2]
+        solverVariantId = None
+        for r in connection.execute(
+            """
+                SELECT Id FROM SolverVariants WHERE fullName=? AND evaluation=?
+                """,
+            (solver, evaluationId),
+        ):
+            solverVariantId = r[0]
+        with tempfile.TemporaryDirectory() as tmpdir:
+            subprocess.run(
+                f"unzip '{p}'",
+                cwd=tmpdir,
+                shell=True,
+                stdout=subprocess.DEVNULL,
+            )
+            for logfile in Path(tmpdir).glob("**/*yml.log"):
+                try:
+                    benchId = benchMap[logfile.name.split(".")[-3]]
+                except KeyError:
+                    continue
+                with open(logfile, "r") as log:
+                    sep = 0
+                    count = 0
+                    for line in log.readlines():
+                        ll = line.strip()
+                        if ll == "":
+                            continue
+                        if ll.startswith("---"):
+                            sep = sep + 1
+                        if sep >= 2:
+                            count = count + 1
+                            status = benchmark_status(ll)
+                            for r in connection.execute(
+                                """
+                                    SELECT Id FROM Queries WHERE idx=? AND benchmark=?
+                                    """,
+                                (count, benchId),
+                            ):
+                                queryId = r[0]
+                            connection.execute(
+                                """
+                                INSERT INTO Results(evaluation, query, solverVariant, status)
+                                VALUES(?,?,?,?);
+                                """,
+                                (
+                                    evaluationId,
+                                    queryId,
+                                    solverVariantId,
+                                    status,
+                                ),
+                            )
+                        # print(ll)
+
+    connection.commit()
     return stats
 
-def add_smt_comps(connection, smtcompwwwfolder, smtcompfolder, smtevalcsv, smtexecdb, smtcompraw):
+
+def add_smt_comps(
+    connection, smtcompwwwfolder, smtcompfolder, smtevalcsv, smtexecdb, smtcompraw
+):
     stats = []
     # s = add_smt_comp_early(connection, "2005", "2005-07-12")
     # stats.append(s)
