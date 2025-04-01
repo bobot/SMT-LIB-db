@@ -18,5 +18,8 @@ sqlite3 "$1" "create index evalIdx5 on Results(query, solverVariant, status, eva
 echo "Add index for Evaluations table"
 sqlite3 "$1" "create index evalIdx6 on Evaluations(date);"
 
+echo "Add index for Ratings table"
+sqlite3 "$1" "create index evalIdx7 on Ratings(query, evaluation);"
+
 echo "Call SQLite analyze."
 sqlite3 "$1" "analyze;"

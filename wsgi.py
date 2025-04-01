@@ -38,7 +38,7 @@ def get_benchmark(cursor, benchmark_id):
                b.compressedSize, l.name, l.link, l.spdxIdentifier, generatedOn,
                generatedBy, generator, application, description, category,
                passesDolmen, passesDolmenStrict,
-               queryCount, family,
+               queryCount, family, s.firstOccurrence,
                s.name AS familyName
                FROM Benchmarks AS b
                   INNER JOIN Families AS s ON s.Id = b.family
@@ -84,11 +84,13 @@ def get_canonical_benchmark_data(cursor, benchmark_id):
         res = cursor.execute(
             """
             SELECT ev.name, ev.date, ev.link, sol.name AS solverName,
-                   sovar.fullName, res.status, res.wallclockTime, res.cpuTime
+                   sovar.fullName, res.status, res.wallclockTime, res.cpuTime,
+                   rat.rating, rat.consideredSolvers, rat.successfulSolvers
             FROM Results AS res
             INNER JOIN Evaluations AS ev ON res.evaluation = ev.id
             INNER JOIN SolverVariants AS sovar ON res.solverVariant = sovar.id
             INNER JOIN Solvers AS sol ON sovar.solver = sol.id
+            LEFT JOIN Ratings AS rat ON rat.evaluation = ev.id AND rat.query = res.query
             WHERE res.query = ?
             ORDER BY ev.date, sol.id, sovar.id
                """,
@@ -142,7 +144,23 @@ def dynamic_query(query_id):
             (query_id,),
         )
         symbols = res.fetchall()
-        return render_template("query.html", query=sb, symbols=symbols)
+        res = cur.execute(
+            """
+            SELECT ev.name, ev.date, ev.link, sol.name AS solverName,
+                   sovar.fullName, res.status, res.wallclockTime, res.cpuTime,
+                   rat.rating, rat.consideredSolvers, rat.successfulSolvers
+            FROM Results AS res
+            INNER JOIN Evaluations AS ev ON res.evaluation = ev.id
+            INNER JOIN SolverVariants AS sovar ON res.solverVariant = sovar.id
+            INNER JOIN Solvers AS sol ON sovar.solver = sol.id
+            LEFT JOIN Ratings AS rat ON rat.evaluation = ev.id AND rat.query = res.query
+            WHERE res.query = ?
+            ORDER BY ev.date, sol.id, sovar.id
+               """,
+            (query_id,),
+        )
+        evaluation = res.fetchall()
+        return render_template("query.html", query=sb, symbols=symbols, evaluation=evaluation)
     abort(404)
 
 

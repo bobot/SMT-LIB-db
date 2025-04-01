@@ -1,14 +1,15 @@
-<a id="query-full-{{ query.number }}"
-   href="#query-full-{{ query.number }}" class="query-header query-full">
-   ▾ Query {{ query.number }}</a>
-<a id="query-short-{{ query.number }}"
-   href="#query-short-{{ query.number }}" class="query-header query-short">
-   ▸ Query {{ query.number }}</a>
+<a id="query-full-{{ query.idx }}"
+   href="#query-full-{{ query.idx }}" class="query-header query-full">
+   ▾ Query {{ query.idx }}</a>
+<a id="query-short-{{ query.idx }}"
+   href="#query-short-{{ query.idx }}" class="query-header query-short">
+   ▸ Query {{ query.idx }}</a>
 
 <div class="query-box">
 <table class="pure-table pure-table-bordered query-table">
 <tbody>
-<tr><td>Status         </td><td>{{ query.status }}        </td></tr>
+<tr><td>Status          </td><td>{{ query.status }}         </td></tr>
+<tr><td>Inferred Status </td><td>{{ query.inferredStatus }} </td></tr>
 <tr><td>Size           </td><td>{{ query.normalizedSize }}</td></tr>
 <tr><td>Compressed Size</td><td>{{ query.compressedSize }}</td></tr>
 <tr><td>Max. Term Depth</td><td>{{ query.maxTermDepth }}  </td</tr>
@@ -54,6 +55,7 @@
 <thead>
   <tr>
       <th>Evaluation</th>
+      <th>Rating</th>
       <th>Solver</th>
       <th>Variant</th>
       <th>Result</th>
@@ -72,18 +74,23 @@
   {% else %}
     <tr>
   {% endif %}
-  <td style="border-top: 1px solid #cbcbcb"><a href="{{ result.link }}">{{ result.name }}<a></td>
+  <td style="border-top: 1px solid #cbcbcb">
+    <a href="{{ result.link }}">{{ result.name }}<a>
+  </td>
+  {% if result.rating %}
+  <td>{{ '{0:0.2f}'.format(result.rating) }} ({{ result.successfulSolvers }}/{{ result.consideredSolvers }})</td>
+  {% else %}<td></td>{% endif %}
 {% else %}
 {% if ns.high == true %}
     <tr class="pure-table-odd">
   {% else %}
     <tr>
   {% endif %}
-  <td></td>
+  <td></td><td></td>
 {% endif %}
 
 {% if loop.previtem %}
-  {% if loop.previtem.solvername != result.solverName %}
+  {% if loop.previtem.solvername != result.solverName or loop.previtem.name != result.name %}
     <td style="border-top: 1px solid #cbcbcb">{{ result.solverName }}</td>
   {% else %}
    	<td></td>

@@ -475,16 +475,6 @@ def guess_query_id(
         if stats:
             stats["lookupFailures"] = stats["lookupFailures"] + 1
             stats["unkownBenchmarks"].add((logic, familyFoldername, fullFilename))
-            # name = fullFilename.split("/")[-1][:-5]
-            # r = connection.execute(
-            #     """
-            #     SELECT Benchmarks.Id FROM Benchmarks WHERE name LIKE '%'||?||'%'
-            #     """,
-            #     (fullFilename,),
-            # )
-            # l = r.fetchall()
-            # if len(l) == 1:
-            #     stats["withCandidates"].add(name)
         return None
     for r in connection.execute(
         """
