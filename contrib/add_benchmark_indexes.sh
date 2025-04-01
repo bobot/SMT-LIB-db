@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Adding indices after adding benchmarks"
+echo "Adding indexes after adding benchmarks"
 echo "    on file" "$1"
 
 echo "Add index for Benchmarks table"

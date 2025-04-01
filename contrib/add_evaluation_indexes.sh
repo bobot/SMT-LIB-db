@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Adding indices after adding evaluations"
+echo "Adding indexes after adding evaluations"
 echo "    on file" "$1"
 
 echo "Add index for Symbols table"

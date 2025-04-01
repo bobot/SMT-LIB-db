@@ -39,7 +39,8 @@ def get_benchmark(cursor, benchmark_id):
                generatedBy, generator, application, description, category,
                passesDolmen, passesDolmenStrict,
                queryCount, family, s.firstOccurrence,
-               s.name AS familyName
+               s.name AS familyName,
+               l.name AS licenseName
                FROM Benchmarks AS b
                   INNER JOIN Families AS s ON s.Id = b.family
                   INNER JOIN Licenses AS l ON l.Id = b.license

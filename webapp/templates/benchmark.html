@@ -16,9 +16,9 @@
 <tr><td>License</td>
     <td>
 {% if benchmark.link %}
-<a href="{{ benchmark.link }}">{{ benchmark.name }}</a>
+<a href="{{ benchmark.link }}">{{ benchmark.licenseName }}</a>
 {% else %}
-{{ benchmark.name }}
+{{ benchmark.licenseName }}
 {% endif %}
 {% if benchmark.spdxIdentifier %}
 ({{ benchmark.spdxIdentifier }})

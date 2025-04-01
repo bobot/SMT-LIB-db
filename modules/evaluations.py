@@ -823,6 +823,7 @@ def add_inferred_status(connection):
 
 
 def add_eval_summaries(connection):
+    add_inferred_status(connection)
     for r in connection.execute(
         """
         SELECT id, name FROM Evaluations
@@ -834,5 +835,4 @@ def add_eval_summaries(connection):
         connection.commit()
     print(f"Adding first occurrences of benchmark families (this will take a while)")
     add_first_occurence(connection)
-    add_inferred_status(connection)
     connection.commit()
