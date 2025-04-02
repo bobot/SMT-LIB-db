@@ -39,13 +39,14 @@
 {% set query = firstQuery %}
 {% include 'query.html' %}
 {% for query in queries[1:150] %}
-<a id="query-{{ query["idx"] }}"
-   class="query-header query-preview"
+<details id="query-{{ query["idx"] }}">
+  <summary
+   class="query-header"
    hx-trigger="click"
    hx-get="/query/dynamic/{{ query["id"] }}"
    hx-target="#query-{{ query["idx"] }}"
-   hx-swap="outerHTML">
-   ▸ Query {{ query["idx"] }}</a>
+   hx-swap="outerHTML">Query {{ query.idx }}</summary>
+</details>
 {% endfor %}
 {% if queries|length > 150 %}
 <a class="query-header query-preview">and many more.</a>

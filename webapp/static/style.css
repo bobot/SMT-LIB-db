@@ -24,8 +24,7 @@ pre {
   white-space: nowrap;
 }
 
-a.query-header,
-a.query-header
+.query-header
 {
   padding: .5em 1em;
   border-left: 1px solid #cbcbcb;

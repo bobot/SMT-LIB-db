@@ -1,9 +1,5 @@
-<a id="query-full-{{ query.idx }}"
-   href="#query-full-{{ query.idx }}" class="query-header query-full">
-   ▾ Query {{ query.idx }}</a>
-<a id="query-short-{{ query.idx }}"
-   href="#query-short-{{ query.idx }}" class="query-header query-short">
-   ▸ Query {{ query.idx }}</a>
+<details open="true">
+  <summary class="query-header">Query {{ query.idx }}</summary>
 
 <div class="query-box">
 <table class="pure-table pure-table-bordered query-table">
@@ -125,4 +121,4 @@
 </tbody>
 </table>
 {% endif %}
-</div>
+</details>
