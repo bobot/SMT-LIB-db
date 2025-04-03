@@ -60,3 +60,11 @@ def fix_smt_comp_early(logic, family, filename):
         if index >= 0:
             return ("QF_BV", "egt", filename[index + 1 :])
     return (logic, family, filename)
+
+
+def fix_2017_preiner(logic, family, filename):
+    if family == "2017-Preiner":
+        index = filename.find("/")
+        if index >= 0:
+            return (logic, "2017-Preiner-" + filename[:index], filename[index + 1 :])
+    return (logic, family, filename)

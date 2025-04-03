@@ -230,7 +230,9 @@ def add_smtexec(connection, smtexecConnection, year, date, jobId):
             connection, logic, benchmarkFamily, benchmarkName, stats
         )
         if not queryId:
-            print(f"WARNING: Benchmark {benchmarkName} of SMT-COMP {year} not found ({logic}, {benchmarkFamily})")
+            print(
+                f"WARNING: Benchmark {benchmarkName} of SMT-COMP {year} not found ({logic}, {benchmarkFamily})"
+            )
             continue
         write_result(
             connection,
@@ -411,6 +413,9 @@ def add_smt_comp_oldstyle(connection, compressedCsvFilename, year, date):
                 logic = benchmarkField[0]
                 benchmarkFamily = benchmarkField[1]
                 benchmarkName = "/".join(benchmarkField[2:])
+                (logic, benchmarkFamily, benchmarkName) = fix_2017_preiner(
+                    logic, benchmarkFamily, benchmarkName
+                )
                 queryId = benchmarks.guess_query_id(
                     connection, logic, benchmarkFamily, benchmarkName, stats
                 )
@@ -709,7 +714,10 @@ def add_eval_ratings(connection, evaluationId):
             INNER JOIN Results on Results.query=Queries.id
             WHERE logic=? AND isIncremental=0 AND Results.evaluation=?
             """,
-            (logic,evaluationId,),
+            (
+                logic,
+                evaluationId,
+            ),
         ):
             query = queryRow[0]
             for benchmarkSolversRow in connection.execute(
@@ -740,6 +748,8 @@ def add_eval_ratings(connection, evaluationId):
 """
 Adds information derived from evaluations.
 """
+
+
 def add_first_occurence(connection):
     connection.execute(
         """
@@ -767,7 +777,6 @@ def add_inferred_status(connection):
               INNER JOIN SolverVariants AS var1 ON var1.id = res1.solverVariant
               INNER JOIN Queries AS sub ON sub.id == res1.query
               WHERE res1.status == "sat"
-                AND sub.status == "unknown"
                 AND NOT EXISTS (
                         SELECT NULL
                         FROM Results AS res2
@@ -798,7 +807,6 @@ def add_inferred_status(connection):
               INNER JOIN SolverVariants AS var1 ON var1.id = res1.solverVariant
               INNER JOIN Queries AS sub ON sub.id == res1.query
               WHERE res1.status == "unsat"
-                AND sub.status == "unknown"
                 AND NOT EXISTS (
                         SELECT NULL
                         FROM Results AS res2
