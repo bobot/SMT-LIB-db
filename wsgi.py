@@ -6,7 +6,7 @@ It is built on top of flask.  It expects the environment variable `SMTLIB_DB`
 to be set to the filepath of the database file to use.
 
 To run a local test server execute:
-    SMTLIB_DB=./smtlib-20240903-done.sqlite flask --app wsgi run
+    SMTLIB_DB=./smtlib2025.sqlite flask --app wsgi run
 """
 import sqlite3
 import os

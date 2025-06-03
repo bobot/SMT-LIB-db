@@ -22,6 +22,7 @@ def setup_benchmarks(connection):
         generatedOn DATETTIME,
         generatedBy TEXT,
         generator TEXT,
+        timeLimit REAL,
         application TEXT,
         description TEXT,
         category TEXT,
@@ -260,6 +261,11 @@ def add_benchmark(dbFile, benchmark, dolmenPath):
         familyId = cursor.lastrowid
 
     licenseId = get_license_id(connection, benchmarkObj["license"])
+    timeLimit = 0.0
+    try:
+        timeLimit = float(benchmarkObj["timeLimit"])
+    except:
+        pass
 
     cursor.execute(
         """
@@ -273,13 +279,14 @@ def add_benchmark(dbFile, benchmark, dolmenPath):
                                generatedOn,
                                generatedBy,
                                generator,
+                               timeLimit,
                                application,
                                description,
                                category,
                                passesDolmen,
                                passesDolmenStrict,
                                queryCount)
-        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
         """,
         (
             fileName,
@@ -292,6 +299,7 @@ def add_benchmark(dbFile, benchmark, dolmenPath):
             generatedOn,
             benchmarkObj["generatedBy"],
             benchmarkObj["generator"],
+            timeLimit,
             benchmarkObj["application"],
             benchmarkObj["description"],
             benchmarkObj["category"],
