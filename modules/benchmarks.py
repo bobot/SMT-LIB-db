@@ -206,7 +206,7 @@ def add_benchmark(dbFile, benchmark, dolmenPath):
         pass
 
     dolmen = subprocess.call(
-        f"{dolmenPath} -s 2G --strict=false {benchmark}",
+        f"{dolmenPath} -s 4G --strict=false {benchmark}",
         shell=True,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
@@ -219,7 +219,7 @@ def add_benchmark(dbFile, benchmark, dolmenPath):
         dolmen = False
 
     dolmenStrict = subprocess.call(
-        f"{dolmenPath} -s 2G --strict=true {benchmark}",
+        f"{dolmenPath} -s 4G --strict=true {benchmark}",
         shell=True,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
