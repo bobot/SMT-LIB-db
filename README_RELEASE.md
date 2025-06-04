@@ -190,7 +190,12 @@ CREATE TABLE Evaluations(
         id INTEGER PRIMARY KEY,
         name TEXT,
         date DATE, -- Date when results were published. Usually, the SMT workshop.
-        link TEXT
+        link TEXT, -- Link to the evaluation webpage
+        -- Unique integer for the hardware used by this evaluation.  Larger
+        -- numbers indicate older hardware.
+        hardwareRevision INT,
+        wallclockLimit REAL, -- Wall clock limit in seconds imposed on solvers.
+        memoryLimit REAL -- Approximate memory limit in GB.
     );
 -- This table maps queries to solver variants and results.
 -- Both cpu time and wallclock time can be NULL if they are not known. Time is

@@ -19,7 +19,10 @@ def setup_evaluations(connection):
         id INTEGER PRIMARY KEY,
         name TEXT,
         date DATE,
-        link TEXT
+        link TEXT,
+        hardwareRevision INT,
+        wallclockLimit REAL,
+        memoryLimit REAL
         );"""
     )
 
@@ -122,14 +125,31 @@ def add_smt_comp_early(connection, year, date):
     name = f"SMT-COMP {year}"
     stats = make_stats_dict(name)
     # Date is the day the PDPAR (pre. SMT) workshop happened.
-    cursor = connection.execute(
-        """
-        INSERT INTO Evaluations(name, date, link)
-        VALUES(?,?,?);
-        """,
-        (name, date, f"https://smtcomp.sourceforge.net/{year}/"),
-    )
-    evaluationId = cursor.lastrowid
+    if year == "2005":
+        cursor = connection.execute(
+            """
+            INSERT INTO Evaluations(name, date, link, hardwareRevision, wallclockLimit, memoryLimit)
+            VALUES(?,?,?,?,?,?);
+            """,
+            (
+                name,
+                date,
+                f"https://smtcomp.sourceforge.net/{year}/",
+                6,
+                13.3 * 60,
+                0.45,
+            ),
+        )
+        evaluationId = cursor.lastrowid
+    else:
+        cursor = connection.execute(
+            """
+            INSERT INTO Evaluations(name, date, link, hardwareRevision, wallclockLimit, memoryLimit)
+            VALUES(?,?,?,?,?,?);
+            """,
+            (name, date, f"https://smtcomp.sourceforge.net/{year}/", 5, 20 * 60, 1.5),
+        )
+        evaluationId = cursor.lastrowid
     modules.solvers.populate_evaluation_solvers(connection, name, evaluationId)
     connection.commit()
     print(f"Adding SMT-COMP {year} results")
@@ -191,15 +211,31 @@ def add_smt_comp_early(connection, year, date):
     return stats
 
 
-def add_smtexec(connection, smtexecConnection, year, date, jobId):
+def add_smtexec(
+    connection,
+    smtexecConnection,
+    year,
+    date,
+    jobId,
+    cmpHardware,
+    cmpTimeout=None,
+    cmpMem=None,
+):
     name = f"SMT-COMP {year}"
     stats = make_stats_dict(name)
     cursor = connection.execute(
         """
-        INSERT INTO Evaluations(name, date, link)
-        VALUES(?,?,?);
+        INSERT INTO Evaluations(name, date, link, hardwareRevision, wallclockLimit, memoryLimit)
+        VALUES(?,?,?,?,?,?);
         """,
-        (name, date, f"https://smt-comp.github.io/{year}/"),
+        (
+            name,
+            date,
+            f"https://smt-comp.github.io/{year}/",
+            cmpHardware,
+            cmpTimeout,
+            cmpMem,
+        ),
     )
     evaluationId = cursor.lastrowid
     modules.solvers.populate_evaluation_solvers(connection, name, evaluationId)
@@ -253,10 +289,10 @@ def add_smt_eval_2013(connection, csvDataFile):
     stats = make_stats_dict(name)
     cursor = connection.execute(
         """
-        INSERT INTO Evaluations(name, date, link)
-        VALUES(?,?,?);
+        INSERT INTO Evaluations(name, date, link, hardwareRevision, wallclockLimit)
+        VALUES(?,?,?,?,?);
         """,
-        (name, "2013-07-02", f"https://smtcomp.sourceforge.net/2013/"),
+        (name, "2013-07-02", f"https://smtcomp.sourceforge.net/2013/", 2, 25 * 60),
     )
     evaluationId = cursor.lastrowid
     modules.solvers.populate_evaluation_solvers(connection, name, evaluationId)
@@ -328,10 +364,10 @@ def add_smt_comp_2014(connection, compressedCsvFilename):
     stats = make_stats_dict(name)
     cursor = connection.execute(
         """
-        INSERT INTO Evaluations(name, date, link)
-        VALUES(?,?,?);
+        INSERT INTO Evaluations(name, date, link, hardwareRevision, wallclockLimit, memoryLimit)
+        VALUES(?,?,?,?,?,?);
         """,
-        (name, "2014-07-21", f"https://smt-comp.github.io/2014/"),
+        (name, "2014-07-21", f"https://smt-comp.github.io/2014/", 2, 25 * 60, 100),
     )
     evaluationId = cursor.lastrowid
     modules.solvers.populate_evaluation_solvers(connection, name, evaluationId)
@@ -381,12 +417,13 @@ def add_smt_comp_2014(connection, compressedCsvFilename):
 def add_smt_comp_oldstyle(connection, compressedCsvFilename, year, date):
     name = f"SMT-COMP {year}"
     stats = make_stats_dict(name)
+    timeLimit = 20 * 60 if year == "2017" else 40 * 60
     cursor = connection.execute(
         """
-        INSERT INTO Evaluations(name, date, link)
-        VALUES(?,?,?);
+        INSERT INTO Evaluations(name, date, link, hardwareRevision, wallclockLimit, memoryLimit)
+        VALUES(?,?,?,?,?,?);
         """,
-        (name, date, f"https://smt-comp.github.io/{year}/"),
+        (name, date, f"https://smt-comp.github.io/{year}/", 2, timeLimit, 60),
     )
     evaluationId = cursor.lastrowid
     modules.solvers.populate_evaluation_solvers(connection, name, evaluationId)
@@ -440,12 +477,20 @@ def add_smt_comp_oldstyle(connection, compressedCsvFilename, year, date):
 def add_smt_comp_generic(connection, folder, year, date):
     name = f"SMT-COMP {year}"
     stats = make_stats_dict(name)
+    hardwareRevision = 1 if year == "2024" else 2
     cursor = connection.execute(
         """
-        INSERT INTO Evaluations(name, date, link)
-        VALUES(?,?,?);
+        INSERT INTO Evaluations(name, date, link, hardwareRevision, wallclockLimit, memoryLimit)
+        VALUES(?,?,?,?,?,?);
         """,
-        (name, date, f"https://smt-comp.github.io/{year}/"),
+        (
+            name,
+            date,
+            f"https://smt-comp.github.io/{year}/",
+            hardwareRevision,
+            20 * 60,
+            30,
+        ),
     )
     evaluationId = cursor.lastrowid
     modules.solvers.populate_evaluation_solvers(connection, name, evaluationId)
@@ -509,10 +554,10 @@ def add_smt_comp_inc_2024(connection, rawfolder):
     #  Insert a test evaluation
     cursor = connection.execute(
         """
-        INSERT INTO Evaluations(name, date, link)
-        VALUES(?,?,?);
+        INSERT INTO Evaluations(name, date, link, hardwareRevision, wallclockLimit, memoryLimit)
+        VALUES(?,?,?,?,?,?);
         """,
-        (name, 2025, f"https://smt-comp.github.io/"),
+        (name, 2024, f"https://smt-comp.github.io/", 1, 20 * 60, 30),
     )
     evaluationId = cursor.lastrowid
     modules.solvers.populate_evaluation_solvers(connection, name, evaluationId)
@@ -613,22 +658,30 @@ def add_smt_comps(
 
     smtexecConnection = sqlite3.connect(smtexecdb)
 
-    s = add_smtexec(connection, smtexecConnection, "2007", "2007-07-03", 20)
+    s = add_smtexec(
+        connection, smtexecConnection, "2007", "2007-07-03", 20, 4, 30 * 60, 1.5
+    )
     stats.append(s)
 
-    s = add_smtexec(connection, smtexecConnection, "2008", "2008-07-07", 311)
+    s = add_smtexec(
+        connection, smtexecConnection, "2008", "2008-07-07", 311, 4, 20 * 60, 1.5
+    )
     stats.append(s)
 
-    s = add_smtexec(connection, smtexecConnection, "2009", "2009-08-02", 529)
+    s = add_smtexec(connection, smtexecConnection, "2009", "2009-08-02", 529, 3)
     stats.append(s)
 
-    s = add_smtexec(connection, smtexecConnection, "2010", "2010-07-15", 684)
+    s = add_smtexec(connection, smtexecConnection, "2010", "2010-07-15", 684, 3)
     stats.append(s)
 
-    s = add_smtexec(connection, smtexecConnection, "2011", "2011-07-14", 856)
+    s = add_smtexec(
+        connection, smtexecConnection, "2011", "2011-07-14", 856, 3, 20 * 60
+    )
     stats.append(s)
 
-    s = add_smtexec(connection, smtexecConnection, "2012", "2011-06-30", 1004)
+    s = add_smtexec(
+        connection, smtexecConnection, "2012", "2011-06-30", 1004, 3, 20 * 60
+    )
     stats.append(s)
 
     smtexecConnection.close()
