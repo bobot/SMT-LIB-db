@@ -558,7 +558,7 @@ def add_smt_comp_inc_2024(connection, rawfolder):
         INSERT INTO Evaluations(name, date, link, hardwareRevision, wallclockLimit, memoryLimit)
         VALUES(?,?,?,?,?,?);
         """,
-        (name, 2024, f"https://smt-comp.github.io/", 1, 20 * 60, 30),
+        (name, "2024-07-22", f"https://smt-comp.github.io/", 1, 20 * 60, 30),
     )
     evaluationId = cursor.lastrowid
     modules.solvers.populate_evaluation_solvers(connection, name, evaluationId)
