@@ -38,7 +38,7 @@ for evalId, evalName, evalDate in evaluations:
             """
             SELECT COUNT(DISTINCT s.id) FROM Solvers AS s
                 INNER JOIN SolverVariants AS sv ON sv.solver = s.id
-                INNER JOIN Results AS r ON sv.Id = r.solverVariant
+                INNER JOIN Results AS r ON sv.id = r.solverVariant
                 INNER JOIN Benchmarks AS b ON b.id = r.query
             WHERE b.logic=? AND r.evaluation=? AND b.isIncremental=0
             """,

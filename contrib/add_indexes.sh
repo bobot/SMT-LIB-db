@@ -4,10 +4,10 @@ echo "Adding indexes"
 echo "    on file" "$1"
 
 echo "Add index for Benchmarks table"
-sqlite3 "$1" "create index benchIdx1 on Benchmarks(name, family, logic, isIncremental);"
+sqlite3 "$1" "create index benchIdx1 on Benchmarks(name, family, logic, isIncremental, category);"
 
 echo "Add index for Queries table"
-sqlite3 "$1" "create index benchIdx2 on Queries(benchmark);"
+sqlite3 "$1" "create index benchIdx2 on Queries(benchmark, status, inferredStatus);"
 
 echo "Add index for Families table"
 sqlite3 "$1" "create index benchIdx3 on Families(name, folderName, firstOccurrence);"
