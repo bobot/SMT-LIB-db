@@ -22,13 +22,16 @@ echo "Add index for SolverVariants table"
 sqlite3 "$1" "create index evalIdx4 on SolverVariants(solver);"
 
 echo "Add index for Results table"
-sqlite3 "$1" "create index evalIdx5 on Results(query, solverVariant, status, evaluation);"
+sqlite3 "$1" "create index evalIdx5 on Results(status, evaluation, query, solverVariant);"
 
 echo "Add index for Evaluations table"
 sqlite3 "$1" "create index evalIdx6 on Evaluations(date);"
 
 echo "Add index for Ratings table"
 sqlite3 "$1" "create index evalIdx7 on Ratings(query, evaluation);"
+
+echo "Add index for Solvers table"
+sqlite3 "$1" "create index extraIdx1 on Solvers(name);"
 
 echo "Call SQLite analyze."
 sqlite3 "$1" "analyze;"
