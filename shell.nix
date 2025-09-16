@@ -27,6 +27,8 @@ pkgs.stdenv.mkDerivation {
       python312Packages.beautifulsoup4
       python312Packages.flask
       python312Packages.gunicorn
+      python312Packages.polars
+      python312Packages.altair
   ];
 
 }
