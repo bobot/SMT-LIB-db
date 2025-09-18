@@ -1,0 +1,18 @@
+{% extends "index.html" %}
+{% block body %}
+    <h1>Index</h1>
+    <h2><a href="logics/ALL.html">ALL logics</a></h2>
+    {% for ld in logics %}
+        <h2><a href="logics/{{ ld.logic }}.html">{{ ld.logic }}</a></h2>
+        <ul>
+          {% for fam in ld.families %}
+          <li>
+          	<a href="family/{{ fam[0] }}.html#{{ ld.logic }}">{{ fam[1] }}</a>
+            {% if fam[2] %}
+              &ndash; {{ fam[2] }}
+            {% endif %}
+        	</li>
+          {% endfor %}
+        </ul>
+    {% endfor %}
+{% endblock %}

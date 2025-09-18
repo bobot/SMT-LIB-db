@@ -1,0 +1,38 @@
+{% extends "index.html" %}
+{% block body %}
+    <h1>Family {{ family.folderName }} </h1>
+    <div class="benchmark-body">
+<table class="pure-table pure-table-bordered benchmark-table">
+  <thead>
+    <tr><th colspan="2">Family</th></tr>
+  </thead>
+  <tbody>
+  <tr><td>Name</td><td>{{ family.name }}</td></tr>
+  <tr><td>Generation Date</td><td>{{ family.date }}</td></tr>
+  <tr><td>First Occurrence</td><td>{{ family.firstOccurrence }}</td></tr>
+  <tr><td>Benchmarks</td><td>{{ family.benchmarkCount }}</td></tr>
+  </tbody>
+  </table>
+
+<h2>Benchmarks</h2>
+
+{% for bench in benchmarks %}
+{% if loop.changed(bench.logic)%}
+{% if not loop.first %}
+  </tbody>
+</table>
+{% endif %}
+<table class="pure-table pure-table-bordered benchmark-table">
+  <thead>
+  <tr><th id="{{ bench.logic }}"><a href="logics/{{ bench.logic }}.html">{{ bench.logic }}</a></th></tr>
+  </thead>
+  <tbody>
+{% endif %}
+  <tr><td><a href="bechnmark/{{ bench.id }}.html">{{ bench.name }}</a></td></tr>
+{% endfor %}
+  </tbody>
+</table>
+
+
+</div>
+{% endblock %}
