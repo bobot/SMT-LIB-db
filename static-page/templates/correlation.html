@@ -1,0 +1,10 @@
+{% extends "index.html" %}
+{% block body %}
+<h1>Correlation Diagram for {{ logicData }} </h1>
+<p>
+    {{ printed | safe }}
+</p>
+<p>
+    {{ charts | safe }}
+</p>
+{% endblock %}

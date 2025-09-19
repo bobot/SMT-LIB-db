@@ -29,6 +29,8 @@ pkgs.stdenv.mkDerivation {
       python312Packages.gunicorn
       python312Packages.polars
       python312Packages.altair
+      python312Packages.pip
+      python312Packages.vega
   ];
 
 }

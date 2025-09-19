@@ -2,9 +2,48 @@
 {% block body %}
 <h1>Diagrams for {{ logic }} </h1>
 
-<h2>Charts</h2>
+<h2>Benchmark Timeline (Non-Incremental)</h2>
+<dl>
+<dt>Fresh</dt>
+<dd>Number of benchmarks that were published, but not used before by the competition.</dd>
+<dt>Solved</dt>
+<dd>Benchmarks that were solved by at least one solver.</dd>
+<dt>Unsolved</dt>
+<dd>Benchmarks that were used by the competition, but not solved.</dd>
+</dl>
+
 <p>
-  {{ charts | safe }}
+<div id="vis1"></div>
 </p>
+
+<h2>Benchmark Categories</h2>
+<p>
+<div id="vis2"></div>
+</p>
+
+<h2>Family Size Histogram</h2>
+Histogram the families by their number of {{ logic }} benchmarks.
+<p>
+<div id="vis3"></div>
+</p>
+
+<h2>Benchmark Size Histogram</h2>
+<p>
+<div id="vis5"></div>
+</p>
+
+<h2>Participants Over Time</h2>
+Number of solves that attempted at least one benchmark from the logic.
+<p>
+<div id="vis4"></div>
+</p>
+
+<script type="text/javascript">
+  vegaEmbed('#vis1', {{ tl_chart | safe }}).catch(console.error);
+  vegaEmbed('#vis2', {{ cat_chart | safe }}).catch(console.error);
+  vegaEmbed('#vis3', {{ fam_chart | safe }}).catch(console.error);
+  vegaEmbed('#vis4', {{ solvers_chart | safe }}).catch(console.error);
+  vegaEmbed('#vis5', {{ size_chart | safe }}).catch(console.error);
+</script>
 
 {% endblock %}

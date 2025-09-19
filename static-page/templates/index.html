@@ -5,6 +5,11 @@
 <!-- TODO: host locally -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css">
+{% if vega_version and vegalite_version and vegaembed_version %}
+<script src="https://cdn.jsdelivr.net/npm/vega@{{ vega_version }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@{{ vegalite_version }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@{{ vegaembed_version }}"></script>
+{% endif %}
 
 <link rel="stylesheet" href="/static/style.css">
 
