@@ -4,6 +4,7 @@ import sqlite3
 import os
 import argparse
 from jinja2 import Environment, PackageLoader, select_autoescape
+from rich.progress import track
 
 """
     Writes index.html and the overview of families and logics.
@@ -17,7 +18,7 @@ env = Environment(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("database")
-    parser.add_argument("folder")
+    parser.add_argument("folder", help="output folder")
     args = parser.parse_args()
     connection = sqlite3.connect(args.database)
     connection.row_factory = sqlite3.Row
@@ -62,8 +63,7 @@ if __name__ == "__main__":
     except:
         pass
 
-    print("Generating families")
-    for fam in families:
+    for fam in track(families, description="Generating families"):
         res = connection.execute("""
                 SELECT bench.id, bench.logic, bench.name FROM Benchmarks AS bench
                 WHERE bench.family = ?

@@ -6,6 +6,8 @@ import argparse
 import polars as pl
 import altair as alt
 from jinja2 import Environment, PackageLoader, select_autoescape
+from rich.progress import track
+
 
 """
     Writes index.html and the overview of families and logics.
@@ -34,7 +36,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("database")
-    parser.add_argument("folder")
+    parser.add_argument("folder", help="output directory")
     args = parser.parse_args()
 
     connection = sqlite3.connect(args.database)
@@ -71,7 +73,7 @@ if __name__ == "__main__":
         crafted = []
         industrial = []
         random = []
-        for year in years:
+        for year in track(years):
             yearstr = f"{year}-12-31"
             oldyearstr = f"{year-1}-12-31"
             # Counts benchark where there was a sat/unsat at some point before
