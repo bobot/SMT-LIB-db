@@ -3,7 +3,10 @@
     <h1>Index</h1>
     <h2>ALL logics &#8226; <a href="logics/ALL.html">Charts</a></h2>
     {% for ld in logics %}
-        <h2>{{ ld.logic }} &#8226; <a href="logics/{{ ld.logic }}.html">Charts</a></h2>
+        <h2>{{ ld.logic }}
+        	&#8226; <a href="logics/{{ ld.logic }}.html">Charts</a>
+        	&#8226; <a href="correlation/{{ ld.logic }}.html">Correlation Matrix</a>
+      	</h2>
         <ul>
           {% for fam in ld.families %}
           <li>

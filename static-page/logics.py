@@ -56,7 +56,6 @@ if __name__ == "__main__":
     except:
         pass
 
-    logics = [("QF_UF",)]
     for logic in logics:
         logic_print_name= logic[0]
         logic_name = logic_print_name
