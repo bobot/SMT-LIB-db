@@ -31,6 +31,7 @@ pkgs.stdenv.mkDerivation {
       python312Packages.altair
       python312Packages.pip
       python312Packages.vega
+      python312Packages.rich
   ];
 
 }
