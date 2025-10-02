@@ -1,12 +1,15 @@
 import sqlite3
 import os
 import polars as pl
+from functools import cache
+import polars_distance as pld
 import altair as alt
 from flask import Flask, g, abort, render_template, request
 from typing import *
 from collections import defaultdict
 from random import Random
 import math
+import sklearn
 
 U = TypeVar("U")
 
@@ -82,29 +85,37 @@ c_status2 = pl.col("status2")
 c_bucket = pl.col("bucket")
 c_bucket2 = pl.col("bucket2")
 
-
 def init_routes(app, get_db):
-    @app.route("/charts/<string:logic_name>")
-    def show_charts(logic_name):
+    @cache
+    def read_database(logic_name) -> pl.DataFrame:
         df = pl.read_database(
             query="""
-            SELECT ev.name, ev.date, ev.link, ev.id as ev_id, sol.name AS solver,
-                       sovar.fullName, res.status, res.cpuTime,
-                       query.id, bench.logic
-                FROM Results AS res
-                INNER JOIN Benchmarks AS bench ON bench.id = query.benchmark
-                INNER JOIN Queries AS query ON res.query = query.id
-                INNER JOIN Evaluations AS ev ON res.evaluation = ev.id
-                INNER JOIN SolverVariants AS sovar ON res.solverVariant = sovar.id
-                INNER JOIN Solvers AS sol ON sovar.solver = sol.id
-                WHERE bench.logic = ?""",
+                SELECT ev.name, ev.date, ev.link, ev.id as ev_id, sol.name AS solver,
+                        sovar.fullName, res.status, res.cpuTime,
+                        query.id, bench.logic
+                    FROM Results AS res
+                    INNER JOIN Benchmarks AS bench ON bench.id = query.benchmark
+                    INNER JOIN Queries AS query ON res.query = query.id
+                    INNER JOIN Evaluations AS ev ON res.evaluation = ev.id
+                    INNER JOIN SolverVariants AS sovar ON res.solverVariant = sovar.id
+                    INNER JOIN Solvers AS sol ON sovar.solver = sol.id
+                    WHERE bench.logic = ?""",
             execute_options={"parameters": [logic_name]},
             connection=get_db(),
             schema_overrides={"wallclockTime": pl.Float64, "cpuTime": pl.Float64},
         )
+        print("db read")
+        results = (
+            df
+            .filter(c_cpuTime.is_not_null()
+            )
+        )
+        return results
+    @app.route("/charts/<string:logic_name>")
+    def show_charts(logic_name):
+        df = read_database(logic_name)
         results = (
             df.lazy()
-            .filter(c_cpuTime.is_not_null())
             .with_columns(
                 bucket=pl.lit(10.0).pow(c_cpuTime.log(10).floor()),
                 solver=pl.concat_str(c_solver, c_name, separator=" "),
@@ -128,6 +139,31 @@ def init_routes(app, get_db):
             .sort(c_solver, c_solver2)
             .select(c_solver, c_solver2, "corr")
         )
+        
+        all = results.group_by(
+                c_query,
+                c_solver,
+            ).agg(c_cpuTime.first())
+
+
+        nb_common = (
+            cross_results.group_by(
+                c_solver,
+                c_solver2,
+            )
+            .len()
+            .sort("len")
+        )
+
+        cosine_dist = (
+            cross_results.group_by(
+                c_solver,
+                c_solver2,
+            )
+            .agg(cosine=pl.lit(1) - ((c_cpuTime*c_cpuTime2).sum() / 
+                         ((c_cpuTime*c_cpuTime).sum() * (c_cpuTime2*c_cpuTime2).sum()).sqrt())
+        ))
+
 
         cross_results = (
             cross_results.group_by(
@@ -142,29 +178,68 @@ def init_routes(app, get_db):
             .sort(c_solver, c_solver2)
         )
 
-        df_corr, df_results, df_buckets, df_status, df_solvers = pl.collect_all(
+        df_all, df_corr, df_results, df_buckets, df_status, df_solvers,df_nb_common,df_cosine_dist = pl.collect_all(
             [
+                all,
                 corr,
                 cross_results,
                 results.select(c_bucket.unique()),
                 results.select(c_status.unique()),
                 results.select(c_solver.unique()),
+                nb_common,
+                cosine_dist
             ]
         )
+
+        print(df_nb_common)
 
         bucket_domain: list[float] = list(df_buckets["bucket"])
         status_domain: list[int] = list(df_status["status"])
         status_domain.sort()
 
-        solver_domain: list[str, str] = list(df_solvers["solver"])
+        solver_domain: list[str] = list(df_solvers["solver"])
         solver_domain.sort(key=lambda x: x.lower())
 
-        if True:
+        if False:
             # Two provers can have no benchmars in common, their pairs is not in df_corrs
             corrs: DefaultDict[Tuple[str, str], float] = defaultdict(lambda: 0.0)
             for row in df_corr.rows(named=False):
                 corrs[row[0], row[1]] = row[2]
             correlation_sorting(solver_domain, corrs, 10000)
+        else:
+            df_all2 = df_all.pivot(on="id",index="solver")
+            imputer = sklearn.impute.KNNImputer(n_neighbors=2)
+            impute=imputer.fit_transform(df_all2.drop("solver"))
+            def isomap(components:List[str]) -> Tuple[pl.DataFrame,pl.DataFrame]:
+                embedding = sklearn.manifold.Isomap(n_components=len(components),neighbors_algorithm="brute",metric="cosine")
+                proj=embedding.fit_transform(impute)
+                df_corr = pl.DataFrame(embedding.dist_matrix_,schema=list(df_all2["solver"])).with_columns(df_all2["solver"]).unpivot(index="solver",variable_name="solver2",value_name="corr")
+                print(df_corr)
+                df_proj=pl.DataFrame(proj,schema=[(c,pl.Float64) for c in components]).with_columns(df_all2["solver"])
+                return df_proj,df_corr
+            
+            df_proj,df_corr = isomap(["proj"])
+            df_proj = df_proj.sort("proj")
+            solver_domain = list(df_proj["solver"])
+            
+            df_proj,df_corr = isomap(["x","y"])
+            
+            print(df_corr.join(df_cosine_dist,on=["solver","solver2"]))
+            
+            print("agglomeration")
+            model = sklearn.cluster.AgglomerativeClustering(distance_threshold=0, n_clusters=None).fit(impute)
+            solvers = list(df_all2["solver"])
+            n_samples = len(solvers)
+            # for i, merge in enumerate(model.children_):
+            #     print("id:",i+n_samples)
+            #     for child_idx in merge:
+            #         if child_idx < n_samples:
+            #             print(solvers[child_idx])
+            #         else:
+            #             print(child_idx)
+
+
+            #lle = sklearn.manifold.locally_linear_embedding(df_all)
 
         # Create heatmap with selection
         solvers = alt.selection_point(
@@ -182,14 +257,14 @@ def init_routes(app, get_db):
         logic = alt.selection_point(fields=["logic"], name="logic")
         division = alt.selection_point(fields=["division"], name="division")
         g_select_provers = (
-            alt.Chart(df_corr, title="Click a tile to compare solvers")
+            alt.Chart(df_corr, title="cosine distance")
             .mark_rect()
             .encode(
                 alt.X("solver", title="solver1").scale(domain=solver_domain),
                 alt.Y("solver2", title="solver2").scale(
                     domain=list(reversed(solver_domain))
                 ),
-                alt.Color("corr", scale=alt.Scale(domain=[-1, 1], scheme="blueorange")),
+                alt.Color("corr", scale=alt.Scale(scheme="lightmulti",reverse=True)),
                 stroke=alt.when(solvers).then(alt.value("lightgreen")),
                 strokeWidth=alt.value(3),
                 opacity=alt.value(0.8),
@@ -197,8 +272,39 @@ def init_routes(app, get_db):
             .add_params(solvers)
         )
 
+        g_select_provers_cosine = (
+            alt.Chart(df_cosine_dist, title="cosine distance")
+            .mark_rect()
+            .encode(
+                alt.X("solver", title="solver1").scale(domain=solver_domain),
+                alt.Y("solver2", title="solver2").scale(
+                    domain=list(reversed(solver_domain))
+                ),
+                alt.Color("cosine", scale=alt.Scale(scheme="lightmulti",reverse=True)),
+                stroke=alt.when(solvers).then(alt.value("lightgreen")),
+                strokeWidth=alt.value(3),
+                opacity=alt.value(0.8),
+            )
+            .add_params(solvers)
+        )
+        
+        print(df_proj)
+        g_isomap = (
+            alt.Chart(df_proj, title="Isomap")
+            .mark_point()
+            .encode(
+                alt.X("x"),
+                alt.Y("y"),
+                alt.Tooltip("solver"),
+                alt.Color("cat:N")
+            ).transform_calculate(cat='split(datum.solver," ",1)[0]'
+                                  #alt.expr.substring(alt.expr.data("solver"),0,3)
+                                  )
+
+        )
+
         with alt.data_transformers.disable_max_rows():
-            charts = g_select_provers.to_html(fullhtml=False)
+            charts = (g_select_provers | g_select_provers_cosine | g_isomap).to_html(fullhtml=False)
 
         return render_template(
             "charts.html",

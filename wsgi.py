@@ -11,6 +11,7 @@ To run a local test server execute:
 
 import sqlite3
 import os
+from pathlib import Path
 import polars as pl
 import altair as alt
 from flask import Flask, g, abort, render_template, request
@@ -30,6 +31,36 @@ def get_db():
         db.cursor().execute(f"PRAGMA cache_size=-10000;")
     db.row_factory = sqlite3.Row
     return db
+
+# def convert_to_df():
+#     df = pl.read_database(
+#         query="""
+#         SELECT ev.name, ev.date, ev.link, ev.id as ev_id, sol.name AS solver,
+#                     sovar.fullName, res.status, res.cpuTime,
+#                     query.id, bench.logic
+#             FROM Results AS res
+#             INNER JOIN Benchmarks AS bench ON bench.id = query.benchmark
+#             INNER JOIN Queries AS query ON res.query = query.id
+#             INNER JOIN Evaluations AS ev ON res.evaluation = ev.id
+#             INNER JOIN SolverVariants AS sovar ON res.solverVariant = sovar.id
+#             INNER JOIN Solvers AS sol ON sovar.solver = sol.id
+#             """,
+#         connection=get_db(),
+#         schema_overrides={"wallclockTime": pl.Float64, "cpuTime": pl.Float64},
+#     )
+#     results = (
+#         df
+#         .filter(c_cpuTime.is_not_null()
+#         )
+#     )
+#     return results
+
+
+# def get_df():
+#     FEATHER=Path(DATABASE+".feather")
+#     if FEATHER.exists():
+#         return pl.rea
+        
 
 
 app = Flask(__name__, static_folder="webapp/static", template_folder="webapp/templates")
