@@ -1,6 +1,7 @@
 import sqlite3
 import os
 import polars as pl
+from pathlib import Path
 from functools import cache
 import polars_distance as pld
 import altair as alt
@@ -85,40 +86,50 @@ c_status2 = pl.col("status2")
 c_bucket = pl.col("bucket")
 c_bucket2 = pl.col("bucket2")
 
-def init_routes(app, get_db):
-    @cache
-    def read_database(logic_name) -> pl.DataFrame:
+@cache
+def read_feather() -> pl.DataFrame:
+    DATABASE = Path(os.environ["SMTLIB_DB"])
+    FEATHER = DATABASE.with_suffix(".feather")
+    if FEATHER.exists():
+        return pl.read_ipc(FEATHER)
+    else:
+        db = sqlite3.connect(DATABASE)
         df = pl.read_database(
             query="""
                 SELECT ev.name, ev.date, ev.link, ev.id as ev_id, sol.name AS solver,
                         sovar.fullName, res.status, res.cpuTime,
-                        query.id, bench.logic
+                        query.id, bench.logic, sovar.id AS sovar_id
                     FROM Results AS res
                     INNER JOIN Benchmarks AS bench ON bench.id = query.benchmark
                     INNER JOIN Queries AS query ON res.query = query.id
                     INNER JOIN Evaluations AS ev ON res.evaluation = ev.id
                     INNER JOIN SolverVariants AS sovar ON res.solverVariant = sovar.id
                     INNER JOIN Solvers AS sol ON sovar.solver = sol.id
-                    WHERE bench.logic = ?""",
-            execute_options={"parameters": [logic_name]},
-            connection=get_db(),
+                    """,
+            connection=db,
             schema_overrides={"wallclockTime": pl.Float64, "cpuTime": pl.Float64},
         )
-        print("db read")
+        df.write_ipc(FEATHER)
+        return df
+
+
+def init_routes(app, get_db):
+    def read_database(logic_name) -> pl.LazyFrame:
+        df = read_feather()
         results = (
-            df
-            .filter(c_cpuTime.is_not_null()
+            df.lazy()
+            .filter(c_cpuTime.is_not_null() & (pl.col("logic") == pl.lit(logic_name))
             )
         )
         return results
     @app.route("/charts/<string:logic_name>")
     def show_charts(logic_name):
-        df = read_database(logic_name)
         results = (
-            df.lazy()
+            read_database(logic_name)
+            .group_by("ev_id","sovar_id","id").last()
             .with_columns(
                 bucket=pl.lit(10.0).pow(c_cpuTime.log(10).floor()),
-                solver=pl.concat_str(c_solver, c_name, separator=" "),
+                solver=pl.concat_str(pl.col("fullName"), c_name, separator=" "),
             )
         )
 
@@ -131,7 +142,7 @@ def init_routes(app, get_db):
             status2=c_status,
         )
 
-        cross_results = results.join(results_with, on=[c_query], how="left")
+        cross_results = results.join(results_with, on=[c_query], how="left").filter()
 
         corr = (
             cross_results.group_by(c_solver, c_solver2)
@@ -155,13 +166,16 @@ def init_routes(app, get_db):
             .sort("len")
         )
 
+        den=((c_cpuTime*c_cpuTime).sum() * (c_cpuTime2*c_cpuTime2).sum())
+        toofew=(pl.len() <= pl.lit(100))
+
         cosine_dist = (
             cross_results.group_by(
                 c_solver,
                 c_solver2,
             )
-            .agg(cosine=pl.lit(1) - ((c_cpuTime*c_cpuTime2).sum() / 
-                         ((c_cpuTime*c_cpuTime).sum() * (c_cpuTime2*c_cpuTime2).sum()).sqrt())
+            .agg(cosine=pl.when(toofew).then(pl.lit(1.)).when((den==pl.lit(0.))).then(pl.lit(0.)).otherwise(pl.lit(1) - ((c_cpuTime*c_cpuTime2).sum() / 
+                         den.sqrt()))
         ))
 
 
@@ -178,20 +192,23 @@ def init_routes(app, get_db):
             .sort(c_solver, c_solver2)
         )
 
-        df_all, df_corr, df_results, df_buckets, df_status, df_solvers,df_nb_common,df_cosine_dist = pl.collect_all(
+        df_corr, df_results, df_buckets, df_status, df_solvers,df_nb_common,df_cosine_dist,diag,diag2 = pl.collect_all(
             [
-                all,
                 corr,
                 cross_results,
                 results.select(c_bucket.unique()),
                 results.select(c_status.unique()),
                 results.select(c_solver.unique()),
                 nb_common,
-                cosine_dist
+                cosine_dist,
+                all.group_by("solver","id").len().filter(pl.col("len") > 0),
+                cosine_dist.filter(c_solver==c_solver2).filter(pl.col("cosine")> 0.)
             ]
         )
 
-        print(df_nb_common)
+        print(df_nb_common.filter(pl.col("len") < 100))
+        print(diag)
+        print(diag2)
 
         bucket_domain: list[float] = list(df_buckets["bucket"])
         status_domain: list[int] = list(df_status["status"])
@@ -207,15 +224,20 @@ def init_routes(app, get_db):
                 corrs[row[0], row[1]] = row[2]
             correlation_sorting(solver_domain, corrs, 10000)
         else:
-            df_all2 = df_all.pivot(on="id",index="solver")
-            imputer = sklearn.impute.KNNImputer(n_neighbors=2)
-            impute=imputer.fit_transform(df_all2.drop("solver"))
+            # df_all2 = df_all.pivot(on="id",index="solver")
+            # imputer = sklearn.impute.KNNImputer(n_neighbors=2)
+            # impute=imputer.fit_transform(df_all2.drop("solver"))
+            df_cosine_dist2 = df_cosine_dist.sort("solver","solver2").pivot(on="solver2",index="solver").fill_null(1.)
+            solvers_cosine = df_cosine_dist2["solver"]
+            df_cosine_dist2 = df_cosine_dist2.select("solver",*solvers_cosine)
+            print(df_cosine_dist2)
+            df_cosine_dist2 = df_cosine_dist2.drop("solver")
             def isomap(components:List[str]) -> Tuple[pl.DataFrame,pl.DataFrame]:
-                embedding = sklearn.manifold.Isomap(n_components=len(components),neighbors_algorithm="brute",metric="cosine")
-                proj=embedding.fit_transform(impute)
-                df_corr = pl.DataFrame(embedding.dist_matrix_,schema=list(df_all2["solver"])).with_columns(df_all2["solver"]).unpivot(index="solver",variable_name="solver2",value_name="corr")
+                embedding = sklearn.manifold.Isomap(n_components=len(components),metric="precomputed",radius=0.5,n_neighbors=None)
+                proj=embedding.fit_transform(df_cosine_dist2.to_numpy())
+                df_corr = pl.DataFrame(embedding.dist_matrix_,schema=list(solvers_cosine)).with_columns(solvers_cosine).unpivot(index="solver",variable_name="solver2",value_name="corr")
                 print(df_corr)
-                df_proj=pl.DataFrame(proj,schema=[(c,pl.Float64) for c in components]).with_columns(df_all2["solver"])
+                df_proj=pl.DataFrame(proj,schema=[(c,pl.Float64) for c in components]).with_columns(solvers_cosine)
                 return df_proj,df_corr
             
             df_proj,df_corr = isomap(["proj"])
@@ -226,10 +248,10 @@ def init_routes(app, get_db):
             
             print(df_corr.join(df_cosine_dist,on=["solver","solver2"]))
             
-            print("agglomeration")
-            model = sklearn.cluster.AgglomerativeClustering(distance_threshold=0, n_clusters=None).fit(impute)
-            solvers = list(df_all2["solver"])
-            n_samples = len(solvers)
+            # print("agglomeration")
+            # model = sklearn.cluster.AgglomerativeClustering(distance_threshold=0, n_clusters=None).fit(impute)
+            # solvers = list(df_all2["solver"])
+            # n_samples = len(solvers)
             # for i, merge in enumerate(model.children_):
             #     print("id:",i+n_samples)
             #     for child_idx in merge:
