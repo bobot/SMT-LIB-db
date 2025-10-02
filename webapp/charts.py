@@ -107,7 +107,7 @@ def read_feather() -> pl.DataFrame:
                     INNER JOIN Solvers AS sol ON sovar.solver = sol.id
                     """,
             connection=db,
-            schema_overrides={"wallclockTime": pl.Float64, "cpuTime": pl.Float64},
+            schema_overrides={"wallclockTime": pl.Float64, "cpuTime": pl.Float64, "solver": pl.Categorical, "sovar_id" : pl.Int32},
         )
         df.write_ipc(FEATHER)
         return df
@@ -129,7 +129,8 @@ def init_routes(app, get_db):
             .group_by("ev_id","sovar_id","id").last()
             .with_columns(
                 bucket=pl.lit(10.0).pow(c_cpuTime.log(10).floor()),
-                solver=pl.concat_str(pl.col("fullName"), c_name, separator=" "),
+                solver=pl.concat_str(pl.col("fullName"), c_name, separator=" ").cast(pl.Categorical),
+                # solver=pl.col("sovar_id")
             )
         )
 
@@ -192,10 +193,10 @@ def init_routes(app, get_db):
             .sort(c_solver, c_solver2)
         )
 
-        df_corr, df_results, df_buckets, df_status, df_solvers,df_nb_common,df_cosine_dist,diag,diag2 = pl.collect_all(
+        df_corr, df_buckets, df_status, df_solvers,df_nb_common,df_cosine_dist,diag,diag2 = pl.collect_all(
             [
                 corr,
-                cross_results,
+                # cross_results, #df_results
                 results.select(c_bucket.unique()),
                 results.select(c_status.unique()),
                 results.select(c_solver.unique()),
@@ -203,7 +204,7 @@ def init_routes(app, get_db):
                 cosine_dist,
                 all.group_by("solver","id").len().filter(pl.col("len") > 0),
                 cosine_dist.filter(c_solver==c_solver2).filter(pl.col("cosine")> 0.)
-            ]
+            ],engine='streaming'
         )
 
         print(df_nb_common.filter(pl.col("len") < 100))
@@ -215,7 +216,7 @@ def init_routes(app, get_db):
         status_domain.sort()
 
         solver_domain: list[str] = list(df_solvers["solver"])
-        solver_domain.sort(key=lambda x: x.lower())
+        #solver_domain.sort(key=lambda x: x.lower())
 
         if False:
             # Two provers can have no benchmars in common, their pairs is not in df_corrs
@@ -229,13 +230,14 @@ def init_routes(app, get_db):
             # impute=imputer.fit_transform(df_all2.drop("solver"))
             df_cosine_dist2 = df_cosine_dist.sort("solver","solver2").pivot(on="solver2",index="solver").fill_null(1.)
             solvers_cosine = df_cosine_dist2["solver"]
-            df_cosine_dist2 = df_cosine_dist2.select("solver",*solvers_cosine)
+            list_solvers_cosine = list(solvers_cosine)
+            df_cosine_dist2 = df_cosine_dist2.select("solver",*list_solvers_cosine)
             print(df_cosine_dist2)
             df_cosine_dist2 = df_cosine_dist2.drop("solver")
             def isomap(components:List[str]) -> Tuple[pl.DataFrame,pl.DataFrame]:
-                embedding = sklearn.manifold.Isomap(n_components=len(components),metric="precomputed",radius=0.5,n_neighbors=None)
+                embedding = sklearn.manifold.Isomap(n_components=len(components),metric="precomputed",n_neighbors=10)
                 proj=embedding.fit_transform(df_cosine_dist2.to_numpy())
-                df_corr = pl.DataFrame(embedding.dist_matrix_,schema=list(solvers_cosine)).with_columns(solvers_cosine).unpivot(index="solver",variable_name="solver2",value_name="corr")
+                df_corr = pl.DataFrame(embedding.dist_matrix_,schema=list_solvers_cosine).with_columns(solvers_cosine).unpivot(index="solver",variable_name="solver2",value_name="corr").with_columns(solver=pl.col("solver").cast(pl.Categorical),solver2=pl.col("solver2").cast(pl.Categorical))
                 print(df_corr)
                 df_proj=pl.DataFrame(proj,schema=[(c,pl.Float64) for c in components]).with_columns(solvers_cosine)
                 return df_proj,df_corr
