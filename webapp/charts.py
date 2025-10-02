@@ -229,15 +229,15 @@ def init_routes(app, get_db):
             # imputer = sklearn.impute.KNNImputer(n_neighbors=2)
             # impute=imputer.fit_transform(df_all2.drop("solver"))
             df_cosine_dist2 = df_cosine_dist.sort("solver","solver2").pivot(on="solver2",index="solver").fill_null(1.)
-            solvers_cosine = df_cosine_dist2["solver"]
-            list_solvers_cosine = list(solvers_cosine)
+            solvers_cosine = df_cosine_dist2.select("solver")
+            list_solvers_cosine = list(solvers_cosine["solver"])
             df_cosine_dist2 = df_cosine_dist2.select("solver",*list_solvers_cosine)
             print(df_cosine_dist2)
             df_cosine_dist2 = df_cosine_dist2.drop("solver")
             def isomap(components:List[str]) -> Tuple[pl.DataFrame,pl.DataFrame]:
                 embedding = sklearn.manifold.Isomap(n_components=len(components),metric="precomputed",n_neighbors=10)
                 proj=embedding.fit_transform(df_cosine_dist2.to_numpy())
-                df_corr = pl.DataFrame(embedding.dist_matrix_,schema=list_solvers_cosine).with_columns(solvers_cosine).unpivot(index="solver",variable_name="solver2",value_name="corr").with_columns(solver=pl.col("solver").cast(pl.Categorical),solver2=pl.col("solver2").cast(pl.Categorical))
+                df_corr = pl.concat([pl.DataFrame(embedding.dist_matrix_,schema=list_solvers_cosine),solvers_cosine],how = "horizontal").unpivot(index="solver",variable_name="solver2",value_name="corr").with_columns(solver2=pl.col("solver2").cast(pl.Categorical))
                 print(df_corr)
                 df_proj=pl.DataFrame(proj,schema=[(c,pl.Float64) for c in components]).with_columns(solvers_cosine)
                 return df_proj,df_corr
@@ -311,6 +311,22 @@ def init_routes(app, get_db):
             )
             .add_params(solvers)
         )
+
+        g_nb_common_benchs= (
+            alt.Chart(df_nb_common, title="number of common benchs")
+            .mark_rect()
+            .encode(
+                alt.X("solver", title="solver1").scale(domain=solver_domain),
+                alt.Y("solver2", title="solver2").scale(
+                    domain=list(reversed(solver_domain))
+                ),
+                alt.Color("len", scale=alt.Scale(scheme="lightmulti",reverse=True,type="log")),
+                stroke=alt.when(solvers).then(alt.value("lightgreen")),
+                strokeWidth=alt.value(3),
+                opacity=alt.value(0.8),
+            )
+            .add_params(solvers)
+        )
         
         print(df_proj)
         g_isomap = (
@@ -328,7 +344,7 @@ def init_routes(app, get_db):
         )
 
         with alt.data_transformers.disable_max_rows():
-            charts = (g_select_provers | g_select_provers_cosine | g_isomap).to_html(fullhtml=False)
+            charts = (g_isomap | g_select_provers | g_select_provers_cosine  |g_nb_common_benchs).to_html(fullhtml=False)
 
         return render_template(
             "charts.html",
