@@ -86,6 +86,7 @@ if __name__ == "__main__":
                 WHERE NOT bnch.isIncremental
                 AND eval.date <= ?
                 AND (res.status == 'sat' OR res.status == 'unsat')
+                AND ((qr.status == 'unknown' OR (res.status == qr.status)))
                 AND bnch.logic LIKE ?;
                 """,
                 (oldyearstr, logic_name),

@@ -92,7 +92,6 @@ if __name__ == "__main__":
     except:
         pass
 
-    benchmarks = [450474]
     for benchmark_id in benchmarks:
         benchmark_data = get_benchmark(connection, benchmark_id)
         query_data = get_queries(connection, benchmark_id)
