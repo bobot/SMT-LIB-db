@@ -129,6 +129,7 @@ def init_routes(app, get_db):
     @app.route("/charts/<string:logic_name>")
     def show_charts(logic_name):
         details_requested = request.args.get('details', default = False, type = bool)
+        dist_too_few = request.args.get('dist_too_few', default = 1.0, type = float)
         results = (
             read_database(logic_name)
             .group_by("ev_id","sovar_id","id").last()
@@ -180,7 +181,7 @@ def init_routes(app, get_db):
                 c_solver,
                 c_solver2,
             )
-            .agg(cosine=pl.when(toofew).then(pl.lit(2.)).when((den==pl.lit(0.))).then(pl.lit(0.)).otherwise(pl.lit(1) - ((c_cpuTime*c_cpuTime2).sum() / 
+            .agg(cosine=pl.when(toofew).then(pl.lit(dist_too_few)).when((den==pl.lit(0.))).then(pl.lit(0.)).otherwise(pl.lit(1) - ((c_cpuTime*c_cpuTime2).sum() / 
                          den.sqrt()))
         ))
 
