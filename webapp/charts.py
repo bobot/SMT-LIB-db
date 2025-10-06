@@ -87,8 +87,6 @@ c_bucket = pl.col("bucket")
 c_bucket2 = pl.col("bucket2")
 
 
-min_common_benches=100
-
 @cache
 def read_feather() -> pl.DataFrame:
     DATABASE = Path(os.environ["SMTLIB_DB"])
@@ -129,7 +127,8 @@ def init_routes(app, get_db):
     @app.route("/charts/<string:logic_name>")
     def show_charts(logic_name):
         details_requested = request.args.get('details', default = False, type = bool)
-        dist_too_few = request.args.get('dist_too_few', default = 1.0, type = float)
+        dist_too_few = request.args.get('dist_too_few', default = None, type = float)
+        min_common_benches = request.args.get('min_common_benches', default = 100, type = int)
         results = (
             read_database(logic_name)
             .group_by("ev_id","sovar_id","id").last()
@@ -175,6 +174,16 @@ def init_routes(app, get_db):
 
         den=((c_cpuTime*c_cpuTime).sum() * (c_cpuTime2*c_cpuTime2).sum())
         toofew=(pl.len() <= pl.lit(min_common_benches))
+        
+        nb_toofew=(cross_results.group_by(
+                c_solver,
+                c_solver2
+            ).agg(toofew=toofew).group_by(c_solver).agg(pl.col("toofew").sum())      
+        .filter(pl.col("toofew") >= (pl.len() / pl.lit(2)))
+        )
+
+        if dist_too_few is None:
+            cross_results = cross_results.join(nb_toofew,on="solver",how="anti").join(nb_toofew.rename({"solver":"solver2"}),on="solver2",how="anti")
 
         cosine_dist = (
             cross_results.group_by(
@@ -199,27 +208,26 @@ def init_routes(app, get_db):
             .sort(c_solver, c_solver2)
         )
 
-        df_corr, df_buckets, df_status, df_solvers,df_nb_common,df_cosine_dist,diag,diag2 = pl.collect_all(
+
+        #coefficient from 0. to 1., 0. oldest to newest for each solver_name separately
+        hist_coef = pl.arg_sort_by("date").over("solver_name") / pl.len().over("solver_name")
+        results = results.select(c_solver,"solver_name","date").unique().sort("date","solver_name",c_solver).with_columns(hist_coef=hist_coef)
+
+        df_corr, df_solvers,df_nb_common,df_cosine_dist= pl.collect_all(
             [
                 corr,
                 # cross_results, #df_results
-                results.select(c_bucket.unique()),
-                results.select(c_status.unique()),
-                results.select(c_solver,"solver_name","date").unique().sort("date","solver_name",c_solver),
+                results,
                 nb_common,
-                cosine_dist,
-                all.group_by("solver","id").len().filter(pl.col("len") > 0),
-                cosine_dist.filter(c_solver==c_solver2).filter(pl.col("cosine")> 0.)
+                cosine_dist
             ],engine='streaming'
         )
 
-        print(df_nb_common.filter(pl.col("len") < 100))
-        print(diag)
-        print(diag2)
+        # print(df_nb_common.filter(pl.col("len") < 100))
 
-        bucket_domain: list[float] = list(df_buckets["bucket"])
-        status_domain: list[int] = list(df_status["status"])
-        status_domain.sort()
+        # bucket_domain: list[float] = list(df_buckets["bucket"])
+        # status_domain: list[int] = list(df_status["status"])
+        # status_domain.sort()
 
         solver_domain: list[str] = list(df_solvers["solver"])
         #solver_domain.sort(key=lambda x: x.lower())
@@ -238,7 +246,7 @@ def init_routes(app, get_db):
             solvers_cosine = df_cosine_dist2.select("solver")
             list_solvers_cosine = list(solvers_cosine["solver"])
             df_cosine_dist2 = df_cosine_dist2.select("solver",*list_solvers_cosine)
-            print(df_cosine_dist2)
+            print("df_cosine_dist2",df_cosine_dist2)
             df_cosine_dist2 = df_cosine_dist2.drop("solver")
             def isomap(components:List[str]) -> Tuple[pl.DataFrame,pl.DataFrame]:
                 embedding = sklearn.manifold.Isomap(n_components=len(components),metric="precomputed",n_neighbors=10)
@@ -296,7 +304,7 @@ def init_routes(app, get_db):
         )
 
         g_select_provers_cosine = (
-            alt.Chart(df_cosine_dist, title=f"cosine distance with (set to 2 when less than {min_common_benches} common benchs)")
+            alt.Chart(df_cosine_dist, title=f"cosine distance with (set to {dist_too_few} when less than {min_common_benches} common benchs)")
             .mark_rect()
             .encode(
                 alt.X("solver", title="solver1").scale(domain=solver_domain),
@@ -323,20 +331,28 @@ def init_routes(app, get_db):
             .add_params(solver_name)
         )
         
+        show_trail=alt.param(bind=alt.binding_checkbox(name="Show trail"),value=True)
         print(df_proj)
-        g_isomap = (
-            alt.Chart(df_proj, title="Isomap")
-            .mark_point()
-            .encode(
+        base_isomap=(
+            alt.Chart(df_proj, title=f"Isomap for {logic_name}",width=500,height=500).encode(
                 alt.X("x"),
                 alt.Y("y"),
                 alt.Tooltip("solver"),
                 alt.Color("solver_name:N",                
-                ),
-                opacity=alt.when(solver_name).then(alt.value(1.)).otherwise(alt.value(0.3))
-            )
-            .add_params(solver_name)
+                )            )
+            .add_params(solver_name,show_trail)
         )
+        g_isomap = alt.layer(
+            # Line layer
+            base_isomap.mark_trail().encode(
+            alt.Order('hist_coef:Q').sort('ascending'),
+            alt.Size('hist_coef:Q').scale(domain=[0., 1.0], range=[1, 12]).legend(None),
+            color="solver_name:N",#alt.value('#222222')
+            opacity=alt.when(solver_name & show_trail).then(alt.value(0.3)).otherwise(alt.value(0.))
+            ),
+            # Point layer
+            base_isomap.mark_point().encode(opacity=alt.when(solver_name).then(alt.value(1.)).otherwise(alt.value(0.3)))
+        ).interactive()
 
         with alt.data_transformers.disable_max_rows():
             if details_requested:
