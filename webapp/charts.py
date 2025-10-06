@@ -175,15 +175,15 @@ def init_routes(app, get_db):
         den=((c_cpuTime*c_cpuTime).sum() * (c_cpuTime2*c_cpuTime2).sum())
         toofew=(pl.len() <= pl.lit(min_common_benches))
         
-        nb_toofew=(cross_results.group_by(
+        nb_enough=(cross_results.group_by(
                 c_solver,
                 c_solver2
-            ).agg(toofew=toofew).group_by(c_solver).agg(pl.col("toofew").sum())      
-        .filter(pl.col("toofew") >= (pl.len() / pl.lit(2)))
+            ).agg(enough=toofew.not_()).group_by(c_solver).agg(pl.col("enough").sum())      
+        .filter(pl.col("enough") >= (pl.len() / pl.lit(2)))
         )
 
         if dist_too_few is None:
-            cross_results = cross_results.join(nb_toofew,on="solver",how="anti").join(nb_toofew.rename({"solver":"solver2"}),on="solver2",how="anti")
+            cross_results = cross_results.join(nb_enough,on="solver").join(nb_enough.rename({"solver":"solver2"}),on="solver2")
 
         cosine_dist = (
             cross_results.group_by(
@@ -213,16 +213,19 @@ def init_routes(app, get_db):
         hist_coef = pl.arg_sort_by("date").over("solver_name") / pl.len().over("solver_name")
         results = results.select(c_solver,"solver_name","date").unique().sort("date","solver_name",c_solver).with_columns(hist_coef=hist_coef)
 
-        df_corr, df_solvers,df_nb_common,df_cosine_dist= pl.collect_all(
+        df_corr, df_solvers,df_nb_common,df_cosine_dist,df_too_few= pl.collect_all(
             [
                 corr,
                 # cross_results, #df_results
                 results,
                 nb_common,
-                cosine_dist
+                cosine_dist,
+                results.join(nb_enough,on="solver",how="anti")
             ],engine='streaming'
         )
 
+
+        print(df_too_few)
         # print(df_nb_common.filter(pl.col("len") < 100))
 
         # bucket_domain: list[float] = list(df_buckets["bucket"])
@@ -246,13 +249,13 @@ def init_routes(app, get_db):
             solvers_cosine = df_cosine_dist2.select("solver")
             list_solvers_cosine = list(solvers_cosine["solver"])
             df_cosine_dist2 = df_cosine_dist2.select("solver",*list_solvers_cosine)
-            print("df_cosine_dist2",df_cosine_dist2)
+            # print("df_cosine_dist2",df_cosine_dist2)
             df_cosine_dist2 = df_cosine_dist2.drop("solver")
             def isomap(components:List[str]) -> Tuple[pl.DataFrame,pl.DataFrame]:
                 embedding = sklearn.manifold.Isomap(n_components=len(components),metric="precomputed",n_neighbors=10)
                 proj=embedding.fit_transform(df_cosine_dist2.to_numpy())
                 df_corr = pl.concat([pl.DataFrame(embedding.dist_matrix_,schema=list_solvers_cosine),solvers_cosine],how = "horizontal").unpivot(index="solver",variable_name="solver2",value_name="corr").with_columns(solver2=pl.col("solver2").cast(pl.Categorical))
-                print(df_corr)
+                # print(df_corr)
                 df_proj=pl.DataFrame(proj,schema=[(c,pl.Float64) for c in components]).with_columns(solvers_cosine)
                 return df_proj,df_corr
             
@@ -262,7 +265,7 @@ def init_routes(app, get_db):
             
             df_proj,df_corr = isomap(["x","y"])
             
-            print(df_corr.join(df_cosine_dist,on=["solver","solver2"]))
+            # print(df_corr.join(df_cosine_dist,on=["solver","solver2"]))
             
             df_proj=df_proj.join(df_solvers,on="solver")
             df_cosine_dist=df_cosine_dist.join(df_solvers,on="solver")
@@ -332,7 +335,7 @@ def init_routes(app, get_db):
         )
         
         show_trail=alt.param(bind=alt.binding_checkbox(name="Show trail"),value=True)
-        print(df_proj)
+
         base_isomap=(
             alt.Chart(df_proj, title=f"Isomap for {logic_name}",width=500,height=500).encode(
                 alt.X("x"),
