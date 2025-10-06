@@ -74,7 +74,7 @@ def correlation_sorting(
 
 
 c_query = pl.col("id")
-c_name = pl.col("name")
+c_eval_name = pl.col("eval_name")
 c_solver = pl.col("solver")
 c_solver2 = pl.col("solver2")
 c_ev_id = pl.col("ev_id")
@@ -86,6 +86,9 @@ c_status2 = pl.col("status2")
 c_bucket = pl.col("bucket")
 c_bucket2 = pl.col("bucket2")
 
+
+min_common_benches=100
+
 @cache
 def read_feather() -> pl.DataFrame:
     DATABASE = Path(os.environ["SMTLIB_DB"])
@@ -93,10 +96,11 @@ def read_feather() -> pl.DataFrame:
     if FEATHER.exists():
         return pl.read_ipc(FEATHER)
     else:
+        print("Creation of cached feather file")
         db = sqlite3.connect(DATABASE)
         df = pl.read_database(
             query="""
-                SELECT ev.name, ev.date, ev.link, ev.id as ev_id, sol.name AS solver,
+                SELECT ev.name as eval_name, ev.date, ev.link, ev.id as ev_id, sol.name AS solver_name,
                         sovar.fullName, res.status, res.cpuTime,
                         query.id, bench.logic, sovar.id AS sovar_id
                     FROM Results AS res
@@ -107,7 +111,7 @@ def read_feather() -> pl.DataFrame:
                     INNER JOIN Solvers AS sol ON sovar.solver = sol.id
                     """,
             connection=db,
-            schema_overrides={"wallclockTime": pl.Float64, "cpuTime": pl.Float64, "solver": pl.Categorical, "sovar_id" : pl.Int32},
+            schema_overrides={"wallclockTime": pl.Float64, "cpuTime": pl.Float64, "solver_name": pl.Categorical, "fullName": pl.Categorical,"sovar_id" : pl.Int32, "status" : pl.Categorical},
         )
         df.write_ipc(FEATHER)
         return df
@@ -124,12 +128,13 @@ def init_routes(app, get_db):
         return results
     @app.route("/charts/<string:logic_name>")
     def show_charts(logic_name):
+        details_requested = request.args.get('details', default = False, type = bool)
         results = (
             read_database(logic_name)
             .group_by("ev_id","sovar_id","id").last()
             .with_columns(
                 bucket=pl.lit(10.0).pow(c_cpuTime.log(10).floor()),
-                solver=pl.concat_str(pl.col("fullName"), c_name, separator=" ").cast(pl.Categorical),
+                solver=pl.concat_str(pl.col("fullName"), c_eval_name, separator=" ").cast(pl.Categorical),
                 # solver=pl.col("sovar_id")
             )
         )
@@ -143,7 +148,7 @@ def init_routes(app, get_db):
             status2=c_status,
         )
 
-        cross_results = results.join(results_with, on=[c_query], how="left").filter()
+        cross_results = results.join(results_with, on=[c_query], how="inner")
 
         corr = (
             cross_results.group_by(c_solver, c_solver2)
@@ -168,14 +173,14 @@ def init_routes(app, get_db):
         )
 
         den=((c_cpuTime*c_cpuTime).sum() * (c_cpuTime2*c_cpuTime2).sum())
-        toofew=(pl.len() <= pl.lit(100))
+        toofew=(pl.len() <= pl.lit(min_common_benches))
 
         cosine_dist = (
             cross_results.group_by(
                 c_solver,
                 c_solver2,
             )
-            .agg(cosine=pl.when(toofew).then(pl.lit(1.)).when((den==pl.lit(0.))).then(pl.lit(0.)).otherwise(pl.lit(1) - ((c_cpuTime*c_cpuTime2).sum() / 
+            .agg(cosine=pl.when(toofew).then(pl.lit(2.)).when((den==pl.lit(0.))).then(pl.lit(0.)).otherwise(pl.lit(1) - ((c_cpuTime*c_cpuTime2).sum() / 
                          den.sqrt()))
         ))
 
@@ -199,7 +204,7 @@ def init_routes(app, get_db):
                 # cross_results, #df_results
                 results.select(c_bucket.unique()),
                 results.select(c_status.unique()),
-                results.select(c_solver.unique()),
+                results.select(c_solver,"solver_name","date").unique().sort("date","solver_name",c_solver),
                 nb_common,
                 cosine_dist,
                 all.group_by("solver","id").len().filter(pl.col("len") > 0),
@@ -242,14 +247,18 @@ def init_routes(app, get_db):
                 df_proj=pl.DataFrame(proj,schema=[(c,pl.Float64) for c in components]).with_columns(solvers_cosine)
                 return df_proj,df_corr
             
-            df_proj,df_corr = isomap(["proj"])
-            df_proj = df_proj.sort("proj")
-            solver_domain = list(df_proj["solver"])
+            # df_proj,df_corr = isomap(["proj"])
+            # df_proj = df_proj.sort("proj")
+            # solver_domain = list(df_proj["solver"])
             
             df_proj,df_corr = isomap(["x","y"])
             
             print(df_corr.join(df_cosine_dist,on=["solver","solver2"]))
             
+            df_proj=df_proj.join(df_solvers,on="solver")
+            df_cosine_dist=df_cosine_dist.join(df_solvers,on="solver")
+            df_corr=df_corr.join(df_solvers,on="solver")
+            df_nb_common=df_nb_common.join(df_solvers,on="solver")
             # print("agglomeration")
             # model = sklearn.cluster.AgglomerativeClustering(distance_threshold=0, n_clusters=None).fit(impute)
             # solvers = list(df_all2["solver"])
@@ -266,22 +275,13 @@ def init_routes(app, get_db):
             #lle = sklearn.manifold.locally_linear_embedding(df_all)
 
         # Create heatmap with selection
-        solvers = alt.selection_point(
-            fields=["solver", "solver2"],
-            name="solvers",
-            value=[
-                {
-                    "solver": solver_domain[0],
-                    "solver2": solver_domain[min(1, len(solver_domain) - 1)],
-                }
-            ],
-            toggle=False,
+        solver_name = alt.selection_point(
+            fields=["solver_name"],
+            name="solver_name"
+            , bind='legend'
         )
-        answer_xy = alt.selection_point(fields=["answer", "answer2"], name="answer")
-        logic = alt.selection_point(fields=["logic"], name="logic")
-        division = alt.selection_point(fields=["division"], name="division")
         g_select_provers = (
-            alt.Chart(df_corr, title="cosine distance")
+            alt.Chart(df_corr, title="smallest distance in neighborhood graph of cosine distance")
             .mark_rect()
             .encode(
                 alt.X("solver", title="solver1").scale(domain=solver_domain),
@@ -289,15 +289,13 @@ def init_routes(app, get_db):
                     domain=list(reversed(solver_domain))
                 ),
                 alt.Color("corr", scale=alt.Scale(scheme="lightmulti",reverse=True)),
-                stroke=alt.when(solvers).then(alt.value("lightgreen")),
-                strokeWidth=alt.value(3),
-                opacity=alt.value(0.8),
+                opacity=alt.when(solver_name).then(alt.value(1.)).otherwise(alt.value(0.3))
             )
-            .add_params(solvers)
+            .add_params(solver_name)
         )
 
         g_select_provers_cosine = (
-            alt.Chart(df_cosine_dist, title="cosine distance")
+            alt.Chart(df_cosine_dist, title=f"cosine distance with (set to 2 when less than {min_common_benches} common benchs)")
             .mark_rect()
             .encode(
                 alt.X("solver", title="solver1").scale(domain=solver_domain),
@@ -305,11 +303,9 @@ def init_routes(app, get_db):
                     domain=list(reversed(solver_domain))
                 ),
                 alt.Color("cosine", scale=alt.Scale(scheme="lightmulti",reverse=True)),
-                stroke=alt.when(solvers).then(alt.value("lightgreen")),
-                strokeWidth=alt.value(3),
-                opacity=alt.value(0.8),
+                opacity=alt.when(solver_name).then(alt.value(1.)).otherwise(alt.value(0.3))
             )
-            .add_params(solvers)
+            .add_params(solver_name)
         )
 
         g_nb_common_benchs= (
@@ -321,11 +317,9 @@ def init_routes(app, get_db):
                     domain=list(reversed(solver_domain))
                 ),
                 alt.Color("len", scale=alt.Scale(scheme="lightmulti",reverse=True,type="log")),
-                stroke=alt.when(solvers).then(alt.value("lightgreen")),
-                strokeWidth=alt.value(3),
-                opacity=alt.value(0.8),
+                opacity=alt.when(solver_name).then(alt.value(1.)).otherwise(alt.value(0.3))
             )
-            .add_params(solvers)
+            .add_params(solver_name)
         )
         
         print(df_proj)
@@ -336,19 +330,23 @@ def init_routes(app, get_db):
                 alt.X("x"),
                 alt.Y("y"),
                 alt.Tooltip("solver"),
-                alt.Color("cat:N")
-            ).transform_calculate(cat='split(datum.solver," ",1)[0]'
-                                  #alt.expr.substring(alt.expr.data("solver"),0,3)
-                                  )
-
+                alt.Color("solver_name:N",                
+                ),
+                opacity=alt.when(solver_name).then(alt.value(1.)).otherwise(alt.value(0.3))
+            )
+            .add_params(solver_name)
         )
 
         with alt.data_transformers.disable_max_rows():
-            charts = (g_isomap | g_select_provers | g_select_provers_cosine  |g_nb_common_benchs).to_html(fullhtml=False)
+            if details_requested:
+                all = (g_isomap | g_nb_common_benchs| g_select_provers_cosine  | g_select_provers )
+            else:
+                all = g_isomap
+            charts = all.to_html(fullhtml=False)
 
         return render_template(
             "charts.html",
             logicData=logic_name,
-            printed=df_corr._repr_html_(),
+            printed="",
             charts=charts,
         )
