@@ -4,4 +4,4 @@ gunicorn
 polars
 altair
 rich
-polars-distance
+scikit-learn

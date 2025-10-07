@@ -86,7 +86,6 @@ c_status2 = pl.col("status2")
 c_bucket = pl.col("bucket")
 c_bucket2 = pl.col("bucket2")
 
-
 @cache
 def read_feather() -> pl.DataFrame:
     DATABASE = Path(os.environ["SMTLIB_DB"])
@@ -127,7 +126,7 @@ def init_routes(app, get_db):
     @app.route("/charts/<string:logic_name>")
     def show_charts(logic_name):
         details_requested = request.args.get('details', default = False, type = bool)
-        dist_too_few = request.args.get('dist_too_few', default = None, type = float)
+        dist_too_few = request.args.get('dist_too_few', default = None, type = (lambda x: None if x == "" else float(x)))
         min_common_benches = request.args.get('min_common_benches', default = 100, type = int)
         results = (
             read_database(logic_name)
@@ -363,10 +362,12 @@ def init_routes(app, get_db):
             else:
                 all = g_isomap
             charts = all.to_html(fullhtml=False)
-
-        return render_template(
-            "charts.html",
-            logicData=logic_name,
-            printed="",
-            charts=charts,
-        )
+            
+        with pl.Config(tbl_width_chars=200):           
+            return render_template(
+                "charts.html",
+                logicData=logic_name,
+                printed="",
+                charts=charts,
+                inputs_value=locals(),
+            )
