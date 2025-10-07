@@ -212,14 +212,15 @@ def init_routes(app, get_db):
         hist_coef = pl.arg_sort_by("date").over("solver_name") / pl.len().over("solver_name")
         results = results.select(c_solver,"solver_name","date").unique().sort("date","solver_name",c_solver).with_columns(hist_coef=hist_coef)
 
-        df_corr, df_solvers,df_nb_common,df_cosine_dist,df_too_few= pl.collect_all(
+        df_corr, df_solvers,df_nb_common,df_cosine_dist,df_too_few,df_solver_name= pl.collect_all(
             [
                 corr,
                 # cross_results, #df_results
                 results,
                 nb_common,
                 cosine_dist,
-                results.join(nb_enough,on="solver",how="anti")
+                results.join(nb_enough,on="solver",how="anti"),
+                results.select(pl.col("solver_name").unique().sort())
             ],engine='streaming'
         )
 
@@ -233,6 +234,7 @@ def init_routes(app, get_db):
 
         solver_domain: list[str] = list(df_solvers["solver"])
         #solver_domain.sort(key=lambda x: x.lower())
+        solver_names=df_solver_name["solver_name"]
 
         if False:
             # Two provers can have no benchmars in common, their pairs is not in df_corrs
@@ -340,8 +342,9 @@ def init_routes(app, get_db):
                 alt.X("x"),
                 alt.Y("y"),
                 alt.Tooltip("solver"),
-                alt.Color("solver_name:N",                
-                )            )
+                alt.Color("solver_name:N").scale(domain=solver_names),
+                alt.Shape("solver_name:N").scale(domain=solver_names),
+    )
             .add_params(solver_name,show_trail)
         )
         g_isomap = alt.layer(
@@ -349,11 +352,12 @@ def init_routes(app, get_db):
             base_isomap.mark_trail().encode(
             alt.Order('hist_coef:Q').sort('ascending'),
             alt.Size('hist_coef:Q').scale(domain=[0., 1.0], range=[1, 12]).legend(None),
-            color="solver_name:N",#alt.value('#222222')
+            color="solver_name:N",
             opacity=alt.when(solver_name & show_trail).then(alt.value(0.3)).otherwise(alt.value(0.))
             ),
             # Point layer
-            base_isomap.mark_point().encode(opacity=alt.when(solver_name).then(alt.value(1.)).otherwise(alt.value(0.3)))
+            base_isomap.mark_point(filled=True).encode(opacity=alt.when(solver_name).then(alt.value(1.)).otherwise(alt.value(0.3))                                            
+            )
         ).interactive()
 
         with alt.data_transformers.disable_max_rows():
